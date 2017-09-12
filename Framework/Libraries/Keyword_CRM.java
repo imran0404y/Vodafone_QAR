@@ -581,10 +581,10 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Order_New");
 			Result.takescreenshot("Sales order Creation");
 
-			Col = CO.Get_Col("Order_Table", Row, "Sales Order") - 1;
-			// Browser.WebTable.click("Order_Table", Row, Col+1);
-			Order_No = Browser.WebTable.getCellData("Order_Table", 2, Col);
-			Browser.WebTable.clickL("Order_Table", Row, Col);
+			Col = CO.Get_Col("Order_Table", Row, "Sales Order");
+			Browser.WebTable.click("Order_Table", Row, Col);
+			Order_No = Browser.WebTable.getCellData("Order_Table", 2, (Col - 1));
+			Browser.WebTable.click("Order_Table", Row, (Col - 1));
 
 			Browser.WebButton.waittillvisible("LI_New");
 
@@ -645,7 +645,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			int Row_Val = 3, Col_V, Len, COl_STyp, Col_Res, Col_S;
+			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
 			String Reserve, Category, GetData = "Mobile Service Bundle", Add_Addon, Remove_Addon, ReservationToken, SIM,
 					Field, MSISDN, SData = "SIM Card";
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
@@ -716,7 +716,7 @@ public class Keyword_CRM extends Driver {
 					Driver.Continue.set(false);
 			}
 
-			if (ReservationToken.equals("") & !MSISDN.equals("")) {
+			if (ReservationToken.equals("")) {
 				CO.scroll("Numbers", "WebLink");
 				Browser.WebLink.click("Numbers");
 				CO.waitforload();
@@ -724,34 +724,44 @@ public class Keyword_CRM extends Driver {
 				if (Row_Count == 1)
 					Browser.WebButton.click("Number_Query");
 				Browser.WebLink.click("Num_Manage");
-				Len = MSISDN.length();
-				Reserve = MSISDN.substring(3, Len);
+				CO.waitforload();
 				Browser.WebButton.waitTillEnabled("Reserve");
 				Browser.WebButton.waittillvisible("Reserve");
-				System.out.println(Reserve);
 				COl_STyp = CO.Select_Cell("Numbers", "Service Type");
 				Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
-				System.out.println(COl_STyp + " " + Col_Res);
 				Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", "Mobile");
-				Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
-				// Browser.WebButton.click("Number_Go");
+				
+				if (!MSISDN.equals("")) {
+
+					Reserve = MSISDN.substring(3, MSISDN.length());
+					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
+					Browser.WebButton.click("Number_Go");
+				} else {
+					Browser.WebButton.click("Number_Go");
+					CO.waitmoreforload();
+					MSISDN = Browser.WebTable.getCellData("Numbers", Row, Col_Res);
+
+				}
+
 				Result.takescreenshot("Number Reservation");
-				Browser.WebButton.waittillvisible("Reserve");
-				Browser.WebButton.waitTillEnabled("Reserve");
 				Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
-				System.out.println("Category " + Category);
+				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
 				CO.waitforload();
-				if (CO.isAlertExist())
-					System.out.println("Alert Handled");
-				Result.takescreenshot("Number Resered");
+				
+				if (CO.isAlertExist()) {
+					Result.takescreenshot("Number Resered");
+					Result.fUpdateLog("Alert Handled");
+				}
+				
 				Browser.WebLink.waittillvisible("Line_Items");
 				Browser.WebLink.click("Line_Items");
+				CO.waitforload();
 				Browser.WebLink.click("LI_Totals");
+				
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
-					Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 					for (int i = 2; i <= Row_Count; i++) {
 						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -766,23 +776,17 @@ public class Keyword_CRM extends Driver {
 					CO.waitforload();
 					CO.Button_Sel("Verify");
 					CO.isAlertExist();
-					Thread.sleep(1000);
+					CO.waitforload();
 					CO.Button_Sel("Done");
-					// CO.waitforload();
 					if (CO.isAlertExist()) {
 						Driver.Continue.set(false);
 						System.exit(0);
 					}
 
 				}
-				Row_Count = Browser.WebTable.getRowCount("Line_Items");
-				if (Row_Count <= 3) {
-					Browser.WebButton.waittillvisible("Expand");
-					Browser.WebButton.click("Expand");
-				}
+				
 				if (Field.equalsIgnoreCase("previous service id"))
 					Col_S = CO.Actual_Cell("Line_Items", "Service Id");
-				Result.fUpdateLog(Field);
 
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -792,7 +796,7 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Browser.WebTable.click("Line_Items", Row_Val, Col_S + 1);
-				// CO.scroll("Service_Id", "WebButton");
+				
 				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
 				Browser.WebButton.waittillvisible("Reserved_Ok");
@@ -802,7 +806,7 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.click("Reserved_Ok");
 				else
 					Driver.Continue.set(false);
-			} else if (!ReservationToken.equals("") & !MSISDN.equals("")) {
+			} else if (!ReservationToken.equals("")) {
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
 					Browser.WebButton.waittillvisible("Expand");
@@ -831,13 +835,15 @@ public class Keyword_CRM extends Driver {
 			}
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
-			Result.takescreenshot("Providing MISDIN and SIM No");
-			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 			if (Driver.Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
 				Test_OutPut += "PlanName : " + PlanName + ",";
+				Utlities.StoreValue("MSISDN", MSISDN);
+				Test_OutPut += "MSISDN : " + MSISDN + ",";
+				Utlities.StoreValue("SIM_NO", SIM);
+				Test_OutPut += "SIM_NO : " + SIM + ",";
 				Result.takescreenshot("Plan Selection is Successful");
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
@@ -1190,13 +1196,13 @@ public class Keyword_CRM extends Driver {
 		return Status + "@@" + Test_OutPut;
 	}
 
-	/*
-	 * -----------------------------------------------------------------------------
-	 * ---------- Method Name : Resume Arguments : None Use : Resume the Suspended
-	 * Plan Designed By : Vinodhini Raviprasad Date : 22-March-2017
-	 * -----------------------------------------------------------------------------
-	 * -----------
-	 */
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Resume
+	 * Arguments			: None
+	 * Use 					: Resume the Suspended Plan
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 22-March-2017
+	--------------------------------------------------------------------------------------------------------*/
 	public String Resume() {
 		String Test_OutPut = "", Status = "";
 		String MSISDN;

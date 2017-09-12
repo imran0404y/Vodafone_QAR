@@ -148,7 +148,12 @@ public class Utlities extends Driver {
 
 		for (int readloop = 0; readloop < DataSap.length; readloop++) {
 			String[] Sapdata = DataSap[readloop].split("--");
-			dict.put(Sapdata[0], Sapdata[1]);
+			if(Sapdata.length==2) {
+				dict.put(Sapdata[0], Sapdata[1]);
+			}else {
+				dict.put(Sapdata[0], "");
+			}
+			
 		}
 		return dict;
 	}
