@@ -132,7 +132,7 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public boolean isAlertExist() {
 		try {
-			WebDriverWait wait = new WebDriverWait(cDriver.get(), 25);
+			WebDriverWait wait = new WebDriverWait(cDriver.get(), 15);
 			if (!(wait.until(ExpectedConditions.alertIsPresent()) == null))
 				System.out.println((cDriver.get()).switchTo().alert().getText());
 			Browser.alert.accept();

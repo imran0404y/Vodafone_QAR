@@ -758,7 +758,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebLink.waittillvisible("Line_Items");
 				Browser.WebLink.click("Line_Items");
 				CO.waitforload();
-				Browser.WebLink.click("LI_Totals");
+				//Browser.WebLink.click("LI_Totals");
 
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
@@ -785,7 +785,7 @@ public class Keyword_CRM extends Driver {
 					}
 
 				}
-
+				CO.waitforload();
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
 					Browser.WebButton.waittillvisible("Expand");
@@ -802,12 +802,15 @@ public class Keyword_CRM extends Driver {
 					}
 				}
 
-				Browser.WebTable.click("Line_Items", Row_Val, Col_S + 1);
+				//Browser.WebTable.click("Line_Items", Row_Val, Col_S + 1);
 
-				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+				//Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
+				CO.waitforload();
+				CO.waitforload();
 				Browser.WebButton.waittillvisible("Reserved_Ok");
 				Browser.WebButton.waitTillEnabled("Reserved_Ok");
+				CO.waitforload();
 				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
 				if (Row_Count > 1)
 					Browser.WebButton.click("Reserved_Ok");
