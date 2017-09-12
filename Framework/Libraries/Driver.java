@@ -135,9 +135,13 @@ public class Driver {
 							Continue.set(false);
 						}
 						if (TestOutput == null) {
-							TestOutput = ResultandDes[1];
+							if (ResultandDes[1] != "") {
+								TestOutput = ResultandDes[1];
+							}
 						} else {
-							TestOutput = TestOutput + ResultandDes[1];
+							if (ResultandDes[1] != "") {
+								TestOutput = TestOutput + ResultandDes[1];
+							}
 						}
 
 					}
@@ -184,7 +188,7 @@ public class Driver {
 			Runtime.getRuntime().exec("taskkill /im conhost.exe /f");
 			Runtime.getRuntime().exec("taskkill /im geckodriver.exe /f");
 			Runtime.getRuntime().exec("taskkill /im IEDriverServer.exe /f");
-			Runtime.getRuntime().exec("taskkill /im iexplore.exe /f");	
+			Runtime.getRuntime().exec("taskkill /im iexplore.exe /f");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

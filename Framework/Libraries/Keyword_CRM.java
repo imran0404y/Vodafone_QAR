@@ -749,9 +749,8 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
 				CO.waitforload();
-
+				Result.takescreenshot("Number Resered");
 				if (CO.isAlertExist()) {
-					Result.takescreenshot("Number Resered");
 					Result.fUpdateLog("Alert Handled");
 				}
 
@@ -801,10 +800,7 @@ public class Keyword_CRM extends Driver {
 						Row_Val = i;
 					}
 				}
-
-				//Browser.WebTable.click("Line_Items", Row_Val, Col_S + 1);
-
-				//Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+				
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
 				CO.waitforload();
 				CO.waitforload();
@@ -922,7 +918,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Submit");
 			CO.waitforload();
 			CO.isAlertExist();
-
+			Result.takescreenshot("Order Submission is Successful");
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
 			if (Row_Count <= 3) {
@@ -965,15 +961,13 @@ public class Keyword_CRM extends Driver {
 				}
 			} while ((R_S < 2) || Wait < 100);
 			Browser.WebButton.waittillvisible("Submit");
+			Result.takescreenshot("");
 			// cDriver.get().navigate().refresh();
 			CO.waitforload();
-			Result.takescreenshot("");
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			CO.scroll("Submit", "WebButton");
 			OS_Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
-			// System.out.println(Row_Count);
 			if (Row_Count <= 3) {
-				Result.takescreenshot("");
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
@@ -985,7 +979,7 @@ public class Keyword_CRM extends Driver {
 			}
 			if (Continue.get() & (Complete_Status == 2)) {
 				Status = "PASS";
-				Result.takescreenshot("Order Submission is Successful");
+				Result.takescreenshot("Order Completed is Successful");
 			} else {
 				Status = "FAIL";
 			}
