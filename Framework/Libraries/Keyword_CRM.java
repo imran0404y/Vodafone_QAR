@@ -370,6 +370,7 @@ public class Keyword_CRM extends Driver {
 		try {
 
 			// Browser.WebLink.waittillvisible("Acc_address");
+			CO.waitforload();
 			if (Browser.WebLink.exist("Acc_address"))
 				System.out.println("Proceeding Address Creation");
 			else {
@@ -407,7 +408,7 @@ public class Keyword_CRM extends Driver {
 				Add2 = Utlities.randname();
 			}
 			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address_2", Add2);
-			Result.fUpdateLog("Address line1 : " + Add2);
+			Result.fUpdateLog("Address line2 : " + Add2);
 
 			Col = CO.Select_Cell("Address", "PO Box");
 			if (!(getdata("Add_POBox").equals(""))) {
@@ -730,7 +731,7 @@ public class Keyword_CRM extends Driver {
 				COl_STyp = CO.Select_Cell("Numbers", "Service Type");
 				Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
 				Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", "Mobile");
-				
+
 				if (!MSISDN.equals("")) {
 
 					Reserve = MSISDN.substring(3, MSISDN.length());
@@ -748,17 +749,17 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
 				CO.waitforload();
-				
+
 				if (CO.isAlertExist()) {
 					Result.takescreenshot("Number Resered");
 					Result.fUpdateLog("Alert Handled");
 				}
-				
+
 				Browser.WebLink.waittillvisible("Line_Items");
 				Browser.WebLink.click("Line_Items");
 				CO.waitforload();
 				Browser.WebLink.click("LI_Totals");
-				
+
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
@@ -784,7 +785,13 @@ public class Keyword_CRM extends Driver {
 					}
 
 				}
-				
+
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				if (Row_Count <= 3) {
+					Browser.WebButton.waittillvisible("Expand");
+					Browser.WebButton.click("Expand");
+				}
+
 				if (Field.equalsIgnoreCase("previous service id"))
 					Col_S = CO.Actual_Cell("Line_Items", "Service Id");
 
@@ -796,7 +803,7 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Browser.WebTable.click("Line_Items", Row_Val, Col_S + 1);
-				
+
 				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
 				Browser.WebButton.waittillvisible("Reserved_Ok");
@@ -815,7 +822,7 @@ public class Keyword_CRM extends Driver {
 
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-					if (SData.equals(LData))
+					if (GetData.equals(LData))
 						Row_Val = i;
 				}
 				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
@@ -828,6 +835,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
+			CO.waitforload();
 			for (int i = 2; i <= Row_Count; i++) {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 				if (SData.equals(LData))
@@ -943,8 +951,9 @@ public class Keyword_CRM extends Driver {
 							R_S = 2;
 							Wait = 101;
 						}
-						cDriver.get().findElement(By.xpath("//body")).sendKeys(Keys.F5); // To refresh Page
-																							// cDriver.get().navigate().refresh();
+						// cDriver.get().findElement(By.xpath("//body")).sendKeys(Keys.F5);
+						// To refresh Page
+						cDriver.get().navigate().refresh();
 						Wait = Wait + 10;
 						Browser.WebButton.waittillvisible("Submit");
 						CO.waitforload();
@@ -1300,4 +1309,5 @@ public class Keyword_CRM extends Driver {
 		}
 		return Status + "@@" + Test_OutPut;
 	}
+
 }

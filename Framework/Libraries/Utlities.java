@@ -59,7 +59,7 @@ public class Utlities extends Driver {
 			ArrayList<String[]> addresses = new ArrayList<String[]>();
 			Fillo nfillo = new Fillo();
 			Connection connection = nfillo.getConnection(TestDataDB_File.get());
-			String strQuery = "Select * from TestData where Control = 1 ORDER BY SeqNo ASC";
+			String strQuery = "Select * from TestData where Control = \'Yes\' ORDER BY SeqNo ASC";
 			Recordset rs = connection.executeQuery(strQuery);
 			rs.moveFirst();
 			String[] UseCases = new String[rs.getCount()];
