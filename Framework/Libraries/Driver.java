@@ -20,7 +20,7 @@ public class Driver {
 	public static ThreadLocal<String> Storage_FLD = new ThreadLocal<String>();
 	public static ThreadLocal<String> OR_File = new ThreadLocal<String>();
 	public static ThreadLocal<String> StoreDB_File = new ThreadLocal<String>();
-	public static ThreadLocal<String> DataBase_FLD = new ThreadLocal<String>();
+	public static ThreadLocal<String> Directory_FLD = new ThreadLocal<String>();
 	public static ThreadLocal<String> Database_File = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestDataDB_File = new ThreadLocal<String>();
 	public static ThreadLocal<String> Result_FLD = new ThreadLocal<String>();
@@ -59,8 +59,8 @@ public class Driver {
 		OR_File.set(Storage_FLD.get() + "/ObjectRepository.xlsx");
 		StoreDB_File.set(Storage_FLD.get() + "/StoreDB.xlsx");
 		Database_File.set(Storage_FLD.get() + "/Database.xlsx");
-		DataBase_FLD.set(Base_Path.get() + "/DataBase");
-		TestDataDB_File.set(DataBase_FLD.get() + "/TestDataDB.xlsm");
+		Directory_FLD.set(Base_Path.get() + "/Directory");
+		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsm");
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
 		String Keyword_Result = null;

@@ -17,13 +17,13 @@ public class KeyWord {
 		return KC.AccountCreation();
 	}
 
-	/*public String Entp_AccountCreation() {
+	public String Entp_AccountCreation() {
 		return KC.Entp_AccountCreation();
 	}
 
 	public String Entp_ContactCreation() {
 		return KC.Entp_ContactCreation();
-	}*/
+	}
 
 	public String BillingProfileCreation() {
 		return KC.BillingProfileCreation();

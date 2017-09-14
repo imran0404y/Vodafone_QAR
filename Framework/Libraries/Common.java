@@ -352,17 +352,15 @@ public class Common extends Driver {
 		String[] obj = objTyp.split("_");
 		if (obj.length > 1)
 			Expected = objTyp.replace('_', ' ');
-		// System.out.println(Expected);
-		// String[] objprop = Driver.FindObject(objname,"WebTable");
 		int Col_Count = Browser.WebTable.getColCount(objname);
 		waitforload();
 		for (int i = 1; i < Col_Count; i++) {
 			Col = i;
 			String cellXpath = "//table//th[" + i + "]";
-			String celldata = cDriver.get().findElement(By.xpath(cellXpath)).getText();
-			if (celldata.toLowerCase().contains(Expected.toLowerCase()))
+			String celldata = cDriver.get().findElement(By.xpath(cellXpath)).getText().trim();
+			if (celldata.equalsIgnoreCase(Expected))
 				f = f + 1;
-			if (f == 2)
+			if (f == 1)
 				break;
 
 		}

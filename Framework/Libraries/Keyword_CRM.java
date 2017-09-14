@@ -136,7 +136,7 @@ public class Keyword_CRM extends Driver {
 			if (!(getdata("LastName").equals(""))) {
 				Last_Name = getdata("LastName");
 			} else if (!(pulldata("LastName").equals(""))) {
-				Last_Name = pulldata("LastName") + R.nextInt(100);
+				Last_Name = pulldata("LastName") + R.nextInt(1000);
 			}
 			CO.scroll("LastName", "WebEdit");
 			Browser.WebEdit.Set("LastName", Last_Name);
@@ -264,9 +264,9 @@ public class Keyword_CRM extends Driver {
 				Result.takescreenshot("Contact created with Address");
 				Result.fUpdateLog("Contact created with Address");
 			} else {
-
-				Status = AddressCreation().split("@@")[0];
-
+				String[] stat_add = AddressCreation().split("@@");
+				Status = stat_add[0];
+				Address = stat_add[1];
 				Result.takescreenshot("Contact created without Address");
 				Result.fUpdateLog("Contact created without Address");
 			}
@@ -398,7 +398,7 @@ public class Keyword_CRM extends Driver {
 			}
 			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address", Add1);
 			Result.fUpdateLog("Address line1 : " + Add1);
-
+			Test_OutPut = Add1;
 			Col = CO.Select_Cell("Address", "Address Line 2");
 			if (!(getdata("Add_AddressLine2").equals(""))) {
 				Add2 = getdata("Add_AddressLine2");
@@ -426,15 +426,15 @@ public class Keyword_CRM extends Driver {
 
 			Col = CO.Select_Cell("Address", "Kahramaa ID");
 			if (!(getdata("Add_Kahramaa_ID").equals(""))) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
+				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Kahramaa_ID"));
 			} else if (!(pulldata("Add_Kahramaa_ID").equals(""))) {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));
-			} else {
+			} else if (pulldata("Add_Kahramaa_ID").equals("")) {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID",
 						"1" + R.nextInt(100000) + R.nextInt(100));
 			}
 
-			Browser.WebLink.click("Acc_Contacts");
+			Browser.WebLink.waittillvisible("Acc_Contacts");
 			CO.waitforload();
 
 			if (Continue.get()) {
@@ -974,13 +974,16 @@ public class Keyword_CRM extends Driver {
 
 			if (OS_Status.equals(EStatus) || Complete_Status == 2) {
 				Complete_Status = 2;
-				Result.fUpdateLog("Completed");
 				Driver.Continue.set(true);
 			}
 			if (Continue.get() & (Complete_Status == 2)) {
 				Status = "PASS";
+				Result.fUpdateLog("Order Status : "+ OS_Status);
+				Test_OutPut += "Order Status : " + OS_Status + ",";
 				Result.takescreenshot("Order Completed is Successful");
 			} else {
+				Result.fUpdateLog("Order Status : "+ FStatus);
+				Test_OutPut += "Order Status : " + FStatus + ",";
 				Status = "FAIL";
 			}
 
@@ -994,6 +997,312 @@ public class Keyword_CRM extends Driver {
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
+	/*-----------------------------------------------------------------------------------------------------
+	 * Method Name			: Entp_AccountCreation
+	 * Arguments			: None
+	 * Use 					: Creates an Enterprise Account for Vanilla Journey
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 22-March-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Entp_AccountCreation() {
+		String Test_OutPut = "", Status = "";
+		String Account_No = "";
+		Result.fUpdateLog("------Account Creation Event Details------");
+		try {
+			// Navigating to Accounts
+			CO.waitforload();
+			Browser.WebLink.waittillvisible("VQ_Account");
+			Result.takescreenshot("Navigating to Accounts");
+			CO.waitforobj("VQ_Account", "WebLink");
+			Browser.WebLink.click("VQ_Account");
+			CO.waitforload();
+			
+			//CO.Link_Select("My Accounts");
+			CO.waitforobj("My_Account", "WebLink");
+			Browser.WebLink.click("My_Account");
+
+			CO.scroll("New_Account", "WebButton");
+			Browser.WebButton.click("New_Account");
+			String Acc;
+			if (!(getdata("Account_Name").equals(""))) {
+				Acc = getdata("Account_Name");
+			} else if (!(pulldata("Account_Name").equals(""))) {
+				Acc = pulldata("Account_Name");
+			}else {
+				Acc = Utlities.randname() + R.nextInt(1000);
+			}
+			CO.scroll("Acc_Name", "WebEdit");
+			Browser.WebEdit.Set("Acc_Name", Acc);
+			
+			if (!(getdata("CR_Type").equals(""))) {
+				Browser.ListBox.select("CR_Type", getdata("CR_Type"));
+			} else {
+				Browser.ListBox.select("CR_Type", pulldata("CR_Type"));
+			}
+
+			Account_No = Browser.WebEdit.gettext("Account_No");
+			Random R = new Random();
+			if (!(getdata("CR_Type").equals(""))) {
+				Browser.ListBox.select("CR_Number", getdata("CR_Number"));
+			} else if (!(pulldata("CR_Number").equals(""))) {
+				Browser.ListBox.select("CR_Number", pulldata("CR_Number"));
+			}else {
+				Browser.ListBox.select("CR_Number", "1" + R.nextInt(1000000));
+			}
+
+			if (!(getdata("SpecialManagement").equals(""))) {
+				Browser.ListBox.select("Spcl_Mang", getdata("SpecialManagement"));
+			} else {
+				Browser.ListBox.select("Spcl_Mang", pulldata("SpecialManagement"));
+			}
+			 
+			CO.scroll("Customer_Segment", "ListBox");
+			if (!(getdata("CustomerSegment").equals(""))) {
+				Browser.ListBox.select("Customer_Segment", getdata("CustomerSegment"));
+			} else {
+				Browser.ListBox.select("Customer_Segment", pulldata("CustomerSegment"));
+			}
+
+			CO.waitforload();
+			CO.scroll("Tier", "WebEdit");
+			Browser.WebEdit.click("Tier");
+			if (!(getdata("Tier").equals(""))) {
+				Browser.WebEdit.Set("Tier", getdata("Tier"));
+			} else {
+				Browser.WebEdit.Set("Tier", pulldata("Tier"));
+			}
+
+			CO.Link_Select(Acc);
+			CO.waitforload();
+			Browser.WebLink.click("Acc_Portal");
+
+			Browser.WebLink.waittillvisible("Acc_Contacts");
+			if (Driver.Continue.get() & Browser.WebButton.exist("Acc_Contacts")) {
+				Status = "PASS";
+				Utlities.StoreValue("Account_No", Account_No);
+				Test_OutPut += "Account_No : " + Account_No + ",";
+				Result.takescreenshot("Account Creation is Successful");
+				Result.fUpdateLog("Account NO : " + Account_No);
+			} else {
+				Status = "FAIL";
+				Result.fUpdateLog("Account Creation Failed");
+			}
+
+			Result.fUpdateLog("Account Creation Event Details - Completed");
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Entp_ContactCreation0
+	 * Arguments			: None
+	 * Use 					: Creates a Contact in the Enterprise Account for Vanilla Journey
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 22-March-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Entp_ContactCreation() {
+		String Test_OutPut = "", Status = "";
+		String Last_Name = null;
+		Result.fUpdateLog("------Contact Creation Event Details------");
+		try {
+			String Address;
+			if (!(getdata("Address").equals(""))) {
+				Address = getdata("Address");
+			} else if (!(getdata("Kahramaa_ID").equals(""))) {
+				Address = "Kar#" + getdata("Kahramaa_ID");
+			} else if (!(pulldata("Kahramaa_ID").equals(""))) {
+				Address = "Kar#" + pulldata("Kahramaa_ID");
+			} else {
+				Address = pulldata("Address");
+			}
+			
+			if (!(Address.equals(""))) {
+
+				CO.waitforobj("Add_Address", "WebButton");
+				// Browser.WebButton.waittillvisible("Add_Address");
+				Browser.WebButton.click("Add_Address");
+
+				// Search for Specific Address
+				CO.waitforobj("Add_Go", "WebButton");
+				CO.scroll("Add_Go", "WebButton");
+
+				if (Address.contains("Kar#")) {
+					Browser.ListBox.select("Add_List", "Kahramaa ID");
+					Browser.WebEdit.Set("Add_Search", Address.split("#")[1]);
+				} else {
+					Browser.ListBox.select("Add_List", "Address Line 1");
+					Browser.WebEdit.Set("Add_Search", Address);
+				}
+
+				Browser.WebButton.click("Add_Go");
+				Result.takescreenshot("Searching Address");
+
+				CO.scroll("Add_OK", "WebButton");
+				Browser.WebButton.click("Add_OK");
+
+				CO.waitmoreforload();
+				Browser.WebButton.waittillvisible("Create_A/c");
+				Result.takescreenshot("Contact created with Address");
+				Result.fUpdateLog("Contact created with Address");
+			} else {
+				String[] stat_add = AddressCreation().split("@@");
+				Status = stat_add[0];
+				Address = stat_add[1];
+
+				Result.takescreenshot("Contact created without Address");
+				Result.fUpdateLog("Contact created without Address");
+			}
+			
+			CO.waitforload();
+			int x = 0;
+			Browser.WebLink.click("Acc_Contacts");
+			CO.waitforload();
+
+			x = Browser.WebTable.getRowCount("Acc_Contact");
+			if (x == 1) {
+				Browser.WebButton.click("Acc_Add_Contact");
+			}
+			int Row = 2, Col;
+			Col = CO.Select_Cell("Acc_Contact", "First Name");
+			if (!(getdata("Cont_FirstName").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", getdata("FirstName"));
+			}else if (!(pulldata("FirstName").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", pulldata("FirstName"));
+			}else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", Utlities.randname());
+			}
+
+			Col = CO.Select_Cell("Acc_Contact", "Last Name");
+			if (!(getdata("LastName").equals(""))) {
+				Last_Name = getdata("LastName");
+			}else if(!(pulldata("LastName").equals(""))) {
+				Last_Name = pulldata("LastName")+ R.nextInt(1000);
+			} else {
+				Last_Name = Utlities.randname();
+			}
+			Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Last_Name", Last_Name);
+
+			Col = CO.Select_Cell("Acc_Contact", "Mr/Ms");
+			if (!(getdata("Mr/Ms").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", getdata("Mr/Ms"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", pulldata("Mr/Ms"));
+			}
+
+			// Browser.WebTable.SetData("Acc_Contact", 2, Col, "Job_Title",getdata(""));
+
+			
+			/* Col = CO.Select_Cell("Acc_Contact", "Work Phone #");
+			 * if(!(getdata("Cont_WorkPhone").equals(""))) {
+			 * Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Work_Phone__",
+			 * getdata("Cont_WorkPhone")); }else { Browser.WebTable.SetDataE("Acc_Contact",
+			 * Row, Col, "Work_Phone__", "97498780980"); }*/
+			 
+
+			Col = CO.Select_Cell("Acc_Contact", "Email");
+			if (!(getdata("Email").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", getdata("Email"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", pulldata("Email"));
+			}
+
+			Col = CO.Select_Cell("Acc_Contact", "Date of Birth");
+			if (!(getdata("DOB").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", getdata("DOB"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", pulldata("DOB"));
+			}
+
+			Col = CO.Select_Cell("Acc_Contact", "ID Expiration Date");
+			if (!(getdata("IDExpiryDate").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date",
+						getdata("IDExpiryDate"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date", pulldata("IDExpiryDate"));
+			}
+
+			Col = CO.Select_Cell("Acc_Contact", "ID Number");
+			if (!(getdata("IDNumber").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", getdata("IDNumber"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", pulldata("ID_Number") + R.nextInt(100000));
+				
+			}
+
+			// CO.scroll("Contact_ACC", "WebTable");
+
+			// Col = CO.Select_Cell("Acc_Contact", "ID Type");
+			Col++;
+			if (!(getdata("IDType").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", getdata("IDType"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", pulldata("IDType"));
+			}
+
+			Col++;
+			// Col = CO.Select_Cell("Acc_Contact", "Mobile Phone #");
+			if (!(getdata("MobilePhone").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__", getdata("MobilePhone"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__", pulldata("MobilePhone"));
+			}
+
+			Col++;
+			// Col = CO.Select_Cell("Acc_Contact", "Nationality");
+			if (!(getdata("Nationality").equals(""))) {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", getdata("Nationality"));
+			} else {
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", pulldata("Nationality"));
+			}
+
+			Col = Col + 4;
+			// Col = CO.Select_Cell("Acc_Contact", "Gender");
+			if (!(getdata("Gender").equals(""))) {
+				Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", getdata("Gender"));
+			} else {
+				Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", pulldata("Gender"));
+			}
+
+			Col = CO.Select_Cell("Acc_Contact", "Preferred Language");
+			if (!(getdata("PrefLang").equals(""))) {
+				Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language", getdata("PrefLang"));
+			} else {
+				Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language", pulldata("PrefLang"));
+			}
+
+			CO.waitforload();
+			CO.scroll("Account360", "WebButton");
+			CO.Link_Select("Addresses");
+			if (CO.isAlertExist())
+				if (CO.isAlertExist())
+					CO.Link_Select("Addresses");
+
+			if (Continue.get()) {
+				Utlities.StoreValue("LastName", Last_Name);
+				Utlities.StoreValue("Address", Address);
+				Status = "PASS";
+			} else {
+				Result.fUpdateLog("Create_A/c button not exist");
+				Status = "FAIL";
+			}
+
+			Result.fUpdateLog("Contact Creation Event Details - Completed");
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+	
+	
+	
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Modify
 	 * Arguments			: None
