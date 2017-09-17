@@ -426,18 +426,19 @@ public class Keyword_CRM extends Driver {
 
 			Col = CO.Select_Cell("Address", "Kahramaa ID");
 			if (!(getdata("Add_Kahramaa_ID").equals(""))) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Kahramaa_ID"));
-			} else if (!(pulldata("Add_Kahramaa_ID").equals(""))) {
+				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
+			} else if (pulldata("Add_Kahramaa_ID").equals("auto")) {
+				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID","1" + R.nextInt(10000000));
+			}else {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));
-			} else if (pulldata("Add_Kahramaa_ID").equals("")) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID",
-						"1" + R.nextInt(100000) + R.nextInt(100));
-			}
-
-			Browser.WebLink.waittillvisible("Acc_Contacts");
+			} 
+			
+			CO.waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Address");
+			//Browser.WebLink.waittillvisible("Acc_Contacts");
 			CO.waitforload();
 
-			if (Continue.get()) {
+			if (Continue.get() && Row_Count>1) {
 				Status = "PASS";
 				Result.takescreenshot("Address Creation is Successful");
 			} else {
@@ -538,7 +539,6 @@ public class Keyword_CRM extends Driver {
 			if (Driver.Continue.get() & Browser.WebButton.exist("Orders_Tab")) {
 				Status = "PASS";
 				Result.takescreenshot("Billing Profile Creation is Successful");
-				Result.fUpdateLog("Billing_NO : " + Bill_No);
 			} else {
 				Result.fUpdateLog("Account Summary not exist");
 				Status = "FAIL";
@@ -591,10 +591,9 @@ public class Keyword_CRM extends Driver {
 
 			if (Driver.Continue.get() & Browser.WebButton.exist("LI_New")) {
 				Status = "PASS";
-				Utlities.StoreValue("Sales_Order", Order_No);
+				Utlities.StoreValue("Sales_OrderNO", Order_No);
 				Test_OutPut += "Order_No : " + Order_No + ",";
 				Result.takescreenshot("Sales Order Creation is Successful");
-				Result.fUpdateLog("Sales Order NO : " + Order_No);
 			} else {
 				Status = "FAIL";
 				Result.fUpdateLog("Sales Order Creation Failed");
@@ -629,7 +628,8 @@ public class Keyword_CRM extends Driver {
 				Driver.Continue.set(true);
 				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
 			}
-
+			CO.waitforload();
+			
 			CO.scroll("LI_New", "WebButton");
 			Browser.WebButton.click("LI_New");
 			int Row = 2, Col;
@@ -648,14 +648,14 @@ public class Keyword_CRM extends Driver {
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
 			String Reserve, Category, GetData = "Mobile Service Bundle", Add_Addon, Remove_Addon, ReservationToken, SIM,
-					Field, MSISDN, SData = "SIM Card";
+					Field, MSISDN = null, SData = "SIM Card";
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
 			Field = CO.Col_Data(Col_S);
 			// To select the Mobile Bundle
 			Col_V = Col + 2;
 
-			// Browser.WebTable.click("Line_Items", Row_Val, Col_V);
-			// Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			//Browser.WebTable.click("Line_Items", Row_Val, Col_V);
+			//Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 			for (int i = 2; i <= Row_Count; i++) {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -736,11 +736,14 @@ public class Keyword_CRM extends Driver {
 
 					Reserve = MSISDN.substring(3, MSISDN.length());
 					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
-					Browser.WebButton.click("Number_Go");
+					//Browser.WebButton.click("Number_Go");
+					CO.waitmoreforload();
 				} else {
 					Browser.WebButton.click("Number_Go");
 					CO.waitmoreforload();
-					MSISDN = Browser.WebTable.getCellData("Numbers", Row, Col_Res);
+					CO.waitforload();
+					Browser.WebTable.click("Numbers", (Row+1), Col);
+					MSISDN = Browser.WebTable.getCellData("Numbers", (Row+1), Col_Res);
 
 				}
 
@@ -758,7 +761,8 @@ public class Keyword_CRM extends Driver {
 				Browser.WebLink.click("Line_Items");
 				CO.waitforload();
 				//Browser.WebLink.click("LI_Totals");
-
+				CO.waitforload();
+				
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
@@ -800,7 +804,8 @@ public class Keyword_CRM extends Driver {
 						Row_Val = i;
 					}
 				}
-				
+				CO.waitforload();
+				CO.waitforload();
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
 				CO.waitforload();
 				CO.waitforload();
@@ -913,10 +918,10 @@ public class Keyword_CRM extends Driver {
 
 			Col = COL_FUL_STATUS;
 			String EStatus = "Complete", FStatus = "Failed";
-			CO.waitforload();
+			CO.waitmoreforload();
 			CO.scroll("Submit", "WebButton");
 			Browser.WebButton.click("Submit");
-			CO.waitforload();
+			CO.waitmoreforload();
 			CO.isAlertExist();
 			Result.takescreenshot("Order Submission is Successful");
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
@@ -1077,7 +1082,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebLink.click("Acc_Portal");
 
 			Browser.WebLink.waittillvisible("Acc_Contacts");
-			if (Driver.Continue.get() & Browser.WebButton.exist("Acc_Contacts")) {
+			if (Driver.Continue.get() & Browser.WebLink.exist("Acc_Contacts")) {
 				Status = "PASS";
 				Utlities.StoreValue("Account_No", Account_No);
 				Test_OutPut += "Account_No : " + Account_No + ",";

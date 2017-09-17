@@ -59,7 +59,8 @@ public class Utlities extends Driver {
 			ArrayList<String[]> addresses = new ArrayList<String[]>();
 			Fillo nfillo = new Fillo();
 			Connection connection = nfillo.getConnection(TestDataDB_File.get());
-			String strQuery = "Select * from TestData where Control = \'Yes\' ORDER BY SeqNo ASC";
+			//String strQuery = "Select * from TestData where Control = \'YES\' ORDER BY SeqNo ASC";
+			String strQuery = "Select * from ExecutionInput where PerformAction = \'YES\' ORDER BY SeqNo ASC";
 			Recordset rs = connection.executeQuery(strQuery);
 			rs.moveFirst();
 			String[] UseCases = new String[rs.getCount()];
@@ -170,7 +171,7 @@ public class Utlities extends Driver {
 		try {
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(Database_File.get());
-			String strQuery = "Select * from " + data ;
+			String strQuery = "Select * from " + data + " Where TestCase = \'" + TestCaseN.get().toString() + "\'";
 
 			Recordset rs = connection.executeQuery(strQuery);
 			int noOfColumns = rs.getFieldNames().size();
@@ -203,7 +204,7 @@ public class Utlities extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public static Object freaddata_diff(String data) {
 		try {
-			String Screen = "Details";
+			String Screen = "LoginDetails";
 			Dictionary<String, String> dict = new Hashtable<String, String>();
 
 			Fillo fillo = new Fillo();

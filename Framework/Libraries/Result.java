@@ -69,11 +69,10 @@ public class Result extends Driver {
 				logfile.createNewFile();
 			}
 
-			File masterhtml = new File(tempref + "/MasterReport.HTML");
-
-			FileUtils.copyFileToDirectory(masterhtml, tresfold);
-
+			//File masterhtml = new File(tempref + "/MasterReport.HTML");
+			//FileUtils.copyFileToDirectory(masterhtml, tresfold);
 			masterrephtml.set(tresfold.toString() + "/MasterReport.HTML");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
