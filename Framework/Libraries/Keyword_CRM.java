@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.Keys;
 
 public class Keyword_CRM extends Driver {
 	Common CO = new Common();
@@ -43,24 +43,28 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("VQ_Login");
 			CO.waitforload();
 			Browser.WebButton.waittillvisible("VF_Search_Identify");
-			CO.waitforload();
-			Result.takescreenshot("Logged in Successfully");
+
+			CO.ToWait();
 
 			if (Continue.get() & Browser.WebButton.exist("VF_Search_Identify")) {
 				Test_OutPut += "Successfully Login with : " + getdata("VQ_Login_User") + ",";
+				Result.takescreenshot("Login Successfully with user " + getdata("VQ_Login_User"));
 				Result.fUpdateLog("Login Successfully with user " + getdata("VQ_Login_User"));
 				Status = "PASS";
 			} else {
+				Test_OutPut += "Login Failed" + ",";
+				Result.takescreenshot("Login Failed");
 				Result.fUpdateLog("Login Failed");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Siebel Login Event Details - Completed");
 		} catch (Exception e) {
-			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			Status = "FAIL";
 			e.printStackTrace();
 		}
+		Result.fUpdateLog("------Siebel Login Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -89,22 +93,24 @@ public class Keyword_CRM extends Driver {
 
 			cDriver.get().close();
 
+			CO.ToWait();
+
 			if (Driver.Continue.get()) {
 				Test_OutPut += "Siebel Logout Successful";
 				Result.fUpdateLog("Siebel Logout Successful");
 				Status = "PASS";
 			} else {
+				Test_OutPut += "Logout Failed";
 				Result.fUpdateLog("Logout Failed");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Siebel Logout Event Details - Completed");
 		} catch (Exception e) {
-			Status = "FAIL";
-			Driver.Continue.set(false);
+			Test_OutPut += "Exception occurred";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-
+			Status = "FAIL";
+			e.printStackTrace();
 		}
+		Result.fUpdateLog("------Siebel Logout Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -128,7 +134,6 @@ public class Keyword_CRM extends Driver {
 
 			CO.waitforobj("My_Contacts", "WebLink");
 			Browser.WebLink.click("My_Contacts");
-			Result.takescreenshot("Navigating to My Contacts");
 			Browser.WebButton.waittillvisible("New_Contact");
 
 			Browser.WebButton.click("New_Contact");
@@ -234,11 +239,11 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Address = pulldata("Address");
 			}
+			Result.takescreenshot("Customer Creation with Customer ID : " + IDNumber);
 
 			if (!(Address.equals(""))) {
 
 				CO.waitforobj("Add_Address", "WebButton");
-				// Browser.WebButton.waittillvisible("Add_Address");
 				Browser.WebButton.click("Add_Address");
 
 				// Search for Specific Address
@@ -254,39 +259,42 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Browser.WebButton.click("Add_Go");
-				Result.takescreenshot("Searching Address");
 
 				CO.scroll("Add_OK", "WebButton");
 				Browser.WebButton.click("Add_OK");
 
 				CO.waitmoreforload();
 				Browser.WebButton.waittillvisible("Create_A/c");
-				Result.takescreenshot("Contact created with Address");
-				Result.fUpdateLog("Contact created with Address");
+				Result.takescreenshot("Address Selected : " + Address);
+				Result.fUpdateLog("Contact created with given Existing Address : " + Address);
 			} else {
 				String[] stat_add = AddressCreation().split("@@");
 				Status = stat_add[0];
 				Address = stat_add[1];
-				Result.takescreenshot("Contact created without Address");
-				Result.fUpdateLog("Contact created without Address");
+				Result.takescreenshot("Address Created : " + Address);
+				Result.fUpdateLog("Created new Address : " + Address);
 			}
 
+			CO.ToWait();
 			if (Continue.get() & Browser.WebButton.exist("Create_A/c")) {
 				Utlities.StoreValue("LastName", Last_Name);
 				Utlities.StoreValue("Address", Address);
 				Status = "PASS";
 			} else {
+				Result.takescreenshot("Create_A/c button not exist");
+				Test_OutPut += "Create_A/c button not exist" + ",";
 				Result.fUpdateLog("Create_A/c button not exist");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Contact Creation Event Details - Completed");
 		} catch (Exception e) {
-			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			Status = "FAIL";
 			e.printStackTrace();
 
 		}
+		Result.fUpdateLog("------Contact Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -303,15 +311,12 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Account Creation Event Details------");
 		try {
 
-			Browser.WebButton.waittillvisible("Create_A/c");
-			Browser.WebButton.waitTillEnabled("Create_A/c");
-			CO.waitforobj("Create_A/c", "WebButton");
 			int Row_Count = Browser.WebTable.getRowCount("Address");
 			if (Row_Count > 1) {
+				Browser.WebButton.waittillvisible("Create_A/c");
+				CO.waitforobj("Create_A/c", "WebButton");
 				CO.scroll("Create_A/c", "WebButton");
 				CO.Span_Sel("Create A/c");
-
-				Result.takescreenshot("Account Created");
 
 				Browser.ListBox.waittillvisible("CR_Type");
 				String CR = "12" + R.nextInt(100000);
@@ -340,20 +345,24 @@ public class Keyword_CRM extends Driver {
 				System.exit(0);
 			}
 
+			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
-				Result.takescreenshot("Account Creation is Successful");
+				Result.takescreenshot("Account Created Account_No : " + Account_No);
 			} else {
+				Test_OutPut += "Account Creation is Failed" + ",";
+				Result.takescreenshot("Account Creation is Failed");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Account Creation Event Details - Completed");
 		} catch (Exception e) {
-			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			Status = "FAIL";
 			e.printStackTrace();
 
 		}
+		Result.fUpdateLog("------Account Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -428,31 +437,29 @@ public class Keyword_CRM extends Driver {
 			if (!(getdata("Add_Kahramaa_ID").equals(""))) {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
 			} else if (pulldata("Add_Kahramaa_ID").equals("auto")) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID","1" + R.nextInt(10000000));
-			}else {
+				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", "1" + R.nextInt(10000000));
+			} else {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));
-			} 
-			
+			}
+
 			CO.waitforload();
 			int Row_Count = Browser.WebTable.getRowCount("Address");
-			//Browser.WebLink.waittillvisible("Acc_Contacts");
+			// Browser.WebLink.waittillvisible("Acc_Contacts");
 			CO.waitforload();
 
-			if (Continue.get() && Row_Count>1) {
+			if (Continue.get() && Row_Count > 1) {
 				Status = "PASS";
-				Result.takescreenshot("Address Creation is Successful");
 			} else {
 				Result.fUpdateLog("Create_A/c button not exist");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Address Creation Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 
 		}
+		Result.fUpdateLog("------Address Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -468,89 +475,91 @@ public class Keyword_CRM extends Driver {
 		String Bill_No = null;
 		Result.fUpdateLog("------Billing Profile Creation Event Details------");
 		try {
-			if (Browser.WebButton.exist("Profile_Tab")) {
-				System.out.println("Proceeds with BillingProfileCreation");
-				CO.scroll("Profile_Tab", "WebButton");
-				Browser.WebButton.click("Profile_Tab");
-				CO.waitforload();
-				int Row = 2, Col_Val = 0, Row_Count;
-				Result.takescreenshot("Billing Profile Creation");
+			Browser.WebButton.exist("Profile_Tab");
+			System.out.println("Proceeds with BillingProfileCreation");
+			CO.scroll("Profile_Tab", "WebButton");
+			Browser.WebButton.click("Profile_Tab");
+			CO.waitforload();
+			int Row = 2, Col_Val = 0, Row_Count;
 
-				String Payment_Type;
+			String Payment_Type;
 
-				CO.waitforobj("Bill_Add", "WebButton");
-				Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
-				if (Row_Count < Row) {
-					CO.scroll("Bill_Add", "WebButton");
-					Browser.WebButton.click("Bill_Add");
-				}
-
-				Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
-
-				CO.scroll("Bill_Prof", "WebTable");
-				if (!(getdata("Bill_PayType").equals(""))) {
-					Payment_Type = getdata("Bill_PayType");
-				} else {
-					Payment_Type = pulldata("Bill_PayType");
-				}
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", Payment_Type);
-
-				CO.waitforload();
-
-				Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
-				if (!(getdata("Bill_PayMethod").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", getdata("Bill_PayMethod"));
-				} else {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", pulldata("Bill_PayMethod"));
-				}
-
-				if (Payment_Type.equals("Postpaid")) {
-					Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
-					if (!(getdata("Bill_Media").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
-					} else {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
-					}
-
-					Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
-					if (!(getdata("Bill_Type").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
-					} else {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
-					}
-
-				}
-
-				Col_Val = CO.Select_Cell("Bill_Prof", "Language");
-				if (!(getdata("Bill_Lang").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
-				} else {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", pulldata("Bill_Lang"));
-				}
-
-				Col_Val = CO.Select_Cell("Bill_Prof", "Name");
-				Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
-				Utlities.StoreValue("Billing_NO", Bill_No);
-				Test_OutPut += "Billing_NO : " + Bill_No + ",";
+			CO.waitforobj("Bill_Add", "WebButton");
+			Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
+			if (Row_Count < Row) {
+				CO.scroll("Bill_Add", "WebButton");
+				Browser.WebButton.click("Bill_Add");
 			}
+
+			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+
+			CO.scroll("Bill_Prof", "WebTable");
+			if (!(getdata("Bill_PayType").equals(""))) {
+				Payment_Type = getdata("Bill_PayType");
+			} else {
+				Payment_Type = pulldata("Bill_PayType");
+			}
+			Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", Payment_Type);
+
+			CO.waitforload();
+
+			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
+			if (!(getdata("Bill_PayMethod").equals(""))) {
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", getdata("Bill_PayMethod"));
+			} else {
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", pulldata("Bill_PayMethod"));
+			}
+
+			if (Payment_Type.equals("Postpaid")) {
+				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
+				if (!(getdata("Bill_Media").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
+				} else {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
+				}
+
+				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
+				if (!(getdata("Bill_Type").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
+				} else {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
+				}
+
+			}
+
+			Col_Val = CO.Select_Cell("Bill_Prof", "Language");
+			if (!(getdata("Bill_Lang").equals(""))) {
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
+			} else {
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", pulldata("Bill_Lang"));
+			}
+
+			Col_Val = CO.Select_Cell("Bill_Prof", "Name");
+			Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
+			Utlities.StoreValue("Billing_NO", Bill_No);
+			Test_OutPut += "Billing_NO : " + Bill_No + ",";
 
 			Browser.WebButton.waittillvisible("Orders_Tab");
 
+			CO.ToWait();
 			if (Driver.Continue.get() & Browser.WebButton.exist("Orders_Tab")) {
 				Status = "PASS";
-				Result.takescreenshot("Billing Profile Creation is Successful");
+				Result.takescreenshot("Billing Profile Created Billing_NO : " + Bill_No);
 			} else {
-				Result.fUpdateLog("Account Summary not exist");
+				Result.takescreenshot("Orders Tab not exist");
+				Test_OutPut += "Orders Tab not exist" + ",";
+				Result.fUpdateLog("Orders Tab not exist");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Billing Profile Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 
 		}
+		Result.fUpdateLog("------Billing Profile Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -580,7 +589,6 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waitTillEnabled("Order_New");
 			CO.scroll("Order_New", "WebButton");
 			Browser.WebButton.click("Order_New");
-			Result.takescreenshot("Sales order Creation");
 
 			Col = CO.Get_Col("Order_Table", Row, "Sales Order");
 			Browser.WebTable.click("Order_Table", Row, Col);
@@ -589,23 +597,28 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("LI_New");
 
+			CO.ToWait();
 			if (Driver.Continue.get() & Browser.WebButton.exist("LI_New")) {
 				Status = "PASS";
 				Utlities.StoreValue("Sales_OrderNO", Order_No);
 				Test_OutPut += "Order_No : " + Order_No + ",";
-				Result.takescreenshot("Sales Order Creation is Successful");
+				Result.takescreenshot("Sales Order Created Order_No : " + Order_No);
 			} else {
 				Status = "FAIL";
+				Test_OutPut += "Sales Order Creation Failed" + ",";
+				Result.takescreenshot("Sales Order Creation Failed");
 				Result.fUpdateLog("Sales Order Creation Failed");
 			}
 
-			Result.fUpdateLog("Sales Order Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 
 		}
+		Result.fUpdateLog("------Sales Order Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -622,6 +635,10 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
 
+			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
+			String Reserve, Category, GetData = "Mobile Service Bundle", Add_Addon, Remove_Addon, ReservationToken, SIM,
+					Field, MSISDN = null, SData = "SIM Card";
+
 			if (Browser.WebButton.exist("LI_New"))
 				System.out.println("Proceeding Plan Selection");
 			else {
@@ -629,33 +646,34 @@ public class Keyword_CRM extends Driver {
 				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
 			}
 			CO.waitforload();
-			
-			CO.scroll("LI_New", "WebButton");
-			Browser.WebButton.click("LI_New");
-			int Row = 2, Col;
-			Col = CO.Select_Cell("Line_Items", "Product");
 
 			if (!(getdata("PlanName").equals(""))) {
 				PlanName = getdata("PlanName");
 			} else {
 				PlanName = pulldata("PlanName");
 			}
-			Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
+			// To use Catalog view uncomment the below lines
+			// Browser.WebLink.click("VQ_Catalog");
+			// CO.Category_Select(pulldata("PlanName"),pulldata("PlanName"),PlanName);
+			// Browser.WebButton.click("LI_New");
+			// CO.waitforload();
 
+			// To use the catalog view comment the below line till '----'
+			CO.scroll("LI_New", "WebButton");
+			Browser.WebButton.click("LI_New");
+			int Row = 2, Col;
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
 			Browser.WebTable.click("Line_Items", Row, Col + 1);
 			CO.waitforload();
+			// -----------------------
 
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Reserve, Category, GetData = "Mobile Service Bundle", Add_Addon, Remove_Addon, ReservationToken, SIM,
-					Field, MSISDN = null, SData = "SIM Card";
+
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
 			Field = CO.Col_Data(Col_S);
 			// To select the Mobile Bundle
 			Col_V = Col + 2;
-
-			//Browser.WebTable.click("Line_Items", Row_Val, Col_V);
-			//Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 			for (int i = 2; i <= Row_Count; i++) {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -664,8 +682,8 @@ public class Keyword_CRM extends Driver {
 					break;
 				}
 			}
-
 			Browser.WebTable.click("Line_Items", Row_Val, Col_V);
+
 			if (!(getdata("Add_Addon").equals(""))) {
 				Add_Addon = getdata("Add_Addon");
 			} else {
@@ -704,9 +722,9 @@ public class Keyword_CRM extends Driver {
 					Result.takescreenshot("Providing Number Reservation Token");
 				}
 				CO.AddOnSelection(getdata("Addons_Add"), "Add");
-				Result.takescreenshot("");
+				// Result.takescreenshot("");
 				CO.AddOnSelection(getdata("Addons_Delete"), "Delete");
-				Result.takescreenshot("");
+				// Result.takescreenshot("");
 				CO.waitforload();
 				CO.Button_Sel("Verify");
 				CO.isAlertExist();
@@ -736,18 +754,17 @@ public class Keyword_CRM extends Driver {
 
 					Reserve = MSISDN.substring(3, MSISDN.length());
 					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
-					//Browser.WebButton.click("Number_Go");
+					// Browser.WebButton.click("Number_Go");
 					CO.waitmoreforload();
 				} else {
 					Browser.WebButton.click("Number_Go");
 					CO.waitmoreforload();
 					CO.waitforload();
-					Browser.WebTable.click("Numbers", (Row+1), Col);
-					MSISDN = Browser.WebTable.getCellData("Numbers", (Row+1), Col_Res);
+					Browser.WebTable.click("Numbers", (Row + 1), Col);
+					MSISDN = Browser.WebTable.getCellData("Numbers", (Row + 1), Col_Res);
 
 				}
 
-				Result.takescreenshot("Number Reservation");
 				Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
@@ -760,9 +777,9 @@ public class Keyword_CRM extends Driver {
 				Browser.WebLink.waittillvisible("Line_Items");
 				Browser.WebLink.click("Line_Items");
 				CO.waitforload();
-				//Browser.WebLink.click("LI_Totals");
+				// Browser.WebLink.click("LI_Totals");
 				CO.waitforload();
-				
+
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
@@ -856,20 +873,23 @@ public class Keyword_CRM extends Driver {
 				Test_OutPut += "MSISDN : " + MSISDN + ",";
 				Utlities.StoreValue("SIM_NO", SIM);
 				Test_OutPut += "SIM_NO : " + SIM + ",";
-				Result.takescreenshot("Plan Selection is Successful");
+				Result.takescreenshot("Plan Selection is Successful : " + PlanName);
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
 				Status = "FAIL";
+				Test_OutPut += "Plan Selection Failed" + ",";
+				Result.takescreenshot("Plan Selection Failed");
 				Result.fUpdateLog("Plan Selection Failed");
 			}
 
-			Result.fUpdateLog("Plan Selection Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
+		Result.fUpdateLog("------Plan Selection Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -883,9 +903,12 @@ public class Keyword_CRM extends Driver {
 	public String OrderSubmission() {
 		String Test_OutPut = "", Status = "";
 		int COL_FUL_STATUS = 0;
+		String OS_Status;
 		Result.fUpdateLog("------Order Submission Event Details------");
 		try {
 			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col;
+			String EStatus = "Complete", FStatus = "Failed";
+
 			if (Browser.WebTable.exist("Line_Items"))
 				Result.fUpdateLog("Proceeding Order Submission");
 			String Product_Type;
@@ -909,21 +932,17 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("Validate");
 			Browser.WebButton.click("Validate");
-
-			CO.isAlertExist();
-			Browser.WebButton.waittillvisible("Submit");
-
-			CO.waitforload();
-			String OS_Status;
-
-			Col = COL_FUL_STATUS;
-			String EStatus = "Complete", FStatus = "Failed";
 			CO.waitmoreforload();
+			CO.isAlertExist();
+
+			Browser.WebButton.waittillvisible("Submit");
 			CO.scroll("Submit", "WebButton");
 			Browser.WebButton.click("Submit");
 			CO.waitmoreforload();
 			CO.isAlertExist();
 			Result.takescreenshot("Order Submission is Successful");
+
+			Col = COL_FUL_STATUS;
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
 			if (Row_Count <= 3) {
@@ -932,9 +951,7 @@ public class Keyword_CRM extends Driver {
 			}
 
 			Browser.WebButton.waittillvisible("Submit");
-
 			do {
-
 				Complete_Status = 0;
 				R_S = 0;
 				CO.scroll("Submit", "WebButton");
@@ -955,7 +972,6 @@ public class Keyword_CRM extends Driver {
 							R_S = 2;
 							Wait = 101;
 						}
-						// cDriver.get().findElement(By.xpath("//body")).sendKeys(Keys.F5);
 						// To refresh Page
 						cDriver.get().navigate().refresh();
 						Wait = Wait + 10;
@@ -966,8 +982,7 @@ public class Keyword_CRM extends Driver {
 				}
 			} while ((R_S < 2) || Wait < 100);
 			Browser.WebButton.waittillvisible("Submit");
-			Result.takescreenshot("");
-			// cDriver.get().navigate().refresh();
+
 			CO.waitforload();
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			CO.scroll("Submit", "WebButton");
@@ -981,24 +996,27 @@ public class Keyword_CRM extends Driver {
 				Complete_Status = 2;
 				Driver.Continue.set(true);
 			}
+
+			CO.ToWait();
 			if (Continue.get() & (Complete_Status == 2)) {
-				Status = "PASS";
-				Result.fUpdateLog("Order Status : "+ OS_Status);
+				Result.fUpdateLog("Order Status : " + OS_Status);
 				Test_OutPut += "Order Status : " + OS_Status + ",";
-				Result.takescreenshot("Order Completed is Successful");
+				Result.takescreenshot("Order Status : " + OS_Status);
+				Status = "PASS";
 			} else {
-				Result.fUpdateLog("Order Status : "+ FStatus);
+				Result.fUpdateLog("Order Status : " + FStatus);
+				Result.takescreenshot("Order Status : " + FStatus);
 				Test_OutPut += "Order Status : " + FStatus + ",";
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Order Submission Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
+		Result.fUpdateLog("------Order Submission Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -1017,12 +1035,11 @@ public class Keyword_CRM extends Driver {
 			// Navigating to Accounts
 			CO.waitforload();
 			Browser.WebLink.waittillvisible("VQ_Account");
-			Result.takescreenshot("Navigating to Accounts");
 			CO.waitforobj("VQ_Account", "WebLink");
 			Browser.WebLink.click("VQ_Account");
 			CO.waitforload();
-			
-			//CO.Link_Select("My Accounts");
+
+			// CO.Link_Select("My Accounts");
 			CO.waitforobj("My_Account", "WebLink");
 			Browser.WebLink.click("My_Account");
 
@@ -1033,12 +1050,12 @@ public class Keyword_CRM extends Driver {
 				Acc = getdata("Account_Name");
 			} else if (!(pulldata("Account_Name").equals(""))) {
 				Acc = pulldata("Account_Name");
-			}else {
+			} else {
 				Acc = Utlities.randname() + R.nextInt(1000);
 			}
 			CO.scroll("Acc_Name", "WebEdit");
 			Browser.WebEdit.Set("Acc_Name", Acc);
-			
+
 			if (!(getdata("CR_Type").equals(""))) {
 				Browser.ListBox.select("CR_Type", getdata("CR_Type"));
 			} else {
@@ -1051,7 +1068,7 @@ public class Keyword_CRM extends Driver {
 				Browser.ListBox.select("CR_Number", getdata("CR_Number"));
 			} else if (!(pulldata("CR_Number").equals(""))) {
 				Browser.ListBox.select("CR_Number", pulldata("CR_Number"));
-			}else {
+			} else {
 				Browser.ListBox.select("CR_Number", "1" + R.nextInt(1000000));
 			}
 
@@ -1060,7 +1077,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Browser.ListBox.select("Spcl_Mang", pulldata("SpecialManagement"));
 			}
-			 
+
 			CO.scroll("Customer_Segment", "ListBox");
 			if (!(getdata("CustomerSegment").equals(""))) {
 				Browser.ListBox.select("Customer_Segment", getdata("CustomerSegment"));
@@ -1082,27 +1099,31 @@ public class Keyword_CRM extends Driver {
 			Browser.WebLink.click("Acc_Portal");
 
 			Browser.WebLink.waittillvisible("Acc_Contacts");
+
+			CO.ToWait();
 			if (Driver.Continue.get() & Browser.WebLink.exist("Acc_Contacts")) {
 				Status = "PASS";
 				Utlities.StoreValue("Account_No", Account_No);
 				Test_OutPut += "Account_No : " + Account_No + ",";
-				Result.takescreenshot("Account Creation is Successful");
+				Result.takescreenshot("Account Created Account NO : " + Account_No);
 				Result.fUpdateLog("Account NO : " + Account_No);
 			} else {
 				Status = "FAIL";
+				Test_OutPut += "Account Creation Failed" + ",";
+				Result.takescreenshot("Account Creation Failed");
 				Result.fUpdateLog("Account Creation Failed");
 			}
-
-			Result.fUpdateLog("Account Creation Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
+		Result.fUpdateLog("------Account Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Entp_ContactCreation0
 	 * Arguments			: None
@@ -1125,7 +1146,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Address = pulldata("Address");
 			}
-			
+
 			if (!(Address.equals(""))) {
 
 				CO.waitforobj("Add_Address", "WebButton");
@@ -1145,24 +1166,23 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Browser.WebButton.click("Add_Go");
-				Result.takescreenshot("Searching Address");
 
 				CO.scroll("Add_OK", "WebButton");
 				Browser.WebButton.click("Add_OK");
 
 				CO.waitmoreforload();
 				Browser.WebButton.waittillvisible("Create_A/c");
-				Result.takescreenshot("Contact created with Address");
-				Result.fUpdateLog("Contact created with Address");
+				Result.takescreenshot("Address Selected : " + Address);
+				Result.fUpdateLog("Address Selected : " + Address);
 			} else {
 				String[] stat_add = AddressCreation().split("@@");
 				Status = stat_add[0];
 				Address = stat_add[1];
 
-				Result.takescreenshot("Contact created without Address");
-				Result.fUpdateLog("Contact created without Address");
+				Result.takescreenshot("Address Created : " + Address);
+				Result.fUpdateLog("New Address Created : " + Address);
 			}
-			
+
 			CO.waitforload();
 			int x = 0;
 			Browser.WebLink.click("Acc_Contacts");
@@ -1176,17 +1196,17 @@ public class Keyword_CRM extends Driver {
 			Col = CO.Select_Cell("Acc_Contact", "First Name");
 			if (!(getdata("Cont_FirstName").equals(""))) {
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", getdata("FirstName"));
-			}else if (!(pulldata("FirstName").equals(""))) {
+			} else if (!(pulldata("FirstName").equals(""))) {
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", pulldata("FirstName"));
-			}else {
+			} else {
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", Utlities.randname());
 			}
 
 			Col = CO.Select_Cell("Acc_Contact", "Last Name");
 			if (!(getdata("LastName").equals(""))) {
 				Last_Name = getdata("LastName");
-			}else if(!(pulldata("LastName").equals(""))) {
-				Last_Name = pulldata("LastName")+ R.nextInt(1000);
+			} else if (!(pulldata("LastName").equals(""))) {
+				Last_Name = pulldata("LastName") + R.nextInt(1000);
 			} else {
 				Last_Name = Utlities.randname();
 			}
@@ -1201,13 +1221,13 @@ public class Keyword_CRM extends Driver {
 
 			// Browser.WebTable.SetData("Acc_Contact", 2, Col, "Job_Title",getdata(""));
 
-			
-			/* Col = CO.Select_Cell("Acc_Contact", "Work Phone #");
+			/*
+			 * Col = CO.Select_Cell("Acc_Contact", "Work Phone #");
 			 * if(!(getdata("Cont_WorkPhone").equals(""))) {
 			 * Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Work_Phone__",
 			 * getdata("Cont_WorkPhone")); }else { Browser.WebTable.SetDataE("Acc_Contact",
-			 * Row, Col, "Work_Phone__", "97498780980"); }*/
-			 
+			 * Row, Col, "Work_Phone__", "97498780980"); }
+			 */
 
 			Col = CO.Select_Cell("Acc_Contact", "Email");
 			if (!(getdata("Email").equals(""))) {
@@ -1225,8 +1245,7 @@ public class Keyword_CRM extends Driver {
 
 			Col = CO.Select_Cell("Acc_Contact", "ID Expiration Date");
 			if (!(getdata("IDExpiryDate").equals(""))) {
-				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date",
-						getdata("IDExpiryDate"));
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date", getdata("IDExpiryDate"));
 			} else {
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date", pulldata("IDExpiryDate"));
 			}
@@ -1235,8 +1254,9 @@ public class Keyword_CRM extends Driver {
 			if (!(getdata("IDNumber").equals(""))) {
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", getdata("IDNumber"));
 			} else {
-				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", pulldata("ID_Number") + R.nextInt(100000));
-				
+				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number",
+						pulldata("ID_Number") + R.nextInt(100000));
+
 			}
 
 			// CO.scroll("Contact_ACC", "WebTable");
@@ -1287,27 +1307,31 @@ public class Keyword_CRM extends Driver {
 				if (CO.isAlertExist())
 					CO.Link_Select("Addresses");
 
+			CO.ToWait();
 			if (Continue.get()) {
+				Result.takescreenshot("Contact Ceated : " + Last_Name);
 				Utlities.StoreValue("LastName", Last_Name);
 				Utlities.StoreValue("Address", Address);
+				Test_OutPut += "Address : " + Address + ",";
+				Test_OutPut += "Contact : " + Last_Name + ",";
 				Status = "PASS";
 			} else {
+				Test_OutPut += "Create_A/c button not exist" + ",";
+				Result.takescreenshot("Create_A/c button not exist");
 				Result.fUpdateLog("Create_A/c button not exist");
 				Status = "FAIL";
 			}
-
-			Result.fUpdateLog("Contact Creation Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
+		Result.fUpdateLog("------Contact Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
-	
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Modify
 	 * Arguments			: None
@@ -1347,8 +1371,6 @@ public class Keyword_CRM extends Driver {
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 
-			Result.takescreenshot("");
-
 			if (!(getdata("Add_Addon").equals(""))) {
 				Add_Addon = getdata("Add_Addon");
 			} else {
@@ -1361,7 +1383,6 @@ public class Keyword_CRM extends Driver {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
 			CO.AddOnSelection(Add_Addon, "Add");
-			Result.takescreenshot("");
 			CO.waitforload();
 			CO.AddOnSelection(Remove_Addon, "Delete");
 			CO.waitforload();
@@ -1371,10 +1392,11 @@ public class Keyword_CRM extends Driver {
 			CO.Button_Sel("Done");
 			if (CO.isAlertExist()) {
 				Driver.Continue.set(false);
+				Result.takescreenshot("");
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
-			Result.takescreenshot("");
+
 			String Product_Type;
 			if (!(getdata("Product_Type").equals(""))) {
 				Product_Type = getdata("Product_Type");
@@ -1388,23 +1410,25 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("Validate");
 			OrderSubmission();
+
+			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
 				Result.takescreenshot("Modification is Successful");
 			} else
 				Status = "FAIL";
 
-			Result.fUpdateLog("Modify Event Details - Completed");
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
+		Result.fUpdateLog("------Modify Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
+	
 
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Suspend
@@ -1464,7 +1488,6 @@ public class Keyword_CRM extends Driver {
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
-			Result.takescreenshot("");
 			CO.scroll("Resume_Date", "WebButton");
 			Col_Resume = CO.Select_Cell("Line_Items", "Resume Date");
 			Browser.WebTable.click("Line_Items", Row, Col_Resume);
@@ -1475,6 +1498,7 @@ public class Keyword_CRM extends Driver {
 			Resume_Date = ResumeDate.format(cals.getTime()).toString();
 			Browser.WebTable.SetDataE("Line_Items", Row, Col_Resume, "Scheduled_Ship_Date", Resume_Date);
 			Result.fUpdateLog(CO.Col_Data(Col_Resume).trim());
+			
 			Result.takescreenshot("");
 			CO.scroll("Ful_Status", "WebButton");
 			Col_F = CO.Select_Cell("Line_Items", "Fulfillment Status");
@@ -1491,14 +1515,10 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("Submit");
 			OrderSubmission();
-			Result.takescreenshot("");
 
-			if (!(getdata("MSISDN").equals(""))) {
-				CO.Assert_Search(MSISDN, "Suspended");
-			} else {
-				CO.Assert_Search(MSISDN, "Suspended");
-			}
+			CO.Assert_Search(MSISDN, "Suspended");
 
+			CO.ToWait();
 			if (Continue.get()) {
 				Test_OutPut += "Suspend the Plan is done Successfully " + ",";
 				Result.fUpdateLog("Suspend the Plan is done Successfully ");
@@ -1507,14 +1527,17 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("Suspenstion Failed");
 				Status = "FAIL";
 			}
-			Result.fUpdateLog("Suspend Login Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
+		Result.fUpdateLog("------Suspend Login Event Details - Completed------");
 		return Status + "@@" + Test_OutPut;
 	}
+	
 
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Resume
@@ -1592,33 +1615,31 @@ public class Keyword_CRM extends Driver {
 			CO.scroll("Service", "WebButton");
 
 			Browser.WebButton.waittillvisible("Validate");
-			Browser.WebButton.click("Validate");
-			CO.waitforload();
-
-			Browser.WebButton.waittillvisible("Submit");
 			OrderSubmission();
-			Result.takescreenshot("");
-			if (!(getdata("MSISDN").equals(""))) {
-				CO.Assert_Search(getdata("MSISDN"), "Active");
-			} else {
-				CO.Assert_Search(pulldata("MSISDN"), "Active");
-			}
+			CO.Assert_Search(MSISDN, "Active");
 
+			CO.ToWait();
 			if (Continue.get()) {
 				Test_OutPut += "Resume Plan is done Successfully " + ",";
 				Result.fUpdateLog("Resume Plan is done Successfully ");
 				Status = "PASS";
 			} else {
+				Test_OutPut += "Resume Failed" + ",";
+				Result.takescreenshot("Resume Failed");
 				Result.fUpdateLog("Resume Failed");
 				Status = "FAIL";
 			}
-			Result.fUpdateLog("Resume Event Details - Completed");
 		} catch (Exception e) {
 			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
+		Result.fUpdateLog("------Resume Event Details - Completed------");
 		return Status + "@@" + Test_OutPut;
 	}
+	
+	
 
 }

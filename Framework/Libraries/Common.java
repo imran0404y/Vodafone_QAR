@@ -40,6 +40,15 @@ public class Common extends Driver {
 		}
 	}
 
+	public void ToWait() {
+		try {
+			int i = 3;
+			cDriver.get().manage().timeouts().implicitlyWait(240, TimeUnit.SECONDS);
+			i = i*1000;
+			Thread.sleep(i);
+		} catch (Exception e) {
+		}
+	}
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: waitforobj
 	 * Use 					: It waits for the obj to be loaded
@@ -413,13 +422,12 @@ public class Common extends Driver {
 			for (int i = 1; i <= Inst_RowCount; i++)
 				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
 						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					Result.takescreenshot("");
 					Browser.WebTable.Expand("Installed_Assert", i, 1);
 					Result.takescreenshot("");
 				}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -433,10 +441,10 @@ public class Common extends Driver {
 			Button_Sel("Now");
 			Button_Sel("Done");
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: InstalledAssertChange
 	 * Use 					: Customizing the specific Plan is done
@@ -467,4 +475,92 @@ public class Common extends Driver {
 		}
 	}
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Category_Select
+	 * Use 					: To select the plan from catlog view
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 18-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Category_Select(String text, String text1, String text2) {
+		try {
+			String cellXpath, cellXpath1, cellXpath2 = null, cellXpath3, TxtVal, TxtVal1;
+			String[] objprop = Utlities.FindObject("Category_Plan", "WebTable");
+			int rowcount = 7;//object need to add to get row count
+			for (int li_N = 1; li_N <= rowcount; li_N++) {
+				cellXpath = objprop[0] + "[" + li_N + "]//a";
+				TxtVal = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("text");
+				if (TxtVal.contains(text)) {
+					cellXpath1 = objprop[0] + "[" + li_N + "]//i[1]";
+					cDriver.get().findElement(By.xpath(cellXpath1)).click();
+					if (text1 != "") {
+						int rowcount1 = 7;
+						for (int li_N1 = 1; li_N1 <= rowcount1; li_N1++) {
+							cellXpath3 = objprop[0] + "[" + li_N + "]//ul//li[" + li_N1 + "]//a";
+							TxtVal1 = cDriver.get().findElement(By.xpath(cellXpath3)).getAttribute("text");
+							if (TxtVal1.contains(text1)) {
+								cellXpath2 = objprop[0] + "[" + li_N + "]//ul//li[" + li_N1 + "]//i[1]";
+								cDriver.get().findElement(By.xpath(cellXpath2)).click();
+								Select_plan(text2, TxtVal1);
+								break;
+							}
+
+						}
+
+					}else {
+						
+					}
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Select_plan(String Text, String Plan) throws InterruptedException {
+		String cellXpath, cellXpath1, cellXpath2, TxtVal, tct1;
+		String[] objprop = Utlities.FindObject("VQ_Plan", "WebLink");
+		int x;
+		try {
+			waitforload();
+			x = Integer.parseInt(Plan.substring(Plan.indexOf("(") + 1, Plan.indexOf(")")).trim());
+			for (int li_N = 1; li_N <= x; li_N++) {
+				cellXpath = objprop[0] + "[" + li_N + "]/div[1]/div[1]//a";
+				TxtVal = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("text");
+				Div_Select("a", TxtVal);
+
+				if (TxtVal.contains(Text)) {
+
+					cellXpath1 = "//a[text()='" + Text
+							+ "']/../../../../div[3]//button[@title='Category Products:Add Item']";
+					cDriver.get().findElement(By.xpath(cellXpath1)).click();
+
+				} else {
+					if ((li_N % 8) == 0) {
+						int li = li_N;
+						Div_Select("a", TxtVal);
+						Browser.WebButton.click("VQ_Roll_Down");
+						cellXpath2 = objprop[0] + "[" + (li + 1) + "]/div[1]/div[1]//a";// text;+"']";
+						tct1 = cDriver.get().findElement(By.xpath(cellXpath2)).getAttribute("text");
+						Div_Select("a", tct1);
+
+					}
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Div_Select(String Tag, String Text) {
+
+		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+
+	}
+	
 }

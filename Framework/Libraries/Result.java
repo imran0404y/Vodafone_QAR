@@ -116,7 +116,7 @@ public class Result extends Driver {
 					Document.PICTURE_TYPE_PNG);
 			XWPFParagraph paragraph = document.createParagraph();
 			XWPFRun run = paragraph.createRun();			run.setText(LogMessage);
-			document.createPicture(id, document.getNextPicNameNumber(Document.PICTURE_TYPE_PNG), 640, 420);
+			document.createPicture(id, document.getNextPicNameNumber(Document.PICTURE_TYPE_PNG), 640, 360);
 			document.write(fos);
 			fos.flush();
 			fos.close();
