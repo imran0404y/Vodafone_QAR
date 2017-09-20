@@ -169,8 +169,8 @@ public class Result extends Driver {
 				+ "<td align=\"center\" width='50%' colspan=3 Style=\"color:blue\"><h3> Detail Summary Report </h3></td>"
 				+ "</tr>" + "<table border =1 width = 100%>" + "<tr>"
 				+ "<td width = 15%><b><center>Usecase</center></b></td>"
-				+ "<td width = 15%><b><center>TestCase Num</center></b></td>"
-				+ "<td width = 32%><b><center>TestCase Data</center></b></td>"
+				+ "<td width = 15%><b><center>TestCase</center></b></td>"
+				+ "<td width = 32%><b><center>UserInputs</center></b></td>"
 				+ "<td width = 32%><b><center>TestCase Output</center></b></td>" 
 				+ "<td width = 6%><b><center>Status</center></b></td>"
 				+ "</tr>";
@@ -221,7 +221,7 @@ public class Result extends Driver {
 			String url = masterrephtml.get();
 			String browser = WorkingDir.get() + "/chromedriver.exe";
 			//"C:\\Program Files\\Mozilla Firefox\\firefox.exe "
-			Process pc = rTime.exec(browser + url);
+			Process pc = rTime.exec(url);
 			pc.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();

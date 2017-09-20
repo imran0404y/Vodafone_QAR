@@ -326,7 +326,7 @@ public class Keyword_CRM extends Driver {
 					Browser.WebEdit.Set("CR_Number", getdata("CR_Number"));
 				} else if (!(pulldata("CR_Type").equals(""))) {
 					Browser.ListBox.select("CR_Type", pulldata("CR_Type"));
-					Browser.ListBox.select("CR_Number", CR);
+					Browser.WebEdit.Set("CR_Number", CR);
 				}
 
 				if (!(getdata("SpecialManagement").equals(""))) {
