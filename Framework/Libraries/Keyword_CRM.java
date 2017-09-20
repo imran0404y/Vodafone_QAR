@@ -270,7 +270,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				String[] stat_add = AddressCreation().split("@@");
 				Status = stat_add[0];
-				Address = stat_add[1];
+				Address = stat_add[1].split(",")[0];
 				Result.takescreenshot("Address Created : " + Address);
 				Result.fUpdateLog("Created new Address : " + Address);
 			}
@@ -310,10 +310,11 @@ public class Keyword_CRM extends Driver {
 		String Account_No = null;
 		Result.fUpdateLog("------Account Creation Event Details------");
 		try {
-
+			
 			int Row_Count = Browser.WebTable.getRowCount("Address");
 			if (Row_Count > 1) {
 				Browser.WebButton.waittillvisible("Create_A/c");
+				Browser.WebButton.waitTillEnabled("Create_A/c");
 				CO.waitforobj("Create_A/c", "WebButton");
 				CO.scroll("Create_A/c", "WebButton");
 				CO.Span_Sel("Create A/c");
@@ -381,16 +382,12 @@ public class Keyword_CRM extends Driver {
 			// Browser.WebLink.waittillvisible("Acc_address");
 			CO.waitforload();
 			if (Browser.WebLink.exist("Acc_address"))
-				System.out.println("Proceeding Address Creation");
-			else {
-				if (!Browser.WebButton.exist("Create A/c"))
-					Browser.WebButton.click("Address_Tab");
-				CO.waitforload();
-			}
+				Result.fUpdateLog("Proceeding Consumer Address Creation");
+			else if (Browser.WebButton.exist("Address_Tab")){
+				Result.fUpdateLog("Proceeding Enterprise Address Creation");
+			}	
 
 			Browser.WebButton.click("Add_Address");
-			// Browser.WebEdit.Set("Acc_Add_Address", "EmptyData");
-			// Browser.WebButton.click("Acc_Add_Go");
 
 			int Row = 2, Col;
 			CO.scroll("Acc_Add_New", "WebButton");
@@ -406,8 +403,8 @@ public class Keyword_CRM extends Driver {
 				Add1 = Utlities.randname();
 			}
 			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address", Add1);
-			Result.fUpdateLog("Address line1 : " + Add1);
-			Test_OutPut = Add1;
+			Utlities.StoreValue("Address line1", Add1);
+			
 			Col = CO.Select_Cell("Address", "Address Line 2");
 			if (!(getdata("Add_AddressLine2").equals(""))) {
 				Add2 = getdata("Add_AddressLine2");
@@ -417,7 +414,7 @@ public class Keyword_CRM extends Driver {
 				Add2 = Utlities.randname();
 			}
 			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address_2", Add2);
-			Result.fUpdateLog("Address line2 : " + Add2);
+			Utlities.StoreValue("Address line2", Add2);
 
 			Col = CO.Select_Cell("Address", "PO Box");
 			if (!(getdata("Add_POBox").equals(""))) {
@@ -448,6 +445,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 
 			if (Continue.get() && Row_Count > 1) {
+				Test_OutPut += Add1+ ",";
 				Status = "PASS";
 			} else {
 				Result.fUpdateLog("Create_A/c button not exist");
@@ -457,7 +455,6 @@ public class Keyword_CRM extends Driver {
 			Status = "FAIL";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
-
 		}
 		Result.fUpdateLog("------Address Creation Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
@@ -768,9 +765,9 @@ public class Keyword_CRM extends Driver {
 				Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
-				CO.waitforload();
-				Result.takescreenshot("Number Resered");
+				CO.waitmoreforload();
 				if (CO.isAlertExist()) {
+					Result.takescreenshot("Number Resered");
 					Result.fUpdateLog("Alert Handled");
 				}
 
@@ -825,10 +822,8 @@ public class Keyword_CRM extends Driver {
 				CO.waitforload();
 				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
 				CO.waitforload();
-				CO.waitforload();
 				Browser.WebButton.waittillvisible("Reserved_Ok");
 				Browser.WebButton.waitTillEnabled("Reserved_Ok");
-				CO.waitforload();
 				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
 				if (Row_Count > 1)
 					Browser.WebButton.click("Reserved_Ok");
@@ -1065,11 +1060,11 @@ public class Keyword_CRM extends Driver {
 			Account_No = Browser.WebEdit.gettext("Account_No");
 			Random R = new Random();
 			if (!(getdata("CR_Type").equals(""))) {
-				Browser.ListBox.select("CR_Number", getdata("CR_Number"));
+				Browser.WebEdit.Set("CR_Number", getdata("CR_Number"));
 			} else if (!(pulldata("CR_Number").equals(""))) {
-				Browser.ListBox.select("CR_Number", pulldata("CR_Number"));
+				Browser.WebEdit.Set("CR_Number", pulldata("CR_Number"));
 			} else {
-				Browser.ListBox.select("CR_Number", "1" + R.nextInt(1000000));
+				Browser.WebEdit.Set("CR_Number", "1" + R.nextInt(1000000));
 			}
 
 			if (!(getdata("SpecialManagement").equals(""))) {
@@ -1106,7 +1101,6 @@ public class Keyword_CRM extends Driver {
 				Utlities.StoreValue("Account_No", Account_No);
 				Test_OutPut += "Account_No : " + Account_No + ",";
 				Result.takescreenshot("Account Created Account NO : " + Account_No);
-				Result.fUpdateLog("Account NO : " + Account_No);
 			} else {
 				Status = "FAIL";
 				Test_OutPut += "Account Creation Failed" + ",";
@@ -1147,8 +1141,10 @@ public class Keyword_CRM extends Driver {
 				Address = pulldata("Address");
 			}
 
+			Browser.WebButton.click("Address_Tab");
+			CO.waitforload();
 			if (!(Address.equals(""))) {
-
+				
 				CO.waitforobj("Add_Address", "WebButton");
 				// Browser.WebButton.waittillvisible("Add_Address");
 				Browser.WebButton.click("Add_Address");
@@ -1171,14 +1167,13 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.click("Add_OK");
 
 				CO.waitmoreforload();
-				Browser.WebButton.waittillvisible("Create_A/c");
+				//Browser.WebButton.waittillvisible("Create_A/c");
 				Result.takescreenshot("Address Selected : " + Address);
 				Result.fUpdateLog("Address Selected : " + Address);
 			} else {
 				String[] stat_add = AddressCreation().split("@@");
 				Status = stat_add[0];
-				Address = stat_add[1];
-
+				Address = stat_add[1].split(",")[0];
 				Result.takescreenshot("Address Created : " + Address);
 				Result.fUpdateLog("New Address Created : " + Address);
 			}
@@ -1187,7 +1182,6 @@ public class Keyword_CRM extends Driver {
 			int x = 0;
 			Browser.WebLink.click("Acc_Contacts");
 			CO.waitforload();
-
 			x = Browser.WebTable.getRowCount("Acc_Contact");
 			if (x == 1) {
 				Browser.WebButton.click("Acc_Add_Contact");
@@ -1302,10 +1296,10 @@ public class Keyword_CRM extends Driver {
 
 			CO.waitforload();
 			CO.scroll("Account360", "WebButton");
-			CO.Link_Select("Addresses");
+			Browser.WebButton.click("Address_Tab");
 			if (CO.isAlertExist())
 				if (CO.isAlertExist())
-					CO.Link_Select("Addresses");
+					Browser.WebButton.click("Address_Tab");
 
 			CO.ToWait();
 			if (Continue.get()) {
@@ -1429,7 +1423,6 @@ public class Keyword_CRM extends Driver {
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 	
-
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Suspend
 	 * Arguments			: None
@@ -1538,7 +1531,6 @@ public class Keyword_CRM extends Driver {
 		return Status + "@@" + Test_OutPut;
 	}
 	
-
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Resume
 	 * Arguments			: None

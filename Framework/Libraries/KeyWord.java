@@ -18,7 +18,7 @@ public class KeyWord {
 	}
 
 	public String Entp_AccountCreation() {
-		return KC.Entp_AccountCreation();
+		return KC.Entp_AccountCreation();	
 	}
 
 	public String Entp_ContactCreation() {

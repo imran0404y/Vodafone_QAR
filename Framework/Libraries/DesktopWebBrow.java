@@ -30,7 +30,7 @@ public class DesktopWebBrow extends Driver implements NewDriver {
 
 		switch (browser.get().toLowerCase()) {
 		case "chrome":
-			System.setProperty("webdriver.chrome.driver", Driver.WorkingDir.get() + "/chromedriver.exe");
+			System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "/chromedriver.exe");
 			Map<String, Object> prefs = new HashMap<String, Object>();
             
             // Set the notification setting it will override the default setting
@@ -41,7 +41,7 @@ public class DesktopWebBrow extends Driver implements NewDriver {
 			remoteDriver = new ChromeDriver(options);
 			break;
 		case "firefox":
-			System.setProperty("webdriver.gecko.driver", Driver.WorkingDir.get() + "/geckodriver.exe");
+			System.setProperty("webdriver.gecko.driver", WorkingDir.get() + "/geckodriver.exe");
 			// System.setProperty("webdriver.Firefoxdriver", Driver.basepth.get() +
 			// "/geckodriver.exe");
 			File pathToBinary = new File("C:\\Users\\ImranH2\\AppData\\Local\\Mozilla Firefox\\firefox.exe");
@@ -54,7 +54,7 @@ public class DesktopWebBrow extends Driver implements NewDriver {
 			// remoteDriver = new FirefoxDriver();
 			break;
 		case "ie":
-			System.setProperty("webdriver.ie.driver", Driver.WorkingDir.get() + "/IEDriverServer.exe");
+			System.setProperty("webdriver.ie.driver", WorkingDir.get() + "/IEDriverServer.exe");
 			remoteDriver = new InternetExplorerDriver();
 			break;
 		}

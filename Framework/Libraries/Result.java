@@ -213,4 +213,18 @@ public class Result extends Driver {
 
 		}
 	}
+	
+	public static void DisplayHTMLReport() {
+		try {
+			// MoveFiletoZIPfolder(g_globalval);
+			Runtime rTime = Runtime.getRuntime();
+			String url = masterrephtml.get();
+			String browser = WorkingDir.get() + "/chromedriver.exe";
+			//"C:\\Program Files\\Mozilla Firefox\\firefox.exe "
+			Process pc = rTime.exec(browser + url);
+			pc.waitFor();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

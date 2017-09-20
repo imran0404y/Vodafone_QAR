@@ -143,7 +143,7 @@ public class Common extends Driver {
 		try {
 			WebDriverWait wait = new WebDriverWait(cDriver.get(), 15);
 			if (!(wait.until(ExpectedConditions.alertIsPresent()) == null))
-				System.out.println((cDriver.get()).switchTo().alert().getText());
+				Result.fUpdateLog((cDriver.get()).switchTo().alert().getText());
 			Browser.alert.accept();
 			Browser.Readystate();
 			return true;

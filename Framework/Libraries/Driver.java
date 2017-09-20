@@ -58,7 +58,7 @@ public class Driver {
 		Storage_FLD.set(Base_Path.get() + "/Storage");
 		OR_File.set(Storage_FLD.get() + "/ObjectRepository.xlsx");
 		StoreDB_File.set(Storage_FLD.get() + "/StoreDB.xlsx");
-		Database_File.set(Storage_FLD.get() + "/Database.xlsx");
+		Database_File.set(Storage_FLD.get() + "/CommonRepository.xlsx");
 		Directory_FLD.set(Base_Path.get() + "/Directory");
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsm");
 		Result_FLD.set(Base_Path.get() + "/Results");
@@ -156,6 +156,7 @@ public class Driver {
 				passUC = passUC + 1;
 			}
 			Result.fcreateMasterHTML();
+			Result.DisplayHTMLReport();
 		}
 	}
 
