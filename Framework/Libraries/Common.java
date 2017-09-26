@@ -422,7 +422,7 @@ public class Common extends Driver {
 			for (int i = 1; i <= Inst_RowCount; i++)
 				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
 						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					Browser.WebTable.Expand("Installed_Assert", i, 1);
+					//Browser.WebTable.Expand("Installed_Assert", i, 1);
 					Result.takescreenshot("");
 				}
 

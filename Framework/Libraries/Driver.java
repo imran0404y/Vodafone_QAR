@@ -87,7 +87,7 @@ public class Driver {
 			TestCaseData.set(totUseCases_data[currUseCase]);
 			TestCaseDes.set(totTestcase_Des[currUseCase]);
 			TestOutput = "";
-			Result.fCreateReportFiles(UseCaseName.get());
+			Result.fCreateReportFiles(currUseCase+1 , UseCaseName.get());
 			ArrayList<String[]> addresses = Utlities.floadKeywords(UseCaseName.get());
 			String totKeywords[] = addresses.get(0);
 			String DataBinding[] = addresses.get(1);
@@ -156,8 +156,8 @@ public class Driver {
 				passUC = passUC + 1;
 			}
 			Result.fcreateMasterHTML();
-			Result.DisplayHTMLReport();
 		}
+		Result.DisplayHTMLReport();
 	}
 
 	public static String getdata(String colname) {

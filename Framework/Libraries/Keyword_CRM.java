@@ -433,7 +433,7 @@ public class Keyword_CRM extends Driver {
 			Col = CO.Select_Cell("Address", "Kahramaa ID");
 			if (!(getdata("Add_Kahramaa_ID").equals(""))) {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
-			} else if (pulldata("Add_Kahramaa_ID").equals("auto")) {
+			} else if (pulldata("Add_Kahramaa_ID").equals("Automatic")) {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", "1" + R.nextInt(10000000));
 			} else {
 				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));

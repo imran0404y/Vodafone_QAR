@@ -72,7 +72,7 @@ public class Utlities extends Driver {
 				UseCases[currs - 1] = rs.getField(2).value();
 				Testcase[currs - 1] = rs.getField(3).value();
 				data[currs - 1] = rs.getField(4).value();
-				TC_Description[currs - 1] = rs.getField(4).value();
+				TC_Description[currs - 1] = rs.getField(5).value();
 				
 				if (rs.hasNext()) {
 					rs.moveNext();

@@ -17,14 +17,18 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Result extends Driver {
 
 	public static ThreadLocal<String> logfilepth = new ThreadLocal<String>();
 	public static ThreadLocal<String> masterrephtml = new ThreadLocal<String>();
 	public static ThreadLocal<String> UCscreenfilepth = new ThreadLocal<String>();
+	public static ThreadLocal<String> UC = new ThreadLocal<String>();
 	public static ThreadLocal<String> TCscreenfile = new ThreadLocal<String>();
 	public static String updatelogmsg = "";
+	
 
 	/*----------------------------------------------------------------------------------------------------
 	 * Method Name			: fCreateReportFiles
@@ -33,7 +37,7 @@ public class Result extends Driver {
 	 * Designed By			: Imran Baig
 	 * Last Modified Date 	: 23-Aug-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public static void fCreateReportFiles(String Usecase) {
+	public static void fCreateReportFiles(int SNo, String Usecase) {
 		DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 		Calendar cal = Calendar.getInstance();
 		try {
@@ -47,8 +51,9 @@ public class Result extends Driver {
 			if ((!tresfold.exists()))
 				tresfold.mkdir();
 
-			UCscreenfilepth.set(tresfold + "/" + Usecase);
-			File bthresfold = new File(tresfold + "/" + Usecase);
+			UC.set(SNo+Usecase);
+			UCscreenfilepth.set(tresfold + "/" + UC.get());
+			File bthresfold = new File(tresfold + "/" + UC.get());
 			if ((!bthresfold.exists()))
 				bthresfold.mkdir();
 
@@ -71,7 +76,7 @@ public class Result extends Driver {
 
 			//File masterhtml = new File(tempref + "/MasterReport.HTML");
 			//FileUtils.copyFileToDirectory(masterhtml, tresfold);
-			masterrephtml.set(tresfold.toString() + "/MasterReport.HTML");
+			masterrephtml.set(tresfold.toString() + "\\MasterReport.HTML");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -168,18 +173,20 @@ public class Result extends Driver {
 				+ "</table>" + "<table width='100%' border=2>" + "<tr>"
 				+ "<td align=\"center\" width='50%' colspan=3 Style=\"color:blue\"><h3> Detail Summary Report </h3></td>"
 				+ "</tr>" + "<table border =1 width = 100%>" + "<tr>"
-				+ "<td width = 15%><b><center>Usecase</center></b></td>"
-				+ "<td width = 15%><b><center>TestCase</center></b></td>"
-				+ "<td width = 32%><b><center>UserInputs</center></b></td>"
+				+ "<td width = 13%><b><center>Usecase</center></b></td>"
+				+ "<td width = 10%><b><center>TestCase</center></b></td>"
+				+ "<td width = 15%><b><center>Testcase ID/Description</center></b></td>"
+				+ "<td width = 24%><b><center>UserInputs</center></b></td>"
 				+ "<td width = 32%><b><center>TestCase Output</center></b></td>" 
 				+ "<td width = 6%><b><center>Status</center></b></td>"
 				+ "</tr>";
 		bw.write(logmessage + "\r\n");
 		logmessage = "";
-		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 15%><center>" + UseCaseName.get() + "</center></td>";
-		updatelogmsg = updatelogmsg + "<td width = 15%><center><a href = .\\" + UseCaseName.get()+"/"+TestCaseN.get()+ ".docx" + ">"
+		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 13%><center>" + UseCaseName.get() + "</center></td>";
+		updatelogmsg = updatelogmsg + "<td width = 10%><center><a href = .\\" + UC.get() + "\\" + TestCaseN.get()+ ".docx" + ">"
 				+ TestCaseN.get() + "</a></center></td>";
-		updatelogmsg = updatelogmsg + "<td width = 32%>" + TestCaseData.get() + "</td>";
+		updatelogmsg = updatelogmsg + "<td width = 15%>" + TestCaseDes.get() + "</td>";
+		updatelogmsg = updatelogmsg + "<td width = 24%>" + TestCaseData.get() + "</td>";
 		if (currUCstatus.get().equals("Pass")) {
 			updatelogmsg = updatelogmsg + "<td width = 32%>" + TestOutput+ "</td>";
 			updatelogmsg = updatelogmsg + "<td width = 6% Style=\"color:green\"><b><center>Pass</center></b></td></tr>";
@@ -215,13 +222,17 @@ public class Result extends Driver {
 	}
 	
 	public static void DisplayHTMLReport() {
+		String url = masterrephtml.get();
 		try {
-			// MoveFiletoZIPfolder(g_globalval);
+			killexeTask();
+			/*System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "/chromedriver.exe");
+			WebDriver driver1 = new ChromeDriver();
+			driver1.navigate().to(url);*/
+			
 			Runtime rTime = Runtime.getRuntime();
-			String url = masterrephtml.get();
-			String browser = WorkingDir.get() + "/chromedriver.exe";
-			//"C:\\Program Files\\Mozilla Firefox\\firefox.exe "
-			Process pc = rTime.exec(url);
+			//String browser = WorkingDir.get() + "/chromedriver.exe";
+			String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
+			Process pc = rTime.exec(browser+url);
 			pc.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();
