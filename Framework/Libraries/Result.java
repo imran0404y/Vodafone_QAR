@@ -229,8 +229,6 @@ public class Result extends Driver {
 			//String browser = WorkingDir.get() + "/chromedriver.exe";
 			String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
 			rTime.exec(browser+url);
-			//Process pc = rTime.exec(browser+url);
-			//pc.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
