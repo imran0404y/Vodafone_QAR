@@ -26,6 +26,19 @@ public class Common extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Order_ID
+	 * Use 					: To fetch order value
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 28-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Order_ID() {
+		String[] objprop = Utlities.FindObject("Order_id", "WebTable");
+		String cellXpath = objprop[0];
+		String OD = cDriver.get().findElement(By.xpath(cellXpath)).getText();
+		return OD;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: waitmoreforload
 	 * Use 					: It waits for the page to Load
 	 * Designed By			: Imran Baig
@@ -44,11 +57,12 @@ public class Common extends Driver {
 		try {
 			int i = 3;
 			cDriver.get().manage().timeouts().implicitlyWait(240, TimeUnit.SECONDS);
-			i = i*1000;
+			i = i * 1000;
 			Thread.sleep(i);
 		} catch (Exception e) {
 		}
 	}
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: waitforobj
 	 * Use 					: It waits for the obj to be loaded
@@ -155,19 +169,6 @@ public class Common extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: Span_Sel
-	 * Use 					: To click a span containing Specific text
-	 * Designed By			: Imran Baig
-	 * Last Modified Date 	: 24-Aug-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public void Span_Sel(String Text) {
-		String cellXpath = "//span[text()='" + Text + "']";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		cDriver.get().findElement(By.xpath(cellXpath)).click();
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Col_Val
 	 * Use 					: To get the specific Col
 	 * Arguments			: Object for which script waits
@@ -199,31 +200,48 @@ public class Common extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: Div_Select
+	 * Method Name			: Text_Select
 	 * Use 					: To select a Link containing Specific text
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 27-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Text_Select(String Tag, String Text) {
+		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		cDriver.get().findElement(By.xpath(cellXpath)).click();
+	}// div option button span
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Tag_Select
+	 * Use 					: To scroll to the particular tag item
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 18-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/	
+	public void Tag_Select(String Tag, String Text) {
+		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Radio_Select
+	 * Use 					: To select a spectific Radio Button or check box
 	 * Designed By			: Vinodhini
 	 * Last Modified Date 	: 12-March-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void Div_Select(String Text) {
+	public void Radio_Select(String Text) {
 
-		String cellXpath = "//div[text()='" + Text + "']";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		cDriver.get().findElement(By.xpath(cellXpath)).click();
-	}
+		String cellXpath = "//input[@value='" + Text + "']";
 
-	public void Option_Sel(String Text) {
-		String cellXpath = "//option[text()='" + Text + "']";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		cDriver.get().findElement(By.xpath(cellXpath)).click();
-	}
+		if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed()) {
+			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+			cDriver.get().findElement(By.xpath(cellXpath)).click();
+			// break;}
 
-	public void Button_Sel(String Text) {
-		String cellXpath = "//button[text()='" + Text + "']";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		cDriver.get().findElement(By.xpath(cellXpath)).click();
+		} else
+			Driver.Continue.set(false);
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -256,9 +274,9 @@ public class Common extends Driver {
 					} else {
 						// Check box
 						((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)",
-								cellXpath.get(i));
+								cellXpath.get(t));
 						waitforload();
-						cellXpath.get(i).click();
+						cellXpath.get(t).click();
 						flag = true;
 						break;
 					}
@@ -271,26 +289,6 @@ public class Common extends Driver {
 
 		}
 
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: Radio_Select
-	 * Use 					: To select a spectific Radio Button or check box
-	 * Designed By			: Vinodhini
-	 * Last Modified Date 	: 12-March-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public void Radio_Select(String Text) {
-
-		String cellXpath = "//input[@value='" + Text + "']";
-
-		if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed()) {
-			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-			cDriver.get().findElement(By.xpath(cellXpath)).click();
-			// break;}
-
-		} else
-			Driver.Continue.set(false);
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -312,9 +310,9 @@ public class Common extends Driver {
 					Link_Select(Prod_array[0]);
 					if (Status.contains("STAR")) {
 						Thread.sleep(3000);
-						Div_Select("Number Purchased Price");
+						Text_Select("div", "Number Purchased Price");
 						// scroll("Number_Purchase_Price", "WebEdit");
-						Option_Sel(Prod_array[2]);
+						Text_Select("option", Prod_array[2]);
 						Browser.WebEdit.click("Number_Purchase_Price");
 						Browser.WebEdit.Set("Number_Purchase_Price", Prod_array[1]);
 						// Browser.WebEdit.click("Discount_Reason");//,Prod_array[2]
@@ -422,7 +420,59 @@ public class Common extends Driver {
 			for (int i = 1; i <= Inst_RowCount; i++)
 				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
 						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					//Browser.WebTable.Expand("Installed_Assert", i, 1);
+					// Browser.WebTable.Expand("Installed_Assert", i, 1);
+					Result.takescreenshot("");
+				}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Assert_Search(String MSISDN, String Status, String Operat) {
+		try {
+			waitforload();
+			int Row = 2, Col, Col_Pro;
+			String Prod = "Mobile Service Bundle";
+			Browser.WebLink.waittillvisible("VQ_Assert");
+			Browser.WebLink.click("VQ_Assert");
+			Browser.WebLink.waittillvisible("Assert_Search");
+			waitforload();
+			scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			waitforload();
+
+			// Installed_Assert
+			Col = Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", Status);
+			Col = Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			waitforload();
+			Col = Select_Cell("Assert", "Account");
+			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Driver.Continue.set(false);
+			Browser.WebLink.waittillvisible("Acc_Portal");
+			waitforload();
+			Browser.WebLink.click("Acc_Portal");
+			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			// Browser.WebLink.click("Inst_Assert_ShowMore");
+			waitforload();
+			int Inst_RowCount = Browser.WebTable.getRowCount("Installed_Assert");
+			Col_Pro = Select_Cell("Installed_Assert", "Asset Description");
+			Col = Select_Cell("Installed_Assert", "Service ID");
+			for (int i = 1; i <= Inst_RowCount; i++)
+				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
+						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
+					if ((Operat.equals("Suspend")) || (Operat.equals("Resume"))) {
+						Text_Select("a", Prod);
+					}
+					// Browser.WebTable.Expand("Installed_Assert", i, 1);
 					Result.takescreenshot("");
 				}
 
@@ -438,8 +488,8 @@ public class Common extends Driver {
 			cDriver.get().findElement(By.xpath(cellXpath)).click();
 			String cellXpath1 = objprop[0] + "//tr[" + rownum + "]/td[" + columnnum + "]//span";
 			cDriver.get().findElement(By.xpath(cellXpath1)).click();
-			Button_Sel("Now");
-			Button_Sel("Done");
+			Text_Select("button", "Now");
+			Text_Select("button", "Done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -485,7 +535,7 @@ public class Common extends Driver {
 		try {
 			String cellXpath, cellXpath1, cellXpath2 = null, cellXpath3, TxtVal, TxtVal1;
 			String[] objprop = Utlities.FindObject("Category_Plan", "WebTable");
-			int rowcount = 7;//object need to add to get row count
+			int rowcount = 7;// object need to add to get row count
 			for (int li_N = 1; li_N <= rowcount; li_N++) {
 				cellXpath = objprop[0] + "[" + li_N + "]//a";
 				TxtVal = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("text");
@@ -506,8 +556,8 @@ public class Common extends Driver {
 
 						}
 
-					}else {
-						
+					} else {
+
 					}
 
 				}
@@ -518,7 +568,13 @@ public class Common extends Driver {
 		}
 	}
 
-	public void Select_plan(String Text, String Plan) throws InterruptedException {
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Select_plan
+	 * Use 					: To select the plan from catlog view
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 18-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Select_plan(String Text, String Plan){
 		String cellXpath, cellXpath1, cellXpath2, TxtVal, tct1;
 		String[] objprop = Utlities.FindObject("VQ_Plan", "WebLink");
 		int x;
@@ -528,7 +584,7 @@ public class Common extends Driver {
 			for (int li_N = 1; li_N <= x; li_N++) {
 				cellXpath = objprop[0] + "[" + li_N + "]/div[1]/div[1]//a";
 				TxtVal = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("text");
-				Div_Select("a", TxtVal);
+				Tag_Select("a", TxtVal);
 
 				if (TxtVal.contains(Text)) {
 
@@ -539,11 +595,11 @@ public class Common extends Driver {
 				} else {
 					if ((li_N % 8) == 0) {
 						int li = li_N;
-						Div_Select("a", TxtVal);
+						Tag_Select("a", TxtVal);
 						Browser.WebButton.click("VQ_Roll_Down");
 						cellXpath2 = objprop[0] + "[" + (li + 1) + "]/div[1]/div[1]//a";// text;+"']";
 						tct1 = cDriver.get().findElement(By.xpath(cellXpath2)).getAttribute("text");
-						Div_Select("a", tct1);
+						Tag_Select("a", tct1);
 
 					}
 
@@ -555,12 +611,45 @@ public class Common extends Driver {
 		}
 	}
 
-	public void Div_Select(String Tag, String Text) {
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Action_Update
+	 * Use 					: To check the action status in line items
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 18-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Action_Update(String Text, String MSISDN) {
+		int Row_Count1, Col, Col_P, Col1;
+		try {
+			Col = Select_Cell("Line_Items", "Product");
+			Col_P = Actual_Cell("Line_Items", "Action");
+			Col1 = Select_Cell("Line_Items", "Service Id");
+			/*
+			 * Field = Col_Data(Col1); if (Field.equalsIgnoreCase("previous service id"))
+			 * Col_SID = Actual_Cell("Line_Items", "Service Id");
+			 */
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+				String Ldata = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Msd = Browser.WebTable.getCellData("Line_Items", i, Col1);
+				if (Msd.equals(MSISDN) || Ldata.equals("SIM Card")) {
+					if (Action.equals(Text)) {
+						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
+					} else {
+						Result.fUpdateLog(LData + ":" + Action);
+						Driver.Continue.set(false);
 
-		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+					}
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
-	
+
 }

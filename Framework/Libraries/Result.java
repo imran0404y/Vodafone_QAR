@@ -1,5 +1,6 @@
 package Libraries;
 
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +18,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Result extends Driver {
 
@@ -224,16 +223,14 @@ public class Result extends Driver {
 	public static void DisplayHTMLReport() {
 		String url = masterrephtml.get();
 		try {
-			killexeTask();
-			/*System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "/chromedriver.exe");
-			WebDriver driver1 = new ChromeDriver();
-			driver1.navigate().to(url);*/
-			
+			//killexeTask();
+		
 			Runtime rTime = Runtime.getRuntime();
 			//String browser = WorkingDir.get() + "/chromedriver.exe";
 			String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
-			Process pc = rTime.exec(browser+url);
-			pc.waitFor();
+			rTime.exec(browser+url);
+			//Process pc = rTime.exec(browser+url);
+			//pc.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -60,7 +60,7 @@ public class Utlities extends Driver {
 			Fillo nfillo = new Fillo();
 			Connection connection = nfillo.getConnection(TestDataDB_File.get());
 			//String strQuery = "Select * from TestData where Control = \'YES\' ORDER BY SeqNo ASC";
-			String strQuery = "Select * from ExecutionInput where PerformAction = \'YES\' ORDER BY SeqNo ASC";
+			String strQuery = "Select * from TestData where RunControl = \'YES\' ORDER BY SeqNo ASC";
 			Recordset rs = connection.executeQuery(strQuery);
 			rs.moveFirst();
 			String[] UseCases = new String[rs.getCount()];
@@ -69,9 +69,9 @@ public class Utlities extends Driver {
 			String[] TC_Description = new String[rs.getCount()];
 
 			for (int currs = 1; currs <= rs.getCount(); currs++) {
-				UseCases[currs - 1] = rs.getField(2).value();
-				Testcase[currs - 1] = rs.getField(3).value();
-				data[currs - 1] = rs.getField(4).value();
+				UseCases[currs - 1] = rs.getField(3).value();
+				Testcase[currs - 1] = rs.getField(4).value();
+				data[currs - 1] = rs.getField(6).value();
 				TC_Description[currs - 1] = rs.getField(5).value();
 				
 				if (rs.hasNext()) {
@@ -209,16 +209,15 @@ public class Utlities extends Driver {
 
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(TestDataDB_File.get());
-			String strQuery = "Select * from " + Screen + "  Where Environment = \'" + data + "\'";
+			String strQuery = "Select * from " + Screen + "  Where Application_Details = \'" + data + "\'";
 
 			Recordset rs = connection.executeQuery(strQuery);
-			int noOfColumns = rs.getFieldNames().size();
+			int noOfColumns = rs.getFieldNames().size();	
 			ArrayList<String> fieldnames = rs.getFieldNames();
 			rs.moveNext();
 			for (int readloop = 0; readloop < noOfColumns; readloop++) {
 				String colname = fieldnames.get(readloop);
 				if (!colname.equals("Environment")) {
-
 					String dat = rs.getField(readloop).value();
 					if (dat == null) {
 						dict.put(colname, "");

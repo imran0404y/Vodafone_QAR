@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
 //import org.openqa.selenium.By;
 //import org.openqa.selenium.Keys;
 
@@ -310,14 +313,14 @@ public class Keyword_CRM extends Driver {
 		String Account_No = null;
 		Result.fUpdateLog("------Account Creation Event Details------");
 		try {
-			
+
 			int Row_Count = Browser.WebTable.getRowCount("Address");
 			if (Row_Count > 1) {
 				Browser.WebButton.waittillvisible("Create_A/c");
 				Browser.WebButton.waitTillEnabled("Create_A/c");
 				CO.waitforobj("Create_A/c", "WebButton");
 				CO.scroll("Create_A/c", "WebButton");
-				CO.Span_Sel("Create A/c");
+				CO.Text_Select("span", "Create A/c");
 
 				Browser.ListBox.waittillvisible("CR_Type");
 				String CR = "12" + R.nextInt(100000);
@@ -383,9 +386,9 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			if (Browser.WebLink.exist("Acc_address"))
 				Result.fUpdateLog("Proceeding Consumer Address Creation");
-			else if (Browser.WebButton.exist("Address_Tab")){
+			else if (Browser.WebButton.exist("Address_Tab")) {
 				Result.fUpdateLog("Proceeding Enterprise Address Creation");
-			}	
+			}
 
 			Browser.WebButton.click("Add_Address");
 
@@ -404,7 +407,7 @@ public class Keyword_CRM extends Driver {
 			}
 			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address", Add1);
 			Utlities.StoreValue("Address line1", Add1);
-			
+
 			Col = CO.Select_Cell("Address", "Address Line 2");
 			if (!(getdata("Add_AddressLine2").equals(""))) {
 				Add2 = getdata("Add_AddressLine2");
@@ -445,7 +448,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 
 			if (Continue.get() && Row_Count > 1) {
-				Test_OutPut += Add1+ ",";
+				Test_OutPut += Add1 + ",";
 				Status = "PASS";
 			} else {
 				Result.fUpdateLog("Create_A/c button not exist");
@@ -723,10 +726,10 @@ public class Keyword_CRM extends Driver {
 				CO.AddOnSelection(getdata("Addons_Delete"), "Delete");
 				// Result.takescreenshot("");
 				CO.waitforload();
-				CO.Button_Sel("Verify");
+				CO.Text_Select("button", "Verify");
 				CO.isAlertExist();
 				CO.waitforload();
-				CO.Button_Sel("Done");
+				CO.Text_Select("button", "Done");
 				CO.waitforload();
 				if (CO.isAlertExist())
 					Driver.Continue.set(false);
@@ -792,10 +795,10 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.click("Customize");
 					CO.AddOnSelection(MSISDN, "STAR");
 					CO.waitforload();
-					CO.Button_Sel("Verify");
+					CO.Text_Select("button", "Verify");
 					CO.isAlertExist();
 					CO.waitforload();
-					CO.Button_Sel("Done");
+					CO.Text_Select("button", "Done");
 					if (CO.isAlertExist()) {
 						Driver.Continue.set(false);
 						System.exit(0);
@@ -1144,7 +1147,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Address_Tab");
 			CO.waitforload();
 			if (!(Address.equals(""))) {
-				
+
 				CO.waitforobj("Add_Address", "WebButton");
 				// Browser.WebButton.waittillvisible("Add_Address");
 				Browser.WebButton.click("Add_Address");
@@ -1167,7 +1170,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.click("Add_OK");
 
 				CO.waitmoreforload();
-				//Browser.WebButton.waittillvisible("Create_A/c");
+				// Browser.WebButton.waittillvisible("Create_A/c");
 				Result.takescreenshot("Address Selected : " + Address);
 				Result.fUpdateLog("Address Selected : " + Address);
 			} else {
@@ -1335,23 +1338,24 @@ public class Keyword_CRM extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public String Modify() {
 		String Test_OutPut = "", Status = "";
-		String MSISDN, Add_Addon, Remove_Addon;
+		String MSISDN, Add_Addon, Remove_Addon, Order_no;
+		int Inst_RowCount, Col_P, Col_SID, Row_Count, Col, Length;
+
 		Result.fUpdateLog("------Modify Event Details------");
 		try {
-
 			if (!(getdata("MSISDN").equals(""))) {
 				MSISDN = getdata("MSISDN");
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
 
-			CO.Assert_Search(MSISDN, "Active");
+			CO.Assert_Search(MSISDN, "Active", "");
 
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
-				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
-				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
-				int Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
 				// To Find the Record with Mobile Service Bundle and MSISDN
 				for (int i = 2; i <= Inst_RowCount; i++)
 					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equals("Mobile Service Bundle")
@@ -1360,10 +1364,13 @@ public class Keyword_CRM extends Driver {
 						break;
 					}
 				Browser.WebButton.click("Assert_Modify");
+
 			} else
 				CO.InstalledAssertChange("Modify");
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+			// wait
 
 			if (!(getdata("Add_Addon").equals(""))) {
 				Add_Addon = getdata("Add_Addon");
@@ -1376,34 +1383,76 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
+
 			CO.AddOnSelection(Add_Addon, "Add");
-			CO.waitforload();
+			Result.takescreenshot("");
+			CO.waitmoreforload();
 			CO.AddOnSelection(Remove_Addon, "Delete");
 			CO.waitforload();
-			CO.Button_Sel("Verify");
+			CO.Text_Select("button", "Verify");
 			CO.isAlertExist();
 			CO.waitforload();
-			CO.Button_Sel("Done");
+			CO.Text_Select("button", "Done");
 			if (CO.isAlertExist()) {
 				Driver.Continue.set(false);
-				Result.takescreenshot("");
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
 
-			String Product_Type;
-			if (!(getdata("Product_Type").equals(""))) {
-				Product_Type = getdata("Product_Type");
-			} else {
-				Product_Type = pulldata("Product_Type");
+			Result.takescreenshot("");
+			/*
+			 * String Product_Type; if (!(getdata("Product_Type").equals(""))) {
+			 * Product_Type = getdata("Product_Type"); } else { Product_Type =
+			 * pulldata("Product_Type"); } if (Product_Type.equals("Enterprise") ||
+			 * Product_Type.equals("VIP")) Browser.WebEdit.Set("Ent_CreditLimit", "100");//
+			 * click("Ent_CreditLimit"); else Browser.WebEdit.click("Credit_Limit");
+			 * 
+			 * //Browser.WebButton.waittillvisible("Validate"); //CO.waitforload();// Use
+			 * for "Ent_CreditLimit"
+			 */
+			CO.waitforload();
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			if (Row_Count <= 3) {
+				Browser.WebButton.waittillvisible("Expand");
+				Browser.WebButton.click("Expand");
 			}
-			if (Product_Type.equals("Enterprise") || Product_Type.equals("VIP"))
-				Browser.WebEdit.Set("Ent_CreditLimit", "100");// click("Ent_CreditLimit");
-			else
-				Browser.WebEdit.click("Credit_Limit");
 
-			Browser.WebButton.waittillvisible("Validate");
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Col_P = CO.Actual_Cell("Line_Items", "Action");
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
+
+			String Product_Tabs[] = Add_Addon.split("<>");
+			for (int j = 0; j < Product_Tabs.length; j++) {
+				String Prod_array[] = Product_Tabs[j].split(",");
+				Length = Prod_array.length;
+				System.out.println(Length);
+				String Sdata = Prod_array[1];
+				if (Length > 1) {
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+
+						if (Sdata.equals(LData)) {
+							String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+							if (Action.equals("Add") || Action.equals("Delete")) {
+								Result.fUpdateLog("Status  updated sucuessfully");
+								Result.fUpdateLog("Add/Delition Event is Successfull");
+							} else {
+								Driver.Continue.set(false);
+								Result.fUpdateLog("Event is UnSuccessfull");
+
+							}
+
+						}
+					}
+				}
+			}
+
 			OrderSubmission();
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+			Result.takescreenshot("");
 
 			CO.ToWait();
 			if (Continue.get()) {
@@ -1412,17 +1461,19 @@ public class Keyword_CRM extends Driver {
 			} else
 				Status = "FAIL";
 
-		} catch (Exception e) {
+		}
+
+		catch (Exception e) {
 			Status = "FAIL";
 			Test_OutPut += "Exception occurred" + ",";
 			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("------Modify Event Details - Completed------");
+		Result.fUpdateLog("Modify Event  Details - Completed");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Suspend
 	 * Arguments			: None
@@ -1432,31 +1483,22 @@ public class Keyword_CRM extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public String Suspension() {
 		String Test_OutPut = "", Status = "";
-		String MSISDN;
+		String MSISDN, Resume_Date, Order_no;
+		int Col_Resume, Row = 2;
 		Result.fUpdateLog("------Suspend Event Details------");
 		try {
+
 			if (!(getdata("MSISDN").equals(""))) {
 				MSISDN = getdata("MSISDN");
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			CO.Assert_Search(MSISDN, "Active");
+			CO.Assert_Search(MSISDN, "Active", "Suspend");
 
-			/*
-			 * String Prod = "Mobile Service Bundle"; int Inst_RowCount =
-			 * Browser.WebTable.getRowCount("Installed_Assert"); for (int i = 1; i <=
-			 * Inst_RowCount; i++) if (Browser.WebTable.getCellData("Installed_Assert", i,
-			 * 2).equals(Prod)) { Result.takescreenshot("");
-			 * Browser.WebTable.click("Installed_Assert", i, 1); Result.takescreenshot("");
-			 * }
-			 */
-
-			String Field, Resume_Date;
-			int Col_F, Col_Resume, Row = 2;
 			if (Browser.WebButton.exist("Suspend")) {
 				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
-				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product"),
-						Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				int Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
 
 				Result.fUpdateLog(Col_P + "," + Col_SID);
 				Result.fUpdateLog(Browser.WebTable.getCellData("Acc_Installed_Assert", 3, Col_P));
@@ -1470,46 +1512,52 @@ public class Keyword_CRM extends Driver {
 				// CO.InstalledAssertChange("Suspend");
 				CO.scroll("Suspend", "WebButton");
 				Browser.WebButton.click("Suspend");
+			} else {
+				CO.InstalledAssertChange("InstalledAssertChange");
 			}
 			CO.waitforload();
+
 			CO.scroll("Due_Date_chicklet", "WebButton");
 			Browser.WebButton.click("Due_Date_chicklet");
 			Browser.WebButton.click("Date_Now");
 			Browser.WebButton.click("Date_Done");
-			if (Browser.WebEdit.gettext("Due_Date").equals(""))
+			if (Browser.WebEdit.gettext("Due_Date1").equals(""))
 				Driver.Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
+
 			CO.scroll("Resume_Date", "WebButton");
 			Col_Resume = CO.Select_Cell("Line_Items", "Resume Date");
 			Browser.WebTable.click("Line_Items", Row, Col_Resume);
+
 			DateFormat ResumeDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
 			Calendar cals = Calendar.getInstance();
 			cals.add(Calendar.MONTH, 1);
-			Result.fUpdateLog(ResumeDate.format(cals.getTime()).toString());
 			Resume_Date = ResumeDate.format(cals.getTime()).toString();
 			Browser.WebTable.SetDataE("Line_Items", Row, Col_Resume, "Scheduled_Ship_Date", Resume_Date);
-			Result.fUpdateLog(CO.Col_Data(Col_Resume).trim());
-			
+			Result.fUpdateLog(Resume_Date);
+
+			// Result.fUpdateLog(CO.Col_Data(Col_Resume).trim());
 			Result.takescreenshot("");
-			CO.scroll("Ful_Status", "WebButton");
-			Col_F = CO.Select_Cell("Line_Items", "Fulfillment Status");
-			Field = (CO.Col_Data(Col_F).trim());
-			Result.fUpdateLog(Field);
-			if (Field.toLowerCase().equals("fulfillment status"))
-				COL_FUL_STATUS = Col_F;
 
 			CO.scroll("Service", "WebButton");
+			CO.scroll("Line_Items", "WebLink");
+			CO.Text_Select("a", "Line Items");
 
-			Browser.WebButton.waittillvisible("Validate");
-			Browser.WebButton.click("Validate");
-			CO.waitforload();
+			int Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			if (Row_Count1 <= 3) {
+				Browser.WebButton.waittillvisible("Expand");
+				Browser.WebButton.click("Expand");
+			}
+			CO.Action_Update("Suspend", MSISDN);
 
-			Browser.WebButton.waittillvisible("Submit");
 			OrderSubmission();
-
-			CO.Assert_Search(MSISDN, "Suspended");
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+			Result.takescreenshot("");
 
 			CO.ToWait();
 			if (Continue.get()) {
@@ -1520,6 +1568,7 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("Suspenstion Failed");
 				Status = "FAIL";
 			}
+
 		} catch (Exception e) {
 			Status = "FAIL";
 			Test_OutPut += "Exception occurred" + ",";
@@ -1527,10 +1576,10 @@ public class Keyword_CRM extends Driver {
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("------Suspend Login Event Details - Completed------");
-		return Status + "@@" + Test_OutPut;
+		Result.fUpdateLog("Suspend Login Event Details - Completed");
+		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Resume
 	 * Arguments			: None
@@ -1540,7 +1589,8 @@ public class Keyword_CRM extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public String Resume() {
 		String Test_OutPut = "", Status = "";
-		String MSISDN;
+		String MSISDN, Field, Resume_Date, Order_no;
+		int Col_F, Col_Resume, Row = 2;
 		Result.fUpdateLog("------Resume Event Details------");
 		try {
 			if (!(getdata("MSISDN").equals(""))) {
@@ -1548,33 +1598,21 @@ public class Keyword_CRM extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			CO.Assert_Search(MSISDN, "Suspended");
-
-			/*
-			 * String Prod = "Mobile Service Bundle"; int Inst_RowCount =
-			 * Browser.WebTable.getRowCount("Installed_Assert"); for (int i = 1; i <=
-			 * Inst_RowCount; i++) if (Browser.WebTable.getCellData("Installed_Assert", i,
-			 * 2).equals(Prod)) { Result.takescreenshot("");
-			 * Browser.WebTable.click("Installed_Assert", i, 1); Result.takescreenshot("");
-			 * }
-			 */
-
-			String Field, Resume_Date;
-			int Col_F, Col_Resume, Row = 2;
+			CO.Assert_Search(MSISDN, "Suspended", "Resume");
 			if (Browser.WebButton.exist("Resume")) {
 				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
 				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
-				for (int i = 2; i <= Inst_RowCount; i++)
+				for (int i = 2; i <= Inst_RowCount; i++) {
 					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P)
 							.equals("Mobile Service Bundle")) {
 						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
 						break;
 					}
-
-				// CO.InstalledAssertChange("Resume");
-
+				}
 				CO.scroll("Resume", "WebButton");
 				Browser.WebButton.click("Resume");
+			} else {
+				CO.InstalledAssertChange("Resume");
 			}
 			CO.waitforload();
 			CO.scroll("Due_Date_chicklet", "WebButton");
@@ -1586,9 +1624,10 @@ public class Keyword_CRM extends Driver {
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
-			Result.takescreenshot("");
+
 			CO.scroll("Resume_Date", "WebButton");
 			Col_Resume = CO.Select_Cell("Line_Items", "Resume Date");
+
 			Resume_Date = (CO.Col_Data(Col_Resume).trim());
 			Result.fUpdateLog(Resume_Date);
 			if (Resume_Date.toLowerCase().equals("resume date"))
@@ -1605,10 +1644,30 @@ public class Keyword_CRM extends Driver {
 			if (Field.toLowerCase().equals("fulfillment status"))
 				COL_FUL_STATUS = Col_F;
 			CO.scroll("Service", "WebButton");
+			int Row_Count1;
+			CO.scroll("Service", "WebButton");
+			CO.scroll("Line_Items", "WebLink");
+			CO.Text_Select("a", "Line Items");
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
 
-			Browser.WebButton.waittillvisible("Validate");
+			if (Row_Count1 <= 3) {
+				Browser.WebButton.waittillvisible("Expand");
+				Browser.WebButton.click("Expand");
+			}
+			CO.Action_Update("Resume", MSISDN);
 			OrderSubmission();
-			CO.Assert_Search(MSISDN, "Active");
+
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+
+			Result.takescreenshot("");
+			if (!(getdata("MSISDN").equals(""))) {
+				CO.Assert_Search(getdata("MSISDN"), "Active", "Resume");
+			} else {
+				CO.Assert_Search(pulldata("MSISDN"), "Active", "Resume");
+			}
 
 			CO.ToWait();
 			if (Continue.get()) {
@@ -1616,9 +1675,105 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("Resume Plan is done Successfully ");
 				Status = "PASS";
 			} else {
-				Test_OutPut += "Resume Failed" + ",";
-				Result.takescreenshot("Resume Failed");
 				Result.fUpdateLog("Resume Failed");
+				Status = "FAIL";
+			}
+
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("Resume Event Details - Completed");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Plan_UpgradeDowngrade
+	 * Arguments			: None
+	 * Use 					: Change of Plan
+	 * Designed By			: Sravani Reddy
+	 * Last Modified Date 	: 27-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Plan_UpgradeDowngrade() {
+
+		String Test_OutPut = "", Status = "";
+		String MSISDN, PlanName, PlanChange_From;
+		int Row_Count, Col, Col_P;
+		Result.fUpdateLog("------Plan Upgrade/Downgrade Event Details------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("PlanName").equals(""))) {
+				PlanName = getdata("PlanName");
+			} else {
+				PlanName = pulldata("PlanName");
+			}
+			if (!(getdata("PlanChange_From").equals(""))) {
+				PlanChange_From = getdata("PlanChange_From");
+			} else {
+				PlanChange_From = pulldata("PlanChange_From");
+			}
+			CO.Assert_Search(MSISDN, "Active", "PlanChange");
+			Col = CO.Select_Cell("Acc_Installed_Assert", "Product");
+			Row_Count = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+			for (int i = 1; i <= Row_Count; i++) {
+				String LData = Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col);
+				if (LData.equals(PlanChange_From)) {
+					Browser.WebTable.click("Acc_Installed_Assert", i, (Col + 1));
+					CO.InstalledAssertChange("Upgrade Promotion");
+
+					break;
+				}
+
+			}
+			CO.waitforload();
+			Browser.WebEdit.Set("Promotion_Upgrade", PlanName);
+			String Path[] = Utlities.FindObject("Promotion_Upgrade", "WebEdit");
+			cDriver.get().findElement(By.xpath(Path[0])).sendKeys(Keys.ENTER);
+			CO.waitforload();
+			
+			if (Browser.WebTable.getRowCount("Promotion_Upgrades") >= 2) {
+				CO.scroll("Upgrade_OK", "WebButton");
+				Browser.WebButton.click("Upgrade_OK");
+			} else {
+				Driver.Continue.set(false);
+				System.exit(0);
+			}
+
+			int Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Col_P = CO.Actual_Cell("Line_Items", "Action");
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+
+				if (LData.equals(PlanName)) {
+					if (Action.equals("Add")) {
+						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
+					} else {
+						Result.fUpdateLog(LData + ":" + Action);
+						Driver.Continue.set(false);
+					}
+				}
+			}
+
+			CO.waitforload();
+			OrderSubmission();
+
+			CO.ToWait();
+			if (Continue.get()) {
+
+				Status = "PASS";
+			} else {
+
 				Status = "FAIL";
 			}
 		} catch (Exception e) {
@@ -1628,10 +1783,244 @@ public class Keyword_CRM extends Driver {
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("------Resume Event Details - Completed------");
-		return Status + "@@" + Test_OutPut;
+		Result.fUpdateLog("------Plan Upgrade/Downgrade Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+
 	}
-	
-	
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Change_PrimaryNumber
+	 * Arguments			: None
+	 * Use 					: Change of Primary number
+	 * Designed By			: Sravani Reddy
+	 * Last Modified Date 	: 27-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Change_PrimaryNumber() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN;
+		String Order_no;
+		Result.fUpdateLog("------Change Primary Number Event Details------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+			CO.Assert_Search(MSISDN, "Active", "Change_PN");
+			CO.Tag_Select("span", "Primary MSISDN");
+			if (Browser.WebButton.exist("Assert_Modify")) {
+				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				int Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equals("Mobile Service Bundle")
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID).equals(MSISDN)) {
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
+						break;
+					}
+				Browser.WebButton.click("Assert_Modify");
+
+			} else
+				CO.InstalledAssertChange("Modify");
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+			CO.Link_Select("Others");
+			CO.Radio_Select("Make Primary MSISDN");
+			Result.takescreenshot("");
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			if (CO.isAlertExist()) {
+				Driver.Continue.set(false);
+				System.out.println("Error On Clicking Done Button");
+				System.exit(0);
+			}
+			Result.takescreenshot("");
+			CO.waitforload();
+			OrderSubmission();
+			CO.waitforload();
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+			String BP = null;
+			int Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			int Col1 = CO.Select_Cell("Line_Items", "Product");
+			int Col_P1 = CO.Actual_Cell("Line_Items", "Service Id");
+			CO.Tag_Select("div", "Billing Profile");
+			int Col_B = CO.Select_Cell("Line_Items", "Billing Profile");
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			for (int i = 2; i <= Row_Count1; i++) {
+				CO.Tag_Select("div", "Product");
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col1);
+				String MSDN = Browser.WebTable.getCellData("Line_Items", i, Col_P1);
+
+				if (LData.equals("Mobile Service Bundle") & (MSDN.equals(MSISDN))) {
+					BP = Browser.WebTable.getCellData("Line_Items", i, Col_B);
+					break;
+				}
+
+			}
+			CO.waitforload();
+			int Row = 2, Col;
+			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
+				Browser.WebButton.click("VFQ_LeftScroll");
+			}
+			Browser.WebLink.waittillvisible("VQ_Assert");
+			Browser.WebLink.click("VQ_Assert");
+			CO.scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			CO.waitforload();
+			Col = CO.Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = CO.Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", "Active");
+			Col = CO.Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			CO.waitforload();
+			Col = CO.Select_Cell("Assert", "Account");
+			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Driver.Continue.set(false);
+			Browser.WebLink.waittillvisible("Acc_Portal");
+			CO.waitforload();
+			Browser.WebLink.click("Acc_Portal");
+			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			CO.scroll("Profile_Tab", "WebButton");
+			Browser.WebButton.click("Profile_Tab");
+			CO.waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
+			int Col_Val = CO.Select_Cell("Bill_Prof", "Name");
+			for (int i = 2; i <= Row_Count; i++) {
+				String BillPro = Browser.WebTable.getCellData("Bill_Prof", i, Col_Val);
+				if (BillPro.equals(BP)) {
+					Browser.WebTable.click("Bill_Prof", i, Col_Val);
+					break;
+				}
+
+			}
+			CO.Text_Select("a", "Unbilled Usage");
+			CO.waitforload();
+
+			CO.ToWait();
+			if (Driver.Continue.get()) {
+				Status = "PASS";
+				Utlities.StoreValue("Sales_OrderNO", Order_no);
+				Test_OutPut += "Order_No : " + Order_no + ",";
+
+			} else {
+				Status = "FAIL";
+
+			}
+
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		Result.fUpdateLog("-----Change Primary Number Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Disconnect
+	 * Arguments			: None
+	 * Use 					: Disconnection of Active line
+	 * Designed By			: Sravani Reddy
+	 * Last Modified Date 	: 27-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Disconnect() {
+
+		String Test_OutPut = "", Status = "";
+		String MSISDN, PlanName;
+		int Col, Col_P;
+		Result.fUpdateLog("------Disconnect Event Details------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("PlanName").equals(""))) {
+				PlanName = getdata("PlanName");
+			} else {
+				PlanName = pulldata("PlanName");
+			}
+			CO.Assert_Search(MSISDN, "Active", "Disconnect");
+			int Row_Count1 = Browser.WebTable.getRowCount("Installed_Assert");
+			Col = CO.Select_Cell("Installed_Assert", "Product");
+			Col_P = CO.Actual_Cell("Installed_Assert", "Service ID");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Installed_Assert", i, Col);
+				if (LData.equals(PlanName)) {
+					Browser.WebTable.click("Installed_Assert", i, Col_P);
+					CO.waitforload();
+					break;
+
+				}
+
+			}
+			Browser.WebButton.click("VFQ_Disconnect");
+			CO.waitforload();
+			CO.scroll("Due_Date_chicklet", "WebButton");
+			Browser.WebButton.click("Due_Date_chicklet");
+			Browser.WebButton.click("Date_Now");
+			Browser.WebButton.click("Date_Done");
+			if (Browser.WebEdit.gettext("Due_Date").equals(""))
+				Driver.Continue.set(false);
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitmoreforload();
+			Result.takescreenshot("Disconnect Order : ");
+			// CO.InstalledAssertChange("Disconnect");
+			CO.waitforload();
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Col_P = CO.Actual_Cell("Line_Items", "Action");
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+
+				if (LData.equals(PlanName)) {
+					if (Action.equals("Delete")) {
+						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
+					} else {
+						Result.fUpdateLog(LData + ":" + Action);
+						Driver.Continue.set(false);
+					}
+				}
+
+			}
+			OrderSubmission();
+			Result.takescreenshot("");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Status = "PASS";
+			} else {
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------Disconnect Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
 
 }
