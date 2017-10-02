@@ -181,7 +181,7 @@ public class Result extends Driver {
 				+ "</tr>";
 		bw.write(logmessage + "\r\n");
 		logmessage = "";
-		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 13%><center>" + UseCaseName.get() + "</center></td>";
+		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 13%><center>" + UC.get() + "</center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 10%><center><a href = .\\" + UC.get() + "\\" + TestCaseN.get()+ ".docx" + ">"
 				+ TestCaseN.get() + "</a></center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 15%>" + TestCaseDes.get() + "</td>";

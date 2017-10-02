@@ -36,6 +36,7 @@ public class Driver {
 	public static ThreadLocal<String> UseCaseName = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseN = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseData = new ThreadLocal<String>();
+	public static ThreadLocal<String> ValidationData = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseDes = new ThreadLocal<String>();
 	public static ThreadLocal<String> currUCstatus = new ThreadLocal<String>();
 	public static ThreadLocal<String> currKWstatus = new ThreadLocal<String>();
@@ -46,6 +47,7 @@ public class Driver {
 	public static ThreadLocal<String> keywordstartdate = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();
+	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> database = new ThreadLocal<Dictionary>();
 	protected static ThreadLocal<WebDriver> cDriver = new ThreadLocal<WebDriver>();
 
@@ -58,7 +60,7 @@ public class Driver {
 		Storage_FLD.set(Base_Path.get() + "/Storage");
 		OR_File.set(Storage_FLD.get() + "/ObjectRepository.xlsx");
 		StoreDB_File.set(Storage_FLD.get() + "/StoreDB.xlsx");
-		Database_File.set(Storage_FLD.get() + "/CommonRepository.xlsx");
+		Database_File.set(Storage_FLD.get() + "/CommonDirectory.xlsx");
 		Directory_FLD.set(Base_Path.get() + "/Directory");
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsm");
 		Result_FLD.set(Base_Path.get() + "/Results");
@@ -78,6 +80,7 @@ public class Driver {
 		String[] totTestCases = addUsecase.get(1);
 		String[] totUseCases_data = addUsecase.get(2);
 		String[] totTestcase_Des = addUsecase.get(3);
+		String[] totvalidation_data= addUsecase.get(3);
 		totalUC = totUseCases.length;
 
 		for (int currUseCase = 0; currUseCase < totalUC; currUseCase++) {
@@ -86,6 +89,8 @@ public class Driver {
 			TestCaseN.set(totTestCases[currUseCase]);
 			TestCaseData.set(totUseCases_data[currUseCase]);
 			TestCaseDes.set(totTestcase_Des[currUseCase]);
+			ValidationData.set(totvalidation_data[currUseCase]);
+			
 			TestOutput = "";
 			Result.fCreateReportFiles(currUseCase+1 , UseCaseName.get());
 			ArrayList<String[]> addresses = Utlities.floadKeywords(UseCaseName.get());
@@ -111,6 +116,7 @@ public class Driver {
 					currKWstatus.set("Pass");
 					if (currKW_DB.get().toString().equalsIgnoreCase("Data")) {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata(TestCaseData.get()));
+						ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
 					} else {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata_diff(currKW_DB.get()));
 					}
@@ -164,6 +170,17 @@ public class Driver {
 		String c = "";
 		try {
 			c = TestData.get().get(colname).toString();
+			return c;
+		} catch (Exception e) {
+			return c;
+		}
+
+	}
+	
+	public static String Validatedata(String colname) {
+		String c = "";
+		try {
+			c = ValidateDT.get().get(colname).toString();
 			return c;
 		} catch (Exception e) {
 			return c;
