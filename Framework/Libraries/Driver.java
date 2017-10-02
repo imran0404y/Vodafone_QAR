@@ -33,6 +33,7 @@ public class Driver {
 
 	public static ThreadLocal<Boolean> Continue = new ThreadLocal<Boolean>();
 	public static ThreadLocal<String> ExecutionStarttimestr = new ThreadLocal<String>();
+	public static ThreadLocal<String> Environment = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseName = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseN = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseData = new ThreadLocal<String>();
@@ -119,6 +120,7 @@ public class Driver {
 						ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
 					} else {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata_diff(currKW_DB.get()));
+						Environment.set(getdata("Environment"));
 					}
 
 					try {
