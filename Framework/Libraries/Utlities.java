@@ -219,7 +219,7 @@ public class Utlities extends Driver {
 			rs.moveNext();
 			for (int readloop = 0; readloop < noOfColumns; readloop++) {
 				String colname = fieldnames.get(readloop);
-				if (!colname.equals("Environment")) {
+				if (!colname.equals("Application_Details")) {
 					String dat = rs.getField(readloop).value();
 					if (dat == null) {
 						dict.put(colname, "");
