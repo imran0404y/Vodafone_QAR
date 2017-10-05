@@ -63,7 +63,7 @@ public class Driver {
 		StoreDB_File.set(Storage_FLD.get() + "/StoreDB.xlsx");
 		Database_File.set(Storage_FLD.get() + "/CommonDirectory.xlsx");
 		Directory_FLD.set(Base_Path.get() + "/Directory");
-		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsm");
+		TestDataDB_File.set(Directory_FLD.get() + "/VFQA_TestDesign.xlsm");
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
 		String Keyword_Result = null;
@@ -79,17 +79,17 @@ public class Driver {
 		ArrayList<String[]> addUsecase = Utlities.floadUseCases();
 		String[] totUseCases = addUsecase.get(0);
 		String[] totTestCases = addUsecase.get(1);
-		String[] totUseCases_data = addUsecase.get(2);
-		String[] totTestcase_Des = addUsecase.get(3);
-		String[] totvalidation_data= addUsecase.get(3);
+		String[] totTestcase_Des = addUsecase.get(2);
+		String[] totUseCases_data = addUsecase.get(3);
+		String[] totvalidation_data= addUsecase.get(4);
 		totalUC = totUseCases.length;
 
 		for (int currUseCase = 0; currUseCase < totalUC; currUseCase++) {
 			Continue.set(true);
 			UseCaseName.set(totUseCases[currUseCase]);
 			TestCaseN.set(totTestCases[currUseCase]);
-			TestCaseData.set(totUseCases_data[currUseCase]);
 			TestCaseDes.set(totTestcase_Des[currUseCase]);
+			TestCaseData.set(totUseCases_data[currUseCase]);			
 			ValidationData.set(totvalidation_data[currUseCase]);
 			
 			TestOutput = "";

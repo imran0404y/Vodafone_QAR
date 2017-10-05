@@ -47,7 +47,7 @@ public class Common extends Driver {
 	public void waitmoreforload() {
 		try {
 			cDriver.get().manage().timeouts().implicitlyWait(240, TimeUnit.SECONDS);
-			Thread.sleep(15000);
+			Thread.sleep(20000);
 
 		} catch (Exception e) {
 		}
@@ -55,9 +55,9 @@ public class Common extends Driver {
 
 	public void ToWait() {
 		try {
-			int i = 3;
+			int i = 1;
 			cDriver.get().manage().timeouts().implicitlyWait(240, TimeUnit.SECONDS);
-			i = i * 1000;
+			i = i * 60 * 1000;
 			Thread.sleep(i);
 		} catch (Exception e) {
 		}
@@ -641,15 +641,122 @@ public class Common extends Driver {
 						Driver.Continue.set(false);
 
 					}
-
 				}
-
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: PN_Verfication
+	 * Use 					: To check the Unbilled usage in Billing profile
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 3-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void PN_Verfication(String MSISDN, String Status, String BP){
+		try {
+			waitforload();
+			int Row = 2, Col;
+			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
+				Browser.WebButton.click("VFQ_LeftScroll");
+			}
+			Browser.WebLink.waittillvisible("VQ_Assert");
+			Browser.WebLink.click("VQ_Assert");
+			scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			waitforload();
+			Col = Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", Status);
+			Col = Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			waitforload();
+			Col = Select_Cell("Assert", "Account");
+			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Driver.Continue.set(false);
+			Browser.WebLink.waittillvisible("Acc_Portal");
+			waitforload();
+			Browser.WebLink.click("Acc_Portal");
+			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			scroll("Profile_Tab", "WebButton");
+			Browser.WebButton.click("Profile_Tab");
+			waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
+			int Col_Val = Select_Cell("Bill_Prof", "Name");
+			for (int i = 2; i <= Row_Count; i++) {
+				String BillPro = Browser.WebTable.getCellData("Bill_Prof", i, Col_Val);
+				if (BillPro.equals(BP)) {
+					Browser.WebTable.click("Bill_Prof", i, Col_Val);
+					break;
+				}
+			}
+			Text_Select("a", "Unbilled Usage");
+			waitforload();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Webtable_Value
+	 * Use 					: To fetch the value from a table having SPAN and Input tag
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 3-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Webtable_Value(String Text,String Val) {
 
+		String cellXpath = "//span[text()='" + Text + "']/../../following-sibling::td[1]//input";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		cDriver.get().findElement(By.xpath(cellXpath)).sendKeys(Val);
+		
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Status
+	 * Use 					: To get the status After modifying the plan
+	 * Designed By			: Sravani
+	 * Last Modified Date 	: 02-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Status(String Addon) {
+		int Col,Col_P,Row_Count,Length;
+		try {
+			Col =Select_Cell("Line_Items", "Product");
+			Col_P =Actual_Cell("Line_Items", "Action");
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			String Product_Tabs[] = Addon.split("<>");
+			for (int j = 0; j < Product_Tabs.length; j++) {
+				String Prod_array[] = Product_Tabs[j].split(",");
+				Length = Prod_array.length;
+				System.out.println(Length);
+				String Sdata = Prod_array[1];
+				if (Length > 1) {
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+
+						if (Sdata.equals(LData)) {
+							String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+							if (Action.equals("Add") || Action.equals("Delete")) {
+								Result.fUpdateLog("Status  updated sucuessfully");
+								Result.fUpdateLog("Add/Delition Event is Successfull");
+							} else {
+								Driver.Continue.set(false);
+								Result.fUpdateLog("Event is UnSuccessfull");
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

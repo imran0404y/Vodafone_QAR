@@ -70,11 +70,11 @@ public class Utlities extends Driver {
 			String[] TC_Description = new String[rs.getCount()];
 
 			for (int currs = 1; currs <= rs.getCount(); currs++) {
-				UseCases[currs - 1] = rs.getField(3).value();
-				Testcase[currs - 1] = rs.getField(4).value();
-				data[currs - 1] = rs.getField(6).value();
-				TC_Description[currs - 1] = rs.getField(5).value();
-				ValidationData[currs - 1] = rs.getField(7).value();
+				UseCases[currs - 1] = rs.getField(2).value();	
+				Testcase[currs - 1] = rs.getField(3).value();
+				TC_Description[currs - 1] = rs.getField(4).value();
+				data[currs - 1] = rs.getField(5).value();
+				ValidationData[currs - 1] = rs.getField(6).value();
 				if (rs.hasNext()) {
 					rs.moveNext();
 				}
@@ -82,8 +82,8 @@ public class Utlities extends Driver {
 			}
 			addresses.add(0, UseCases);
 			addresses.add(1, Testcase);
-			addresses.add(2, data);
-			addresses.add(3, TC_Description);
+			addresses.add(2, TC_Description);
+			addresses.add(3, data);
 			addresses.add(4, ValidationData);
 			rs.close();
 			connection.close();

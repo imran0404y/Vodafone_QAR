@@ -18,6 +18,8 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Result extends Driver {
 
@@ -223,14 +225,16 @@ public class Result extends Driver {
 	}
 	
 	public static void DisplayHTMLReport() {
+		System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "\\chromedriver.exe");
 		String url = masterrephtml.get();
+		System.out.println(url);
 		try {
 			//killexeTask();
-		
-			Runtime rTime = Runtime.getRuntime();
-			//String browser = WorkingDir.get() + "/chromedriver.exe";
-			String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
-			rTime.exec(browser+url);
+			WebDriver driver=new ChromeDriver();	
+			driver.get(url);
+			//Runtime rTime = Runtime.getRuntime();
+			//String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
+			//rTime.exec(browser+url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
