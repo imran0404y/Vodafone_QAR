@@ -55,7 +55,7 @@ public class Common extends Driver {
 
 	public void ToWait() {
 		try {
-			int i = 1;
+			int i = 0;
 			cDriver.get().manage().timeouts().implicitlyWait(240, TimeUnit.SECONDS);
 			i = i * 60 * 1000;
 			Thread.sleep(i);
@@ -256,6 +256,7 @@ public class Common extends Driver {
 		int Size = elements.size();
 		System.out.println(Size);
 		boolean flag = false;
+		waitforload();
 		for (int i = 1; i <= Size; i++) {
 			List<WebElement> cellXpath = cDriver.get()
 					.findElements(By.xpath("//div[@class='siebui-ecfg-products']//div[1]//div[" + i
@@ -380,11 +381,10 @@ public class Common extends Driver {
 	 * Designed By			: Vinodhini
 	 * Last Modified Date 	: 7-March-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void Assert_Search(String MSISDN, String Status) {
+	public void Assert_Search(String MSISDN, String Status, String Prod) {
 		try {
 			waitforload();
 			int Row = 2, Col, Col_Pro;
-			String Prod = "Mobile Service Bundle";
 			Browser.WebLink.waittillvisible("VQ_Assert");
 			Browser.WebLink.click("VQ_Assert");
 			Browser.WebLink.waittillvisible("Assert_Search");
@@ -420,58 +420,7 @@ public class Common extends Driver {
 			for (int i = 1; i <= Inst_RowCount; i++)
 				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
 						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					// Browser.WebTable.Expand("Installed_Assert", i, 1);
-					Result.takescreenshot("");
-				}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void Assert_Search(String MSISDN, String Status, String Operat) {
-		try {
-			waitforload();
-			int Row = 2, Col, Col_Pro;
-			String Prod = "Mobile Service Bundle";
-			Browser.WebLink.waittillvisible("VQ_Assert");
-			Browser.WebLink.click("VQ_Assert");
-			Browser.WebLink.waittillvisible("Assert_Search");
-			waitforload();
-			scroll("Assert_Search", "WebLink");
-			Browser.WebLink.click("Assert_Search");
-			waitforload();
-
-			// Installed_Assert
-			Col = Select_Cell("Assert", "Service ID");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
-			Col = Select_Cell("Assert", "Status");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", Status);
-			Col = Select_Cell("Assert", "Product");
-			Browser.WebButton.waitTillEnabled("Assert_Go");
-			Browser.WebButton.click("Assert_Go");
-			waitforload();
-			Col = Select_Cell("Assert", "Account");
-			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
-			if (Assert_Row_Count > 1)
-				Browser.WebTable.clickL("Assert", Row, Col);
-			else
-				Driver.Continue.set(false);
-			Browser.WebLink.waittillvisible("Acc_Portal");
-			waitforload();
-			Browser.WebLink.click("Acc_Portal");
-			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
-			// Browser.WebLink.click("Inst_Assert_ShowMore");
-			waitforload();
-			int Inst_RowCount = Browser.WebTable.getRowCount("Installed_Assert");
-			Col_Pro = Select_Cell("Installed_Assert", "Asset Description");
-			Col = Select_Cell("Installed_Assert", "Service ID");
-			for (int i = 1; i <= Inst_RowCount; i++)
-				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
-						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					if ((Operat.equals("Suspend")) || (Operat.equals("Resume"))) {
 						Text_Select("a", Prod);
-					}
 					// Browser.WebTable.Expand("Installed_Assert", i, 1);
 					Result.takescreenshot("");
 				}

@@ -65,6 +65,17 @@ public class KeyWord {
 		return KC.Resume();
 	}
 	
+	public String Plan_UpgradeDowngrade() {
+		return KC.Plan_UpgradeDowngrade();
+	}
+	
+	public String Change_PrimaryNumber() {
+		return KC.Change_PrimaryNumber();
+	}
+	
+	public String Disconnect() {
+		return KC.Disconnect();
+	}
 	// ------------------Keyword CRM -------------------//
 	
 	// ---------------------XML------------------------//
