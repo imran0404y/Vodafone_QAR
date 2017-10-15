@@ -1,6 +1,5 @@
 package Libraries;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +28,6 @@ public class Result extends Driver {
 	public static ThreadLocal<String> UC = new ThreadLocal<String>();
 	public static ThreadLocal<String> TCscreenfile = new ThreadLocal<String>();
 	public static String updatelogmsg = "";
-	
 
 	/*----------------------------------------------------------------------------------------------------
 	 * Method Name			: fCreateReportFiles
@@ -52,15 +50,19 @@ public class Result extends Driver {
 			if ((!tresfold.exists()))
 				tresfold.mkdir();
 
-			UC.set(SNo+Usecase);
+			UC.set(SNo + Usecase);
 			UCscreenfilepth.set(tresfold + "/" + UC.get());
 			File bthresfold = new File(tresfold + "/" + UC.get());
 			if ((!bthresfold.exists()))
 				bthresfold.mkdir();
 
+			XMLfilepth.set(UCscreenfilepth.get() + "/XML");
+			File XMLfilepth = new File(UCscreenfilepth.get() + "/XML");
+			if ((!XMLfilepth.exists()))
+				XMLfilepth.mkdir();
+
 			File scriptfold = new File(tresfold + "/Scripts");
 			if ((!scriptfold.exists()))
-
 				scriptfold.mkdir();
 
 			String tempref = Templete_FLD.get();
@@ -75,10 +77,10 @@ public class Result extends Driver {
 				logfile.createNewFile();
 			}
 
-			//File masterhtml = new File(tempref + "/MasterReport.HTML");
-			//FileUtils.copyFileToDirectory(masterhtml, tresfold);
+			// File masterhtml = new File(tempref + "/MasterReport.HTML");
+			// FileUtils.copyFileToDirectory(masterhtml, tresfold);
 			masterrephtml.set(tresfold.toString() + "\\MasterReport.HTML");
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -103,7 +105,7 @@ public class Result extends Driver {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/*----------------------------------------------------------------------------------------------------
@@ -116,12 +118,14 @@ public class Result extends Driver {
 	public static void takescreenshot(String LogMessage) {
 		try {
 			File scrFile = ((TakesScreenshot) cDriver.get()).getScreenshotAs(OutputType.FILE);
+
 			CustomXWPFDocument document = new CustomXWPFDocument(new FileInputStream(new File(TCscreenfile.get())));
 			FileOutputStream fos = new FileOutputStream(new File(TCscreenfile.get()));
 			String id = document.addPictureData(new FileInputStream(new File(scrFile.toString())),
 					Document.PICTURE_TYPE_PNG);
 			XWPFParagraph paragraph = document.createParagraph();
-			XWPFRun run = paragraph.createRun();			run.setText(LogMessage);
+			XWPFRun run = paragraph.createRun();
+			run.setText(LogMessage);
 			document.createPicture(id, document.getNextPicNameNumber(Document.PICTURE_TYPE_PNG), 640, 360);
 			document.write(fos);
 			fos.flush();
@@ -149,8 +153,8 @@ public class Result extends Driver {
 				+ "<link rel=\"stylesheet\" href=\"" + "Scripts\\style.css\" type=\"text/css\">" + "<script src=\""
 				+ "Scripts\\amcharts.js\" type=\"text/javascript\"></script>" + "<style>" + "table {font-size: 12px;"
 				+ "background:#E6E6E6;" + "}" + "</style>" + "<script>" + "var chart;" + "var chartData = [{"
-				+ "Status: \"Pass\"," + "Count:" + passUC + "}, {" + "Status: \"Fail\"," + "Count:"
-				+ failUC + "}];" + "AmCharts.ready(function () {" + "chart = new AmCharts.AmPieChart();" +
+				+ "Status: \"Pass\"," + "Count:" + passUC + "}, {" + "Status: \"Fail\"," + "Count:" + failUC + "}];"
+				+ "AmCharts.ready(function () {" + "chart = new AmCharts.AmPieChart();" +
 				// "chart.addTitle(\"Execution Status\", 16);"+
 				"chart.dataProvider = chartData;" + "chart.titleField = \"Status\";" + "chart.valueField = \"Count\";"
 				+ "chart.sequencedAnimation = true;" + "chart.startEffect = \"elastic\";"
@@ -179,23 +183,24 @@ public class Result extends Driver {
 				+ "<td width = 10%><b><center>TestCase</center></b></td>"
 				+ "<td width = 14%><b><center>Testcase ID/Description</center></b></td>"
 				+ "<td width = 22%><b><center>UserInputs</center></b></td>"
-				+ "<td width = 26%><b><center>TestCase Output</center></b></td>" 
-				+ "<td width = 6%><b><center>Status</center></b></td>"
-				+ "</tr>";
+				+ "<td width = 26%><b><center>TestCase Output</center></b></td>"
+				+ "<td width = 6%><b><center>Status</center></b></td>" + "</tr>";
 		bw.write(logmessage + "\r\n");
 		logmessage = "";
 		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 10%><center>" + Environment.get() + "</center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 12%><center>" + UC.get() + "</center></td>";
-		updatelogmsg = updatelogmsg + "<td width = 10%><center><a href = .\\" + UC.get() + "\\" + TestCaseN.get()+ ".docx" + ">"
-				+ TestCaseN.get() + "</a></center></td>";
+		updatelogmsg = updatelogmsg + "<td width = 10%><center><a href = .\\" + UC.get() + "\\" + TestCaseN.get()
+				+ ".docx" + ">" + TestCaseN.get() + "</a></center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 14%>" + TestCaseDes.get() + "</td>";
 		updatelogmsg = updatelogmsg + "<td width = 22%>" + TestCaseData.get() + "</td>";
 		if (currUCstatus.get().equals("Pass")) {
-			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput+ "</td>";
+			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput + "</td>";
 			updatelogmsg = updatelogmsg + "<td width = 6% Style=\"color:green\"><b><center>Pass</center></b></td></tr>";
 		} else if (currUCstatus.get().equals("Fail")) {
-			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput+ "\n" + "Failed at " + currKW_Des.get() + "</td>";
-			updatelogmsg = updatelogmsg + "<td width = 6% Style=\\\"color:Red\\\"><b><center>Fail</center></b></td></tr>";
+			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput + "\n" + "Failed at " + currKW_Des.get()
+					+ "</td>";
+			updatelogmsg = updatelogmsg
+					+ "<td width = 6% Style=\\\"color:Red\\\"><b><center>Fail</center></b></td></tr>";
 		}
 
 		bw.write(updatelogmsg);
@@ -219,22 +224,22 @@ public class Result extends Driver {
 			FileOutputStream out = new FileOutputStream(new File(TCscreenfile.get()));
 			document.write(out);
 			out.close();
-			} catch (Exception e) {
+		} catch (Exception e) {
 
 		}
 	}
-	
+
 	public static void DisplayHTMLReport() {
 		System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "\\chromedriver.exe");
 		String url = masterrephtml.get();
 		System.out.println(url);
 		try {
-			//killexeTask();
-			WebDriver driver=new ChromeDriver();	
+			// killexeTask();
+			WebDriver driver = new ChromeDriver();
 			driver.get(url);
-			//Runtime rTime = Runtime.getRuntime();
-			//String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
-			//rTime.exec(browser+url);
+			// Runtime rTime = Runtime.getRuntime();
+			// String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
+			// rTime.exec(browser+url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

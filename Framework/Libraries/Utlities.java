@@ -63,6 +63,7 @@ public class Utlities extends Driver {
 			String strQuery = "Select * from TestData where RunControl = \'YES\' ORDER BY SeqNo ASC";
 			Recordset rs = connection.executeQuery(strQuery);
 			rs.moveFirst();
+			String[] ID = new String[rs.getCount()];
 			String[] UseCases = new String[rs.getCount()];
 			String[] Testcase = new String[rs.getCount()];
 			String[] data = new String[rs.getCount()];
@@ -70,21 +71,23 @@ public class Utlities extends Driver {
 			String[] TC_Description = new String[rs.getCount()];
 
 			for (int currs = 1; currs <= rs.getCount(); currs++) {
-				UseCases[currs - 1] = rs.getField(2).value();	
-				Testcase[currs - 1] = rs.getField(3).value();
-				TC_Description[currs - 1] = rs.getField(4).value();
-				data[currs - 1] = rs.getField(5).value();
-				ValidationData[currs - 1] = rs.getField(6).value();
+				ID[currs - 1] = rs.getField(2).value();
+				UseCases[currs - 1] = rs.getField(3).value();	
+				Testcase[currs - 1] = rs.getField(4).value();
+				TC_Description[currs - 1] = rs.getField(5).value();
+				data[currs - 1] = rs.getField(6).value();
+				ValidationData[currs - 1] = rs.getField(7).value();
 				if (rs.hasNext()) {
 					rs.moveNext();
 				}
 
 			}
-			addresses.add(0, UseCases);
-			addresses.add(1, Testcase);
-			addresses.add(2, TC_Description);
-			addresses.add(3, data);
-			addresses.add(4, ValidationData);
+			addresses.add(0, ID);
+			addresses.add(1, UseCases);
+			addresses.add(2, Testcase);
+			addresses.add(3, TC_Description);
+			addresses.add(4, data);
+			addresses.add(5, ValidationData);
 			rs.close();
 			connection.close();
 			return addresses;

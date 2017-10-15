@@ -34,8 +34,14 @@ public class Keyword_CRM extends Driver {
 			} else {
 				browser.set("Chrome");
 			}
+			
+			if (!(getdata("URL").equals(""))) {
+				URL.set(getdata("URL"));
+			} else {
+				URL.set("Chrome");
+			}
 
-			Browser.OpenBrowser(browser.get(), getdata("URL"));
+			Browser.OpenBrowser(browser.get(),URL.get() );
 
 			Result.fUpdateLog("Browser Opened Successfully");
 			Result.takescreenshot("Opening Browser and navigating to the URL");
@@ -2034,4 +2040,311 @@ public class Keyword_CRM extends Driver {
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Barring
+	 * Arguments			: None
+	 * Use 					: Barring of active services
+	 * Designed By			: Lavannya Mahalingam
+	 * Last Modified Date 	: 03-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Barring() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, GetData;
+		int Inst_RowCount, Col_P, Col_SID;
+
+		Result.fUpdateLog("------Barring of active services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+			CO.Assert_Search(MSISDN, "Active", GetData);
+
+			if (Browser.WebButton.exist("Assert_Modify")) {
+
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				// To Find the Record with Mobile Service Bundle and MSISDN
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
+						break;
+					}
+				Browser.WebButton.click("Assert_Modify");
+
+			} else
+				CO.InstalledAssertChange("Modify");
+			CO.waitforload();
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			CO.waitforload();
+			if (CO.isAlertExist())
+				Driver.Continue.set(false);
+
+			Browser.WebButton.waittillvisible("Validate");
+			OrderSubmission();
+
+			// CO.Assert_Search(MSISDN, "Active");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "Barring Service is done Successfully " + ",";
+				Result.fUpdateLog("Barring Service is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "Barring Failed" + ",";
+				Result.takescreenshot("Barring Failed");
+				Result.fUpdateLog("Barring Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------Barring Services Details - Completed------");
+		return Status + "@@" + Test_OutPut;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: UnBarring
+	 * Arguments			: None
+	 * Use 					: UnBarring of services
+	 * Designed By			: Lavannya Mahalingam
+	 * Last Modified Date 	: 03-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String UnBarring() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, GetData;
+		int Inst_RowCount, Col_P, Col_SID;
+
+		Result.fUpdateLog("------UnBarring of services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+			CO.Assert_Search(MSISDN, "Active", GetData);
+
+			if (Browser.WebButton.exist("Assert_Modify")) {
+
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				// To Find the Record with Mobile Service Bundle and MSISDN
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
+						break;
+					}
+				Browser.WebButton.click("Assert_Modify");
+
+			} else
+				CO.InstalledAssertChange("Modify");
+			CO.waitforload();
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+
+			CO.waitforload();
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			CO.waitforload();
+			if (CO.isAlertExist())
+				Driver.Continue.set(false);
+
+			Browser.WebButton.waittillvisible("Validate");
+			OrderSubmission();
+
+			// CO.Assert_Search(MSISDN, "Active");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "UnBarring Service is done Successfully " + ",";
+				Result.fUpdateLog("UnBarring Service is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "UnBarring Failed" + ",";
+				Result.takescreenshot("UnBarring Failed");
+				Result.fUpdateLog("UnBarring Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------UnBarring Services Details - Completed------");
+		return Status + "@@" + Test_OutPut;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: SIMSWAP
+	 * Arguments			: None
+	 * Use 					: Sim Swap from Vanilla
+	 * Designed By			: Lavannya Mahalingam
+	 * Last Modified Date 	: 09-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String SIMSwap() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, Order_no, GetData,SIM,SData = "SIM Card";
+		int Inst_RowCount,Col, Col_P,Col_S, Col_SID,Row_Val=3, Row_Count;
+
+		Result.fUpdateLog("------SIM Swap services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("New_SIM").equals(""))) {
+				SIM = getdata("New_SIM");
+			} else {
+				SIM = pulldata("New_SIM");
+			}
+
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+			
+			/*// To use the catalog view comment the below line till '----'
+						CO.scroll("LI_New", "WebButton");
+						Browser.WebButton.click("LI_New");
+						int Row = 2, Col;
+						Col = CO.Select_Cell("Line_Items", "Product");
+						//Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
+						//Browser.WebTable.click("Line_Items", Row, Col + 1);
+						CO.waitforload();
+						// -----------------------
+*/			
+			CO.Assert_Search(MSISDN, "Active", GetData);
+
+			if (Browser.WebButton.exist("Assert_Modify")) {
+
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				// To Find the Record with Mobile Service Bundle and MSISDN
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
+						break;
+					}
+				Browser.WebButton.click("Assert_Modify");
+
+			} else
+				CO.InstalledAssertChange("Modify");
+			CO.waitforload();
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+
+			CO.waitforload();
+		/*	CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			if (CO.isAlertExist()) {
+				Driver.Continue.set(false);
+				System.out.println("Error On Clicking Done Button");
+				System.exit(0);
+			}*/
+
+			Result.takescreenshot("");
+			
+			
+			/*
+			 * String Product_Type; if (!(getdata("Product_Type").equals(""))) {
+			 * Product_Type = getdata("Product_Type"); } else { Product_Type =
+			 * pulldata("Product_Type"); } if (Product_Type.equals("Enterprise") ||
+			 * Product_Type.equals("VIP")) Browser.WebEdit.Set("Ent_CreditLimit", "100");//
+			 * click("Ent_CreditLimit"); else Browser.WebEdit.click("Credit_Limit");
+			 * 
+			 * //Browser.WebButton.waittillvisible("Validate"); //CO.waitforload();// Use
+			 * for "Ent_CreditLimit"
+			 */
+			// To Provide SIM No
+						Row_Count = Browser.WebTable.getRowCount("Line_Items");
+						//if (Row_Count <= 3) {
+							Browser.WebButton.waittillvisible("Expand");
+							Browser.WebButton.click("Expand");
+						//}
+						
+						CO.waitforload();
+						Col = CO.Select_Cell("Line_Items", "Product");
+						Col_S = CO.Select_Cell("Line_Items", "Service Id");
+						for (int i = 2; i <= Row_Count; i++) {
+							String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+							if (SData.equalsIgnoreCase(LData))
+								Row_Val = i;
+						}
+						Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+						Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
+
+			
+			OrderSubmission();
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+			Result.takescreenshot("");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Status = "PASS";
+				Result.takescreenshot("SIMSWAP is Successful");
+			} else
+				Status = "FAIL";
+
+		}
+
+		catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("SIMSWAP - Completed");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
 }

@@ -3,6 +3,7 @@ package Libraries;
 public class KeyWord {
 
 	Keyword_CRM KC = new Keyword_CRM();
+	Keyword_API KA = new Keyword_API();
 
 	// ------------------Keyword CRM -------------------//
 	public String Siebel_Login() {
@@ -76,11 +77,22 @@ public class KeyWord {
 	public String Disconnect() {
 		return KC.Disconnect();
 	}
+	
+	public String SIMSwap() {
+		return KC.SIMSwap();
+	}
+	
 	// ------------------Keyword CRM -------------------//
 	
-	// ---------------------XML------------------------//
+	// ---------------------Keyword API------------------------//
 	
-	/*public void XML_NumtoDoller() { 
-		KX.XML_NumtoDoller(); 
-	}*/
+	public String RTB_Login() {
+		return KA.RTB_Login();
+	}
+	
+	public String RTBValidation() {
+		return KA.RTBValidation();
+	}
+	
+	// ---------------------Keyword API------------------------//
 }

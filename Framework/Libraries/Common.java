@@ -1,13 +1,29 @@
 package Libraries;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+import javax.xml.transform.stream.StreamSource;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class Common extends Driver {
 
@@ -37,7 +53,7 @@ public class Common extends Driver {
 		String OD = cDriver.get().findElement(By.xpath(cellXpath)).getText();
 		return OD;
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: waitmoreforload
 	 * Use 					: It waits for the page to Load
@@ -217,13 +233,13 @@ public class Common extends Driver {
 	 * Use 					: To scroll to the particular tag item
 	 * Designed By			: Sravani
 	 * Last Modified Date 	: 18-Sep-2017
-	--------------------------------------------------------------------------------------------------------*/	
+	--------------------------------------------------------------------------------------------------------*/
 	public void Tag_Select(String Tag, String Text) {
 		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Radio_Select
 	 * Use 					: To select a spectific Radio Button or check box
@@ -420,7 +436,7 @@ public class Common extends Driver {
 			for (int i = 1; i <= Inst_RowCount; i++)
 				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
 						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-						Text_Select("a", Prod);
+					Text_Select("a", Prod);
 					// Browser.WebTable.Expand("Installed_Assert", i, 1);
 					Result.takescreenshot("");
 				}
@@ -523,7 +539,7 @@ public class Common extends Driver {
 	 * Designed By			: Sravani
 	 * Last Modified Date 	: 18-Sep-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void Select_plan(String Text, String Plan){
+	public void Select_plan(String Text, String Plan) {
 		String cellXpath, cellXpath1, cellXpath2, TxtVal, tct1;
 		String[] objprop = Utlities.FindObject("VQ_Plan", "WebLink");
 		int x;
@@ -596,14 +612,14 @@ public class Common extends Driver {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: PN_Verfication
 	 * Use 					: To check the Unbilled usage in Billing profile
 	 * Designed By			: SravaniReddy
 	 * Last Modified Date 	: 3-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void PN_Verfication(String MSISDN, String Status, String BP){
+	public void PN_Verfication(String MSISDN, String Status, String BP) {
 		try {
 			waitforload();
 			int Row = 2, Col;
@@ -652,22 +668,22 @@ public class Common extends Driver {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Webtable_Value
 	 * Use 					: To fetch the value from a table having SPAN and Input tag
 	 * Designed By			: SravaniReddy
 	 * Last Modified Date 	: 3-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void Webtable_Value(String Text,String Val) {
+	public void Webtable_Value(String Text, String Val) {
 
 		String cellXpath = "//span[text()='" + Text + "']/../../following-sibling::td[1]//input";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 		cDriver.get().findElement(By.xpath(cellXpath)).sendKeys(Val);
-		
+
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Status
 	 * Use 					: To get the status After modifying the plan
@@ -675,10 +691,10 @@ public class Common extends Driver {
 	 * Last Modified Date 	: 02-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
 	public void Status(String Addon) {
-		int Col,Col_P,Row_Count,Length;
+		int Col, Col_P, Row_Count, Length;
 		try {
-			Col =Select_Cell("Line_Items", "Product");
-			Col_P =Actual_Cell("Line_Items", "Action");
+			Col = Select_Cell("Line_Items", "Product");
+			Col_P = Actual_Cell("Line_Items", "Action");
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			String Product_Tabs[] = Addon.split("<>");
 			for (int j = 0; j < Product_Tabs.length; j++) {
@@ -708,4 +724,138 @@ public class Common extends Driver {
 		}
 	}
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: readSoapMessage
+	 * Use 					: To read the soap response
+	 * Designed By			: Lavannya
+	 * Last Modified Date 	: 13-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public SOAPMessage readSoapMessage(String filename, String SOAPAction)
+			throws SOAPException, FileNotFoundException {
+		SOAPMessage message = MessageFactory.newInstance().createMessage();
+		SOAPPart soapPart = message.getSOAPPart();
+		soapPart.setContent(new StreamSource(new FileInputStream(filename)));
+		MimeHeaders headers = message.getMimeHeaders();
+		headers.addHeader("SOAPAction", SOAPAction);
+		message.saveChanges();
+		return message;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Setvalue
+	 * Use 					: To read the soap response
+	 * Designed By			: Lavannya
+	 * Last Modified Date 	: 13-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public Document Setvalue(Document doc, String TagName, String val) {
+		NodeList nList = doc.getElementsByTagName(TagName);
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				nNode.setTextContent(val);
+			}
+		}
+		return doc;
+	}
+
+	public Document SametagSetvalue(Document doc, String Key, String val) {
+		NodeList nList = doc.getElementsByTagName("cli:item");
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nodes = nList.item(temp);
+			NodeList list = nodes.getChildNodes();
+			for (int i = 0; i != list.getLength(); i++) {
+				Node child = list.item(i);
+				if (child.getTextContent().contentEquals(Key)) {
+					child = list.item(i + 2);
+					if (child.getNodeName().equals("cli:value")) {
+						child.getFirstChild().setTextContent(val);
+					}
+				}
+			}
+		}
+		return doc;
+	}
+
+	public Document Setvalue(Document doc, String NodeName, String TagName, String Value) {
+		if (NodeName != null) {
+			String TagArray[] = TagName.split("&&");
+			if (TagArray.length == 2) {
+				String ValueArray[] = Value.split("&&");
+				NodeList nList = doc.getElementsByTagName(TagArray[0]);
+				System.out.println("----------------------------");
+				for (int temp = 0; temp < nList.getLength(); temp++) {
+					Node nNode = nList.item(temp);
+					System.out.println("\nCurrent Element :" + nNode.getNodeName());
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+						eElement.getElementsByTagName(TagArray[1]).item(0).setTextContent(ValueArray[temp]);
+					}
+				}
+			} else {
+				NodeList nList = doc.getElementsByTagName(TagName);
+				if (nList.getLength() > 0) {
+					nList.item(0).setTextContent(Value);
+				}
+			}
+		}
+		return doc;
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: getvalue
+	 * Use 					: To read the soap response
+	 * Designed By			: Lavannya
+	 * Last Modified Date 	: 13-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String getvalue(Document doc, String NodeName, String TagName) {
+		String ReturnValue = "";
+		if (NodeName != null) {
+			String TagArray[] = TagName.split("&&");
+			if (TagArray.length == 2) {
+				NodeList nList = doc.getElementsByTagName(TagArray[0]);
+				System.out.println("----------------------------");
+				for (int temp = 0; temp < nList.getLength(); temp++) {
+					Node nNode = nList.item(temp);
+					System.out.println("\nCurrent Element :" + nNode.getNodeName());
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+						ReturnValue = ReturnValue + eElement.getElementsByTagName(TagArray[1]).item(0).getTextContent()
+								+ "||";
+					}
+				}
+			} else {
+				NodeList nList = doc.getElementsByTagName(TagName);
+				if (nList.getLength() > 0) {
+					ReturnValue = nList.item(0).getTextContent();
+				}
+			}
+		}
+		return ReturnValue;
+	}
+	
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: XML_Request
+	 * Use 					: Establish SOAP Connection and send request to End Point URL
+	 * Designed By			: Imran
+	 * Last Modified Date 	: 15-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public SOAPMessage XML_Request(SOAPMessage message,String URL) {
+		SOAPMessage soapResponse = null;
+		try {
+			// Establish SOAP Connection and send request to End Point URL
+			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
+			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
+			System.out.println("Connection Established");
+			soapResponse = soapConnection.call(message, URL);
+			
+			// CF.printSOAPResponse(soapResponse);
+			soapConnection.close();
+
+		} catch (Exception e) {
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		return soapResponse;
+	}
 }

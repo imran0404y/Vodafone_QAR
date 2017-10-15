@@ -25,7 +25,9 @@ public class Driver {
 	public static ThreadLocal<String> TestDataDB_File = new ThreadLocal<String>();
 	public static ThreadLocal<String> Result_FLD = new ThreadLocal<String>();
 	public static ThreadLocal<String> Templete_FLD = new ThreadLocal<String>();
-
+	public static ThreadLocal<String> XMLfilepth = new ThreadLocal<String>();
+	public static ThreadLocal<String> URL = new ThreadLocal<String>();
+	
 	public static int passUC = 0;
 	public static int failUC = 0;
 	public static int totalUC = 0;
@@ -35,6 +37,9 @@ public class Driver {
 	public static ThreadLocal<String> ExecutionStarttimestr = new ThreadLocal<String>();
 	public static ThreadLocal<String> Environment = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseName = new ThreadLocal<String>();
+	public static ThreadLocal<String> UseCaseIDP = new ThreadLocal<String>();
+	public static ThreadLocal<String> Dependancy = new ThreadLocal<String>();
+	public static ThreadLocal<String> TestCaseIDP = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseN = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseData = new ThreadLocal<String>();
 	public static ThreadLocal<String> ValidationData = new ThreadLocal<String>();
@@ -54,7 +59,7 @@ public class Driver {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Intialization");
-		killexeTask();
+		//killexeTask();
 
 		WorkingDir.set(System.getProperty("user.dir").replace("\\", "/"));
 		Base_Path.set(WorkingDir.get() + "/Framework");
@@ -77,15 +82,21 @@ public class Driver {
 		System.out.println("Execution initiated at ---> " + ExecutionStarttime.format(cal.getTime()));
 
 		ArrayList<String[]> addUsecase = Utlities.floadUseCases();
-		String[] totUseCases = addUsecase.get(0);
-		String[] totTestCases = addUsecase.get(1);
-		String[] totTestcase_Des = addUsecase.get(2);
-		String[] totUseCases_data = addUsecase.get(3);
-		String[] totvalidation_data= addUsecase.get(4);
+		String[] IDP = addUsecase.get(0);
+		String[] totUseCases = addUsecase.get(1);
+		String[] totTestCases = addUsecase.get(2);
+		String[] totTestcase_Des = addUsecase.get(3);
+		String[] totUseCases_data= addUsecase.get(4);
+		String[] totvalidation_data= addUsecase.get(5);
 		totalUC = totUseCases.length;
 
 		for (int currUseCase = 0; currUseCase < totalUC; currUseCase++) {
-			Continue.set(true);
+			String DP = IDP[currUseCase];
+			Dependancy.set(DP);
+			if(DP.equalsIgnoreCase("IDP")) {
+				UseCaseIDP.set(totUseCases[currUseCase]);
+				TestCaseIDP.set(totTestCases[currUseCase]);
+			}
 			UseCaseName.set(totUseCases[currUseCase]);
 			TestCaseN.set(totTestCases[currUseCase]);
 			TestCaseDes.set(totTestcase_Des[currUseCase]);
@@ -99,11 +110,19 @@ public class Driver {
 			String DataBinding[] = addresses.get(1);
 			String Description[] = addresses.get(2);
 
-			System.out.println("No of Kaywords to be executed in " + UseCaseName.get() + ":" + totKeywords.length);
-			currUCstatus.set("Pass");
+			System.out.println("No of Keywords to be executed in " + UseCaseName.get() + ":" + totKeywords.length);
+			if (DP.equalsIgnoreCase("DP") && currUCstatus.get().equalsIgnoreCase("Fail")) {
+				currUCstatus.set("Fail");
+				Continue.set(false);
+				TestOutput = "******* Interdependant Failure Blocked*******"+ "<br/>";
+				Result.fUpdateLog("******* Interdependant Failure Blocked******");
+			} else {
+				Continue.set(true);
+				currUCstatus.set("Pass");
+				database.set((Dictionary<?, ?>) Utlities.fdatabase(UseCaseName.get()));
+			}
+			
 			Result.createTCScreenshotFold();
-
-			database.set((Dictionary<?, ?>) Utlities.fdatabase(UseCaseName.get()));
 
 			for (int currKeyword = 0; currKeyword < totKeywords.length; currKeyword++) {
 				if (Continue.get() == true) {
