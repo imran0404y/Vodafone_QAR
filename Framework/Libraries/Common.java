@@ -117,7 +117,7 @@ public class Common extends Driver {
 						break;
 				}
 			if (time > 40)
-				Driver.Continue.set(false);
+				Continue.set(false);
 		} catch (Exception e) {
 		}
 	}
@@ -136,7 +136,7 @@ public class Common extends Driver {
 			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 			Thread.sleep(1500);
 		} catch (Exception E) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 		}
 	}
 
@@ -257,7 +257,7 @@ public class Common extends Driver {
 			// break;}
 
 		} else
-			Driver.Continue.set(false);
+			Continue.set(false);
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -423,7 +423,7 @@ public class Common extends Driver {
 			if (Assert_Row_Count > 1)
 				Browser.WebTable.clickL("Assert", Row, Col);
 			else
-				Driver.Continue.set(false);
+				Continue.set(false);
 			Browser.WebLink.waittillvisible("Acc_Portal");
 			waitforload();
 			Browser.WebLink.click("Acc_Portal");
@@ -483,7 +483,7 @@ public class Common extends Driver {
 				((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 				cDriver.get().findElement(By.xpath(cellXpath)).click();
 			} else
-				Driver.Continue.set(false);
+				Continue.set(false);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -603,7 +603,7 @@ public class Common extends Driver {
 						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
 					} else {
 						Result.fUpdateLog(LData + ":" + Action);
-						Driver.Continue.set(false);
+						Continue.set(false);
 
 					}
 				}
@@ -644,7 +644,7 @@ public class Common extends Driver {
 			if (Assert_Row_Count > 1)
 				Browser.WebTable.clickL("Assert", Row, Col);
 			else
-				Driver.Continue.set(false);
+				Continue.set(false);
 			Browser.WebLink.waittillvisible("Acc_Portal");
 			waitforload();
 			Browser.WebLink.click("Acc_Portal");
@@ -712,7 +712,7 @@ public class Common extends Driver {
 								Result.fUpdateLog("Status  updated sucuessfully");
 								Result.fUpdateLog("Add/Delition Event is Successfull");
 							} else {
-								Driver.Continue.set(false);
+								Continue.set(false);
 								Result.fUpdateLog("Event is UnSuccessfull");
 							}
 						}
@@ -730,8 +730,7 @@ public class Common extends Driver {
 	 * Designed By			: Lavannya
 	 * Last Modified Date 	: 13-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public SOAPMessage readSoapMessage(String filename, String SOAPAction)
-			throws SOAPException, FileNotFoundException {
+	public SOAPMessage readSoapMessage(String filename, String SOAPAction) throws SOAPException, FileNotFoundException {
 		SOAPMessage message = MessageFactory.newInstance().createMessage();
 		SOAPPart soapPart = message.getSOAPPart();
 		soapPart.setContent(new StreamSource(new FileInputStream(filename)));
@@ -807,7 +806,7 @@ public class Common extends Driver {
 	 * Designed By			: Lavannya
 	 * Last Modified Date 	: 13-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public String getvalue(Document doc, String NodeName, String TagName) {
+	public String getvalue(Document doc, String NodeName, String TagName, int i) {
 		String ReturnValue = "";
 		if (NodeName != null) {
 			String TagArray[] = TagName.split("&&");
@@ -819,27 +818,27 @@ public class Common extends Driver {
 					System.out.println("\nCurrent Element :" + nNode.getNodeName());
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
-						ReturnValue = ReturnValue + eElement.getElementsByTagName(TagArray[1]).item(0).getTextContent()
+						ReturnValue = ReturnValue + eElement.getElementsByTagName(TagArray[1]).item(i).getTextContent()
 								+ "||";
 					}
 				}
 			} else {
 				NodeList nList = doc.getElementsByTagName(TagName);
 				if (nList.getLength() > 0) {
-					ReturnValue = nList.item(0).getTextContent();
+					ReturnValue = nList.item(i).getTextContent();
 				}
 			}
 		}
 		return ReturnValue;
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: XML_Request
 	 * Use 					: Establish SOAP Connection and send request to End Point URL
 	 * Designed By			: Imran
 	 * Last Modified Date 	: 15-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public SOAPMessage XML_Request(SOAPMessage message,String URL) {
+	public SOAPMessage XML_Request(SOAPMessage message, String URL) {
 		SOAPMessage soapResponse = null;
 		try {
 			// Establish SOAP Connection and send request to End Point URL
@@ -847,7 +846,7 @@ public class Common extends Driver {
 			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
 			System.out.println("Connection Established");
 			soapResponse = soapConnection.call(message, URL);
-			
+
 			// CF.printSOAPResponse(soapResponse);
 			soapConnection.close();
 

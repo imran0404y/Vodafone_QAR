@@ -2,9 +2,6 @@ package Libraries;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,6 +12,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 public class Keyword_API extends Driver {
 	Common CO = new Common();
@@ -48,11 +46,11 @@ public class Keyword_API extends Driver {
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
-	public String RTBValidation() {
+	public String RTB() {
 
 		String Test_OutPut = "", Status = "";
 		String MSISDN, SOAP_Action, XMLResponse_Path = "", XMLRequest_Path = "";
-		Result.fUpdateLog("------XML/API services------");
+		Result.fUpdateLog("------RTBValidation------");
 
 		try {
 			if (!(getdata("MSISDN").equals(""))) {
@@ -65,11 +63,11 @@ public class Keyword_API extends Driver {
 			} else {
 				SOAP_Action = pulldata("SOAP_Action");
 			}
-			HashMap<String, Object> XMLOutputData = new HashMap<String, Object>();
+			
 			String Templatefile = Templete_FLD.get() + "/XML/RTBQuery_Temp.xml";
 
 			/* Print the request message */
-			System.out.print("Request SOAP Message = ");
+			Result.fUpdateLog("Request SOAP Message = ");
 
 			// Get and Store Request XML File Path
 			String XMLfilepath = XMLfilepth.get();
@@ -113,23 +111,19 @@ public class Keyword_API extends Driver {
 			Document doc1 = dBuilder1.parse(new File(XMLResponse_Path));
 			doc1.getDocumentElement().normalize();
 
-			// Get a set of the entries
-			Set<String> set1 = XMLOutputData.keySet();
-			// Get an iterator
-			Iterator<String> itr1 = set1.iterator();
-			// Display elements
-			while (itr1.hasNext()) {
-				String key1 = (String) itr1.next();
-				String value1 = (String) XMLOutputData.get(key1);
-				if (key1 != null) {
-					String Output = CO.getvalue(doc1, key1, value1);
-					Result.fUpdateLog(Output);
-				}
+			// Det count of Node : rtbrespabo:CmuBalanceSummaryVbc
+			NodeList list = doc1.getElementsByTagName("rtbrespabo:CmuBalanceSummaryVbc");
+			Result.fUpdateLog("Total of elements : " + list.getLength());
+
+			for (int i = 0; i < list.getLength(); i++) {
+				String Output = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:BucketID", i);
+				String Output1 = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:AccountName", i);
+				Result.fUpdateLog(Output+" : "+Output1);
+				RTBOutputData.put(Output, Output1);
 			}
 
 			if (Continue.get()) {
 				Status = "PASS";
-				Result.takescreenshot("Webservice is Successful");
 			} else
 				Status = "FAIL";
 
@@ -139,7 +133,7 @@ public class Keyword_API extends Driver {
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("Web Service Call - Completed");
+		Result.fUpdateLog("RTBValidation - Completed");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 

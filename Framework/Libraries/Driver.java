@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.lang.reflect.Method;
 
 import org.openqa.selenium.WebDriver;
@@ -56,10 +57,11 @@ public class Driver {
 	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> database = new ThreadLocal<Dictionary>();
 	protected static ThreadLocal<WebDriver> cDriver = new ThreadLocal<WebDriver>();
+	HashMap<String, Object> RTBOutputData = new HashMap<String, Object>();
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Intialization");
-		//killexeTask();
+		killexeTask();
 
 		WorkingDir.set(System.getProperty("user.dir").replace("\\", "/"));
 		Base_Path.set(WorkingDir.get() + "/Framework");

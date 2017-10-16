@@ -57,7 +57,7 @@ public class Method extends Driver {
 		Exception Error = null;
 		for (i = 0; i < identify.length; i++) {
 			try {
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -163,11 +163,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 		}
 	}
@@ -184,7 +184,7 @@ public class Method extends Driver {
 		Exception Error = null;
 		for (i = 0; i < identify.length;) {
 			try {
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -227,11 +227,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 		}
 	}
@@ -248,7 +248,7 @@ public class Method extends Driver {
 		Exception Error = null;
 		for (i = 0; i < identify.length;) {
 			try {
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -291,11 +291,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 		}
 	}
@@ -312,7 +312,7 @@ public class Method extends Driver {
 		Exception Error = null;
 		for (i = 0; i < identify.length;) {
 			try {
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -355,11 +355,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 		}
 	}
@@ -377,7 +377,7 @@ public class Method extends Driver {
 		for (i = 0; i < identify.length;) {
 			try {
 
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -420,11 +420,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 		}
 	}
@@ -442,7 +442,7 @@ public class Method extends Driver {
 		Exception Error = null;
 		for (i = 0; i < identify.length;) {
 			try {
-				if (Driver.Continue.get() == true) {
+				if (Continue.get() == true) {
 					switch (i) {
 					case 0:
 						if (identify[0] != "") {
@@ -485,11 +485,11 @@ public class Method extends Driver {
 			} catch (Exception e) {
 				i++;
 				Error = e;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 		}
 		if (i == identify.length) {
-			Driver.Continue.set(false);
+			Continue.set(false);
 
 			return null;
 		} else {
@@ -507,7 +507,7 @@ public class Method extends Driver {
 	public static void waittillobjvisible(String[] identify) throws InterruptedException {
 		String vis = "false";
 		int countval = 1;
-		while (vis == "false" || countval < 10000) {
+		while (countval < 10) {
 			int i = 0;
 			for (i = 0; i < identify.length;) {
 				try {
@@ -561,6 +561,9 @@ public class Method extends Driver {
 				vis = "true";
 				break;
 			}
+		}
+		if(vis == "false") {
+			Continue.set(false);
 		}
 	}
 

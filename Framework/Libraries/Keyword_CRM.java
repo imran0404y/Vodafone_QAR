@@ -55,7 +55,7 @@ public class Keyword_CRM extends Driver {
 
 			CO.ToWait();
 
-			if (Continue.get() & Browser.WebButton.exist("VF_Search_Identify")) {
+			if (Continue.get()) {
 				Test_OutPut += "Successfully Login with : " + getdata("VQ_Login_User") + ",";
 				Result.takescreenshot("Login Successfully with user " + getdata("VQ_Login_User"));
 				Result.fUpdateLog("Login Successfully with user " + getdata("VQ_Login_User"));
@@ -104,7 +104,7 @@ public class Keyword_CRM extends Driver {
 
 			CO.ToWait();
 
-			if (Driver.Continue.get()) {
+			if (Continue.get()) {
 				Test_OutPut += "Siebel Logout Successful";
 				Result.fUpdateLog("Siebel Logout Successful");
 				Status = "PASS";
@@ -285,7 +285,7 @@ public class Keyword_CRM extends Driver {
 			}
 
 			CO.ToWait();
-			if (Continue.get() & Browser.WebButton.exist("Create_A/c")) {
+			if (Continue.get()) {
 				Utlities.StoreValue("LastName", Last_Name);
 				Utlities.StoreValue("Address", Address);
 				Status = "PASS";
@@ -350,7 +350,7 @@ public class Keyword_CRM extends Driver {
 				Utlities.StoreValue("Account_No", Account_No);
 				Test_OutPut += "Account_No : " + Account_No + ",";
 			} else {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				Result.fUpdateLog("No records Founded - Create a address for the customer");
 				System.exit(0);
 			}
@@ -549,7 +549,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waittillvisible("Orders_Tab");
 
 			CO.ToWait();
-			if (Driver.Continue.get() & Browser.WebButton.exist("Orders_Tab")) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Result.takescreenshot("Billing Profile Created Billing_NO : " + Bill_No);
 			} else {
@@ -586,7 +586,7 @@ public class Keyword_CRM extends Driver {
 			if (Browser.WebButton.exist("Orders_Tab"))
 				System.out.println("Proceeding with Sales Order");
 			else if (!Utlities.FetchStoredValue("BillingProfileCreation").isEmpty()) {
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 			Browser.WebButton.click("Orders_Tab");
 			if (CO.isAlertExist())
@@ -605,7 +605,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waittillvisible("LI_New");
 
 			CO.ToWait();
-			if (Driver.Continue.get() & Browser.WebButton.exist("LI_New")) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Utlities.StoreValue("Sales_OrderNO", Order_No);
 				Test_OutPut += "Order_No : " + Order_No + ",";
@@ -649,7 +649,7 @@ public class Keyword_CRM extends Driver {
 			if (Browser.WebButton.exist("LI_New"))
 				System.out.println("Proceeding Plan Selection");
 			else {
-				Driver.Continue.set(true);
+				Continue.set(true);
 				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
 			}
 			CO.waitforload();
@@ -746,7 +746,7 @@ public class Keyword_CRM extends Driver {
 				CO.Text_Select("button", "Done");
 				CO.waitforload();
 				if (CO.isAlertExist())
-					Driver.Continue.set(false);
+					Continue.set(false);
 			}
 
 			if (ReservationToken.equals("")) {
@@ -814,7 +814,7 @@ public class Keyword_CRM extends Driver {
 					CO.waitforload();
 					CO.Text_Select("button", "Done");
 					if (CO.isAlertExist()) {
-						Driver.Continue.set(false);
+						Continue.set(false);
 						System.exit(0);
 					}
 
@@ -846,7 +846,7 @@ public class Keyword_CRM extends Driver {
 				if (Row_Count > 1)
 					Browser.WebButton.click("Reserved_Ok");
 				else
-					Driver.Continue.set(false);
+					Continue.set(false);
 			} else if (!ReservationToken.equals("")) {
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
@@ -878,7 +878,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
 
-			if (Driver.Continue.get() & (Row_Count >= 3)) {
+			if (Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
 				Test_OutPut += "PlanName : " + PlanName + ",";
@@ -977,10 +977,10 @@ public class Keyword_CRM extends Driver {
 						Complete_Status = Complete_Status + 1;
 						R_S++;
 						Wait = Wait + 80;
-						Driver.Continue.set(true);
+						Continue.set(true);
 					} else {
 						if (FStatus.equalsIgnoreCase(OS_Status)) {
-							Driver.Continue.set(false);
+							Continue.set(false);
 							R_S = 2;
 							Wait = 101;
 						}
@@ -1006,7 +1006,7 @@ public class Keyword_CRM extends Driver {
 
 			if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
 				Complete_Status = 2;
-				Driver.Continue.set(true);
+				Continue.set(true);
 			}
 
 			CO.ToWait();
@@ -1113,7 +1113,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebLink.waittillvisible("Acc_Contacts");
 
 			CO.ToWait();
-			if (Driver.Continue.get() & Browser.WebLink.exist("Acc_Contacts")) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Utlities.StoreValue("Account_No", Account_No);
 				Test_OutPut += "Account_No : " + Account_No + ",";
@@ -1416,7 +1416,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Text_Select("button", "Done");
 			if (CO.isAlertExist()) {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
@@ -1455,10 +1455,7 @@ public class Keyword_CRM extends Driver {
 				Result.takescreenshot("Modification is Successful");
 			} else
 				Status = "FAIL";
-
-		}
-
-		catch (Exception e) {
+		}catch (Exception e) {
 			Status = "FAIL";
 			Test_OutPut += "Exception occurred" + ",";
 			Result.takescreenshot("Exception occurred");
@@ -1523,7 +1520,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Date_Now");
 			Browser.WebButton.click("Date_Done");
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
-				Driver.Continue.set(false);
+				Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
@@ -1626,7 +1623,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Date_Now");
 			Browser.WebButton.click("Date_Done");
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
-				Driver.Continue.set(false);
+				Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
@@ -1748,7 +1745,7 @@ public class Keyword_CRM extends Driver {
 				CO.scroll("Upgrade_OK", "WebButton");
 				Browser.WebButton.click("Upgrade_OK");
 			} else {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				System.exit(0);
 			}
 
@@ -1765,7 +1762,7 @@ public class Keyword_CRM extends Driver {
 						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
 					} else {
 						Result.fUpdateLog(LData + ":" + Action);
-						Driver.Continue.set(false);
+						Continue.set(false);
 					}
 				}
 			}
@@ -1775,10 +1772,8 @@ public class Keyword_CRM extends Driver {
 
 			CO.ToWait();
 			if (Continue.get()) {
-
 				Status = "PASS";
 			} else {
-
 				Status = "FAIL";
 			}
 		} catch (Exception e) {
@@ -1843,7 +1838,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Text_Select("button", "Done");
 			if (CO.isAlertExist()) {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
@@ -1878,14 +1873,12 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 
 			CO.ToWait();
-			if (Driver.Continue.get()) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Utlities.StoreValue("Sales_OrderNO", Order_no);
 				Test_OutPut += "Order_No : " + Order_no + ",";
-
 			} else {
 				Status = "FAIL";
-
 			}
 
 		} catch (Exception e) {
@@ -1957,7 +1950,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Date_Now");
 			Browser.WebButton.click("Date_Done");
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
-				Driver.Continue.set(false);
+				Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			CO.waitmoreforload();
@@ -1979,7 +1972,7 @@ public class Keyword_CRM extends Driver {
 						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
 					} else {
 						Result.fUpdateLog(LData + ":" + Action);
-						Driver.Continue.set(false);
+						Continue.set(false);
 					}
 				}
 
@@ -2012,7 +2005,7 @@ public class Keyword_CRM extends Driver {
 			CO.PN_Verfication(MSISDN, "Active", BP);
 			CO.waitforload();
 			CO.ToWait();
-			if (Driver.Continue.get()) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Utlities.StoreValue("Sales_OrderNO", Order_no);
 				Test_OutPut += "Order_No : " + Order_no + ",";
@@ -2097,7 +2090,7 @@ public class Keyword_CRM extends Driver {
 			CO.Text_Select("button", "Done");
 			CO.waitforload();
 			if (CO.isAlertExist())
-				Driver.Continue.set(false);
+				Continue.set(false);
 
 			Browser.WebButton.waittillvisible("Validate");
 			OrderSubmission();
@@ -2183,7 +2176,7 @@ public class Keyword_CRM extends Driver {
 			CO.Text_Select("button", "Done");
 			CO.waitforload();
 			if (CO.isAlertExist())
-				Driver.Continue.set(false);
+				Continue.set(false);
 
 			Browser.WebButton.waittillvisible("Validate");
 			OrderSubmission();
@@ -2284,7 +2277,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Text_Select("button", "Done");
 			if (CO.isAlertExist()) {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}*/
@@ -2335,9 +2328,7 @@ public class Keyword_CRM extends Driver {
 			} else
 				Status = "FAIL";
 
-		}
-
-		catch (Exception e) {
+		}catch (Exception e) {
 			Status = "FAIL";
 			Test_OutPut += "Exception occurred" + ",";
 			Result.takescreenshot("Exception occurred");

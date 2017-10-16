@@ -90,8 +90,8 @@ public class KeyWord {
 		return KA.RTB_Login();
 	}
 	
-	public String RTBValidation() {
-		return KA.RTBValidation();
+	public String RTB() {
+		return KA.RTB();
 	}
 	
 	// ---------------------Keyword API------------------------//
