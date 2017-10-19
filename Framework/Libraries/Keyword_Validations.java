@@ -22,10 +22,10 @@ public class Keyword_Validations extends Driver {
 		String Test_OutPut = "", Status = "";
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
-			String Surepay, Benefits, Product_Validity, Siebel_Desc;// ,BID,SubscriptionPrice
+			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;// ,BID,SubscriptionPrice
 			/*
 			 * String[]a=
-			 * {"399	||300_Mins	||Bill_Cycle	||Red3B	||750	||Red 750 roaming terminating voice: Your account has &CV minutes, expiring on &BE"
+			 * {"399	||300_Mins||300_Mins||300_Mins	||Bill_Cycle	||Red3B	||750	||Red 750 roaming terminating voice: Your account has &CV minutes, expiring on &BE"
 			 * ,
 			 * "400	||0_Mins	||Bill_Cycle	||Red3D	||750	||Red 750 Roaming minutes to Vodafone Qatar: Your account has &CV minutes, expiring on &BE"
 			 * ,
@@ -50,9 +50,12 @@ public class Keyword_Validations extends Driver {
 				String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
 				Surepay = FetchPC[0].trim();
 				Benefits = FetchPC[1].trim();
-				Product_Validity = FetchPC[2].trim();
-				Siebel_Desc = FetchPC[5].trim();
-				String BE = BE(Siebel_Desc, Benefits, Product_Validity);
+				BucketValue = FetchPC[2].trim();
+				BucketUsageType = FetchPC[3].trim();
+				Product_Validity = FetchPC[4].trim();
+				Siebel_Desc = FetchPC[7].trim();
+
+				String BE = BE(Siebel_Desc, Benefits, Product_Validity, BucketValue, BucketUsageType);
 				Result.fUpdateLog(BE);
 				if (BE.equals(RTBOutputData.get(Surepay)))
 					Continue.set(true);
@@ -88,17 +91,16 @@ public class Keyword_Validations extends Driver {
 	 * Modified By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 17-Oct-2017  
 	--------------------------------------------------------------------------------------------------------*/
-	public String BE(String Desc, String Benifit, String Product_Validity) {
+	public String BE(String Desc, String Benifit, String Product_Validity, String BucketValue, String BucketUsageType) {
 		try {
-			DateFormat Date_Format = new SimpleDateFormat("dd/MM/yyyy");
-
-			String billcycledate, Expiry, orderdate = "09/10/2017";// OrderSubmissionDate
+			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
+			String billcycledate, Expiry, orderdate = OrderDate.get();// "19-10-2017"
 			billcycledate = CO.FindBillingCycle(orderdate);
 			Calendar cals = Calendar.getInstance();
-			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("/")[2]));
-			cals.set(Calendar.MONTH, Integer.parseInt(orderdate.split("/")[1]) - 1);
-			cals.set(Calendar.DATE, Integer.parseInt(orderdate.split("/")[0]));
-			Date startDate = Date_Format.parse(orderdate);
+			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));
+			cals.set(Calendar.MONTH, Integer.parseInt(orderdate.split("-")[1]) - 1);
+			cals.set(Calendar.DATE, Integer.parseInt(orderdate.split("-")[0]));
+			Date startDate = Date_Format.parse(Date_Format.format(cals.getTime()));
 			Date endDate = Date_Format.parse(billcycledate);
 			int difInDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 			int Total_Days = cals.getActualMaximum(Calendar.DATE);
@@ -109,25 +111,29 @@ public class Keyword_Validations extends Driver {
 
 			switch (Product_Validity.toLowerCase()) {
 			case "bill_cycle":
-				Prorate = CO.Prorated(Total_Days, difInDays, Benifit);
+				// Prorate = CO.Prorated(Total_Days, difInDays, Benifit);
+				Prorate = CO.Prorated(Total_Days, difInDays, Benifit, BucketValue, BucketUsageType);
 				Expiry = billcycledate;
 				break;
 			case "day":
-				Prorate = CO.Prorated(1, 1, Benifit);
+				// Prorate = CO.Prorated(1, 1, Benifit);
+				Prorate = CO.Prorated(1, 1, Benifit, BucketValue, BucketUsageType);
 				Expiry = orderdate;
 				break;
 			case "month":
 			case "black":
-				Prorate = CO.Prorated(Total_Days, Total_Days, Benifit);
+				// Prorate = CO.Prorated(Total_Days, Total_Days, Benifit);
+				Prorate = CO.Prorated(Total_Days, difInDays, Benifit, BucketValue, BucketUsageType);
 				cals.add(Calendar.DATE, Total_Days);
 				Expiry = Date_Format.format(cals.getTime());// Total_Days+Month
 				break;
 			}
 
-			Desc = Desc.replace("&CV", Prorate + "");
-			Desc = Desc.replace("&BE", Expiry);
+			Desc = Desc.replace("&CV", " " + Prorate + " ");
+			Desc = Desc.replace("&BE", " " + Expiry + " ");
 			return Desc;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}

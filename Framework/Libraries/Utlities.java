@@ -336,13 +336,13 @@ public class Utlities extends Driver {
 	public static ArrayList<String> FetchProcuctCatalogData() {
 		ArrayList<String> PCSAll = new ArrayList<String>();
 		try {
-			String BundleID,StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
+			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
 
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
-				String Product = LineItemData.get(i);
+				String Product = LineItemData.get(Integer.toString(k));
 				switch (Product) {
 				case "Smart Limit":
 				case "SIM Card":
@@ -352,29 +352,30 @@ public class Utlities extends Driver {
 					System.out.println("Item available in Line items");
 					break;
 				default:
-					if (!(Product.equalsIgnoreCase(Planname.get()))) {
-						String StrQuery = "Select SurePayID,Benefit,Product_Validity,BundleID,SubscriptionPrice,Siebel_Description from AutCatalogue where Siebel_Plan_Name='"
+					if (!(Product.equalsIgnoreCase("Postpaid Red 750 Promotion"))) {
+						String StrQuery = "Select SurePayID,Benefit,BucketValue,BucketUsageType,ProductValidity,BundleID,SubscriptionPrice,Siebel_Description from AutCatalogue where Siebel_Plan_Name='"
 								+ Product + "'";
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 0; currs <= rs.getCount(); currs++) {
-							if (!(rs.getField(1).value().equals("DUMMY"))) {
-								BundleID=rs.getField(3).value();
+							if ((!rs.getField(2).value().isEmpty())) {
+								BundleID = rs.getField(3).value();
 								if (BundleID.isEmpty())
-									BundleID=" ";
-									
-								String Type = rs.getField(5).value() + "||" + rs.getField(1).value() + "||"
-										+ rs.getField(0).value() + "||" + BundleID + "||"
-										+ rs.getField(4).value() + "||" + rs.getField(2).value();
+									BundleID = " ";
+								String Type = rs.getField(6).value() + "||" + rs.getField(0).value() + "||"
+										+ rs.getField(7).value() + "||" + rs.getField(1).value() + "||"
+										+ rs.getField(4).value() + "||" + BundleID + "||" + rs.getField(5).value()
+										+ "||" + rs.getField(2).value();
 								PCSAll.add(k, Type);
 								k++;
-							}
-							if (rs.hasNext()) {
-								rs.moveNext();
+								// }
+								if (rs.hasNext()) {
+									rs.moveNext();
+								}
 							}
 						}
 						rs.close();
-					}else {
+					} else {
 						System.out.println("Plan name matches");
 					}
 				}
@@ -386,5 +387,5 @@ public class Utlities extends Driver {
 		}
 		return PCSAll;
 	}
-	
+
 }

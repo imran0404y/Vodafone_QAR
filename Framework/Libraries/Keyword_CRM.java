@@ -1389,32 +1389,6 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
-
-			if (Browser.WebButton.exist("Assert_Modify")) {
-
-				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
-				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
-				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
-				// To Find the Record with Mobile Service Bundle and MSISDN
-				for (int i = 2; i <= Inst_RowCount; i++)
-					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
-							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
-									.equalsIgnoreCase(MSISDN)) {
-						CO.waitforload();
-						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
-						break;
-					}
-				Browser.WebButton.click("Assert_Modify");
-				CO.waitforload();
-
-			} else
-				CO.InstalledAssertChange("Modify");
-			CO.waitforload();
-			CO.scroll("Date_Continue", "WebButton");
-			Browser.WebButton.click("Date_Continue");
-			CO.waitforload();
-			// wait
 
 			if (!(getdata("Add_Addon").equals(""))) {
 				Add_Addon = getdata("Add_Addon");
@@ -1427,25 +1401,36 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
+			// CO.Assert_Search(MSISDN, "Active", GetData);
 
-			CO.waitmoreforload();
-			CO.AddOnSelection(Add_Addon, "Add");
-			Result.takescreenshot("");
-			CO.waitmoreforload();
-			CO.AddOnSelection(Remove_Addon, "Delete");
-			CO.waitforload();
-			CO.Text_Select("button", "Verify");
-			CO.isAlertExist();
-			CO.waitforload();
-			CO.Text_Select("button", "Done");
-			if (CO.isAlertExist()) {
-				Continue.set(false);
-				System.out.println("Error On Clicking Done Button");
-				System.exit(0);
-			}
-
-			Result.takescreenshot("");
 			/*
+			 * if (Browser.WebButton.exist("Assert_Modify")) {
+			 * 
+			 * Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert"); Col_P =
+			 * CO.Select_Cell("Acc_Installed_Assert", "Product"); Col_SID =
+			 * CO.Select_Cell("Acc_Installed_Assert", "Service ID"); // To Find the Record
+			 * with Mobile Service Bundle and MSISDN for (int i = 2; i <= Inst_RowCount;
+			 * i++) if (Browser.WebTable.getCellData("Acc_Installed_Assert", i,
+			 * Col_P).equalsIgnoreCase(GetData) &
+			 * Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+			 * .equalsIgnoreCase(MSISDN)) { CO.waitforload();
+			 * Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1); break; }
+			 * Browser.WebButton.click("Assert_Modify"); CO.waitforload();
+			 * 
+			 * } else CO.InstalledAssertChange("Modify"); CO.waitforload();
+			 * CO.scroll("Date_Continue", "WebButton");
+			 * Browser.WebButton.click("Date_Continue"); CO.waitforload(); // wait
+			 * 
+			 * CO.waitmoreforload(); CO.AddOnSelection(Add_Addon, "Add");
+			 * Result.takescreenshot(""); CO.waitmoreforload();
+			 * CO.AddOnSelection(Remove_Addon, "Delete"); CO.waitforload();
+			 * CO.Text_Select("button", "Verify"); CO.isAlertExist(); CO.waitforload();
+			 * CO.Text_Select("button", "Done"); if (CO.isAlertExist()) {
+			 * Continue.set(false); System.out.println("Error On Clicking Done Button");
+			 * System.exit(0); }
+			 * 
+			 * Result.takescreenshot("");
+			 * 
 			 * String Product_Type; if (!(getdata("Product_Type").equals(""))) {
 			 * Product_Type = getdata("Product_Type"); } else { Product_Type =
 			 * pulldata("Product_Type"); } if (Product_Type.equals("Enterprise") ||
@@ -1461,13 +1446,14 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
-
+			Add_Addon = "Paid Addons,Vodafone Passport";
+			LineItemData.clear();
 			CO.Status(Add_Addon);
 			CO.waitforload();
 			CO.Status(Remove_Addon);
 			CO.waitforload();
 
-			OrderSubmission();
+			// OrderSubmission();
 			// fetching Order_no
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);

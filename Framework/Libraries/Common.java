@@ -621,9 +621,9 @@ public class Common extends Driver {
 				String Msd = Browser.WebTable.getCellData("Line_Items", i, Col1);
 				if (Msd.equals(MSISDN) || LData.equals("SIM Card")) {
 					if (Action.equals(Text)) {
-						LineItemData.set(k, LData);
+						LineItemData.put(Integer.toString(k), LData);
 						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
-						k = k + 1;
+						k++;
 					} else {
 						Result.fUpdateLog(LData + ":" + Action);
 						Continue.set(false);
@@ -715,7 +715,7 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void Status(String Addon) {
 		int Col, Col_P, Row_Count, Length;
-		LineItemData.clear();
+
 		try {
 			Col = Select_Cell("Line_Items", "Product");
 			Col_P = Actual_Cell("Line_Items", "Action");
@@ -725,24 +725,26 @@ public class Common extends Driver {
 				String Prod_array[] = Product_Tabs[j].split(",");
 				Length = Prod_array.length;
 				System.out.println(Length);
-				String Sdata = Prod_array[1];
 				int k = 0;
 				if (Length > 1) {
 					for (int i = 2; i <= Row_Count; i++) {
 						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-						if (Sdata.equals(LData)) {
-							String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
-							if (Action.equals("Add")) {
-								LineItemData.set(k, LData);
-								Result.fUpdateLog("Status  updated sucuessfully");
-								Result.fUpdateLog("Add Event is Successfull");
-								k = k + 1;
-							} else if (Action.equals("Delete")) {
-								Result.fUpdateLog("Status  updated sucuessfully");
-								Result.fUpdateLog("Delition Event is Successfull");
-							} else {
-								Continue.set(false);
-								Result.fUpdateLog("Event is UnSuccessfull");
+						for (int a = 1; a < Prod_array.length; a++) {
+							String Sdata = Prod_array[a];
+							if (Sdata.equals(LData)) {
+								String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+								if (Action.equals("Add")) {
+									LineItemData.put(Integer.toString(k), LData);
+									Result.fUpdateLog("Status  updated sucuessfully");
+									Result.fUpdateLog("Add Event is Successfull");
+									k = k + 1;
+								} else if (Action.equals("Delete")) {
+									Result.fUpdateLog("Status  updated sucuessfully");
+									Result.fUpdateLog("Delition Event is Successfull");
+								} else {
+									Continue.set(false);
+									Result.fUpdateLog("Event is UnSuccessfull");
+								}
 							}
 						}
 					}
@@ -899,47 +901,53 @@ public class Common extends Driver {
 		try {
 			String billingcycle;
 			Date DD_3 = new Date();
-			DateFormat Date_Format = new SimpleDateFormat("dd/MM/yyyy");
+			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
 
-			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("/")[2]));
-			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("/")[1]) - 1);
-			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("/")[0]));
-
-			int Order_Day, Order_Month, Order_Year, Add_Month, Add_Year;
-			DateFormat Month = new SimpleDateFormat("MM");
+			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
+			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
+			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
+			String Order_Month, Add_Month;
+			int Order_Day, Order_Year, Add_Year;
+			DateFormat Month = new SimpleDateFormat("MMM");
 			DateFormat Year = new SimpleDateFormat("yyyy");
-			Order_Month = Integer.parseInt(Month.format(cals.getTime()));
+			Order_Month = Month.format(cals.getTime());
 			Order_Year = Integer.parseInt(Year.format(cals.getTime()));
-			Order_Day = Integer.parseInt(Submission_Date.split("/")[0]);
+			Order_Day = Integer.parseInt(Submission_Date.split("-")[0]);
 
 			cals.add(Calendar.MONTH, 1);
-			Add_Month = Integer.parseInt(Month.format(cals.getTime()));
+			Add_Month = Month.format(cals.getTime());
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
 
 			cals.add(Calendar.DATE, 3);
 			DD_3 = Date_Format.parse(Date_Format.format(cals.getTime()));// .parse(Date_Format.parse(cals.getTime().toString()));DD_3=Day.parse(Day.format(Submission_Date.toString()));
 
-			Date Date_15 = Date_Format.parse(("15/" + Order_Month + "/" + Order_Year));
-			Date Date_1 = Date_Format.parse(("1/" + Add_Month + "/" + Order_Year));
+			Date Date_15 = Date_Format.parse(("15-" + Order_Month + "-" + Order_Year));
+			Date Date_1 = Date_Format.parse(("1-" + Add_Month + "-" + Order_Year));
 
-			if (Order_Day < 15)
-				if (DD_3.equals(Date_15) || DD_3.after(Date_15))
-					billingcycle = "01/" + Add_Month + "/" + Add_Year;
+			if (TestCaseN.get().contains("black")) {
+				if (Order_Day < 4)
+					billingcycle = "07-" + Order_Month + "-" + Order_Year;
 				else
-					billingcycle = "15/" + Order_Month + "/" + Order_Year;
-			else if (DD_3.equals(Date_1) || DD_3.after(Date_1))
-				billingcycle = "15/" + Add_Month + "/" + Add_Year;
-			else
-				billingcycle = "01/" + Add_Month + "/" + Add_Year;
-
+					billingcycle = "07-" + Add_Month + "-" + Add_Year;
+			} else {
+				if (Order_Day < 15)
+					if (DD_3.equals(Date_15) || DD_3.after(Date_15))
+						billingcycle = "01-" + Add_Month + "-" + Add_Year;
+					else
+						billingcycle = "15-" + Order_Month + "-" + Order_Year;
+				else if (DD_3.equals(Date_1) || DD_3.after(Date_1))
+					billingcycle = "15-" + Add_Month + "-" + Add_Year;
+				else
+					billingcycle = "01-" + Add_Month + "-" + Add_Year;
+			}
 			return billingcycle;
 		} catch (Exception e) {
 			return "";
 		}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Prorated
 	 * Use 					: To Prorate the Benifit with specified values and conversion units as expected
@@ -959,15 +967,12 @@ public class Common extends Driver {
 			switch (Unit_VAL) {
 			case "gb":
 				ben = ben * 1024 * 1024;
-				Unit = ben + "";
 				break;
 			case "mb":
 				ben = ben * 1024;
-				Unit = ben + "";
 				break;
 			case "tb":
 				ben = ben * 1024 * 1024 * 1024;
-				Unit = ben + "";
 				break;
 			}
 		}
@@ -975,6 +980,34 @@ public class Common extends Driver {
 		double Prorate = (ben * Remaingdays / TotalDays);
 		Prorate = Math.round(Prorate);
 		return Double.toString(Prorate);
+	}
+
+	public String Prorated(int TotalDays, int Remaingdays, String Benifit, String BucketValue, String BucketUsageType) {
+		double ben = 0;
+		switch (BucketUsageType) {
+		case "Cost":
+			ben = Double.parseDouble(BucketValue);
+			if (!Benifit.equals("DUMMY")) {
+				ben = ben / 100;
+			}
+			break;
+		case "GU":
+			ben = Double.parseDouble(BucketValue);
+			ben = ben / 600;
+			break;
+		case "Item":
+			ben = Double.parseDouble(BucketValue);
+			break;
+		case "Time":
+			ben = Double.parseDouble(BucketValue);
+			ben = ben / 60;
+			break;
+		case "Volume":
+			ben = Double.parseDouble(BucketValue);
+			break;
+		}
+		double Prorate = (ben * Remaingdays / TotalDays);
+		return Math.round(Prorate) + "";
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -1037,10 +1070,7 @@ public class Common extends Driver {
 	 * Designed By			: Sravani Reddy
 	 * Last Modified Date 	: 17-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public String GetSiebelDate() {
-
-		String Test_OutPut = "", Status = "";
-		Result.fUpdateLog("------Siebel Login Event Details------");
+	public void GetSiebelDate() {
 		try {
 
 			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
@@ -1069,8 +1099,6 @@ public class Common extends Driver {
 
 			e.printStackTrace();
 		}
-
-		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -1083,6 +1111,7 @@ public class Common extends Driver {
 		String cellXpath = "//" + Tag + "[@title='" + Text + "']";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		waitforload();
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 	}
 

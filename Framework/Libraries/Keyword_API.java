@@ -63,7 +63,7 @@ public class Keyword_API extends Driver {
 			} else {
 				SOAP_Action = pulldata("SOAP_Action");
 			}
-			
+
 			String Templatefile = Templete_FLD.get() + "/XML/RTBQuery_Temp.xml";
 
 			/* Print the request message */
@@ -118,9 +118,9 @@ public class Keyword_API extends Driver {
 			for (int i = 0; i < list.getLength(); i++) {
 				String Output = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:BucketID", i);
 				String Output1 = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:AccountName", i);
-				Result.fUpdateLog(Output+" : "+Output1);
+				Result.fUpdateLog(Output + " : " + Output1);
 				RTBOutputData.put(Output, Output1);
-				
+
 			}
 
 			if (Continue.get()) {

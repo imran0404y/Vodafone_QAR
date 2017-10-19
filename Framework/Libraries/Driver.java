@@ -28,7 +28,7 @@ public class Driver {
 	public static ThreadLocal<String> Templete_FLD = new ThreadLocal<String>();
 	public static ThreadLocal<String> XMLfilepth = new ThreadLocal<String>();
 	public static ThreadLocal<String> URL = new ThreadLocal<String>();
-	
+
 	public static int passUC = 0;
 	public static int failUC = 0;
 	public static int totalUC = 0;
@@ -60,14 +60,14 @@ public class Driver {
 	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> database = new ThreadLocal<Dictionary>();
 	protected static ThreadLocal<WebDriver> cDriver = new ThreadLocal<WebDriver>();
-	static HashMap<String, String> RTBOutputData = new HashMap<String, String>();
-	static ArrayList<String> LineItemData = new ArrayList<String>();
-	//static String[] LineItemData = new String[15]; ;
-	
+	public static HashMap<String, String> RTBOutputData = new HashMap<String, String>();
+	public static HashMap<String, String> LineItemData = new HashMap<String, String>();
+	// static String[] LineItemData = new String[15]; ;
+
 	public static void main(String[] args) throws IOException {
 		System.out.println("Intialization");
 		killexeTask();
-		
+
 		WorkingDir.set(System.getProperty("user.dir").replace("\\", "/"));
 		Base_Path.set(WorkingDir.get() + "/Framework");
 		Storage_FLD.set(Base_Path.get() + "/Storage");
@@ -79,7 +79,7 @@ public class Driver {
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
 		String Keyword_Result = null;
-		
+
 		File resfold = new File(Result_FLD.get());
 		if ((!resfold.exists()))
 			resfold.mkdir();
@@ -93,25 +93,25 @@ public class Driver {
 		String[] totUseCases = addUsecase.get(1);
 		String[] totTestCases = addUsecase.get(2);
 		String[] totTestcase_Des = addUsecase.get(3);
-		String[] totUseCases_data= addUsecase.get(4);
-		String[] totvalidation_data= addUsecase.get(5);
+		String[] totUseCases_data = addUsecase.get(4);
+		String[] totvalidation_data = addUsecase.get(5);
 		totalUC = totUseCases.length;
 
 		for (int currUseCase = 0; currUseCase < totalUC; currUseCase++) {
 			String DP = IDP[currUseCase];
 			Dependancy.set(DP);
-			if(DP.equalsIgnoreCase("IDP")) {
+			if (DP.equalsIgnoreCase("IDP")) {
 				UseCaseIDP.set(totUseCases[currUseCase]);
 				TestCaseIDP.set(totTestCases[currUseCase]);
 			}
 			UseCaseName.set(totUseCases[currUseCase]);
 			TestCaseN.set(totTestCases[currUseCase]);
 			TestCaseDes.set(totTestcase_Des[currUseCase]);
-			TestCaseData.set(totUseCases_data[currUseCase]);			
+			TestCaseData.set(totUseCases_data[currUseCase]);
 			ValidationData.set(totvalidation_data[currUseCase]);
-			
+
 			TestOutput = "";
-			Result.fCreateReportFiles(currUseCase+1 , UseCaseName.get());
+			Result.fCreateReportFiles(currUseCase + 1, UseCaseName.get());
 			ArrayList<String[]> addresses = Utlities.floadKeywords(UseCaseName.get());
 			String totKeywords[] = addresses.get(0);
 			String DataBinding[] = addresses.get(1);
@@ -121,14 +121,14 @@ public class Driver {
 			if (DP.equalsIgnoreCase("DP") && currUCstatus.get().equalsIgnoreCase("Fail")) {
 				currUCstatus.set("Fail");
 				Continue.set(false);
-				TestOutput = "******* Interdependant Failure Blocked*******"+ "<br/>";
+				TestOutput = "******* Interdependant Failure Blocked*******" + "<br/>";
 				Result.fUpdateLog("******* Interdependant Failure Blocked******");
 			} else {
 				Continue.set(true);
 				currUCstatus.set("Pass");
 				database.set((Dictionary<?, ?>) Utlities.fdatabase(UseCaseName.get()));
 			}
-			
+
 			Result.createTCScreenshotFold();
 
 			for (int currKeyword = 0; currKeyword < totKeywords.length; currKeyword++) {
@@ -203,7 +203,7 @@ public class Driver {
 		}
 
 	}
-	
+
 	public static String Validatedata(String colname) {
 		String c = "";
 		try {
