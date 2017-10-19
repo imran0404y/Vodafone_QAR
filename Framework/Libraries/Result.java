@@ -178,26 +178,26 @@ public class Result extends Driver {
 				+ "</table>" + "<table width='100%' border=2>" + "<tr>"
 				+ "<td align=\"center\" width='50%' colspan=3 Style=\"color:blue\"><h3> Detail Summary Report </h3></td>"
 				+ "</tr>" + "<table border =1 width = 100%>" + "<tr>"
-				+ "<td width = 10%><b><center>Environment</center></b></td>"
+				+ "<td width = 8%><b><center>Environment</center></b></td>"
 				+ "<td width = 12%><b><center>Usecase</center></b></td>"
 				+ "<td width = 10%><b><center>TestCase</center></b></td>"
 				+ "<td width = 14%><b><center>Testcase ID/Description</center></b></td>"
 				+ "<td width = 22%><b><center>UserInputs</center></b></td>"
-				+ "<td width = 26%><b><center>TestCase Output</center></b></td>"
+				+ "<td width = 28%><b><center>TestCase Output</center></b></td>"
 				+ "<td width = 6%><b><center>Status</center></b></td>" + "</tr>";
 		bw.write(logmessage + "\r\n");
 		logmessage = "";
-		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 10%><center>" + Environment.get() + "</center></td>";
+		updatelogmsg = updatelogmsg + "<tr>" + "<td width = 8%><center>" + Environment.get() + "</center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 12%><center>" + UC.get() + "</center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 10%><center><a href = .\\" + UC.get() + "\\" + TestCaseN.get()
 				+ ".docx" + ">" + TestCaseN.get() + "</a></center></td>";
 		updatelogmsg = updatelogmsg + "<td width = 14%>" + TestCaseDes.get() + "</td>";
 		updatelogmsg = updatelogmsg + "<td width = 22%>" + TestCaseData.get() + "</td>";
 		if (currUCstatus.get().equals("Pass")) {
-			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput + "</td>";
+			updatelogmsg = updatelogmsg + "<td width = 28%>" + TestOutput + "</td>";
 			updatelogmsg = updatelogmsg + "<td width = 6% Style=\"color:green\"><b><center>Pass</center></b></td></tr>";
 		} else if (currUCstatus.get().equals("Fail")) {
-			updatelogmsg = updatelogmsg + "<td width = 26%>" + TestOutput + "\n" + "Failed at " + currKW_Des.get()
+			updatelogmsg = updatelogmsg + "<td width = 28%>" + TestOutput + "\n" + "Failed at " + currKW_Des.get()
 					+ "</td>";
 			updatelogmsg = updatelogmsg
 					+ "<td width = 6% Style=\\\"color:Red\\\"><b><center>Fail</center></b></td></tr>";
@@ -237,9 +237,7 @@ public class Result extends Driver {
 			// killexeTask();
 			WebDriver driver = new ChromeDriver();
 			driver.get(url);
-			// Runtime rTime = Runtime.getRuntime();
-			// String browser = "C:\\Program Files\\Mozilla Firefox\\firefox.exe ";
-			// rTime.exec(browser+url);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

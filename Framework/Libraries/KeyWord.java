@@ -4,6 +4,8 @@ public class KeyWord {
 
 	Keyword_CRM KC = new Keyword_CRM();
 	Keyword_API KA = new Keyword_API();
+	Keyword_SIPT KS = new Keyword_SIPT();
+	Keyword_Validations KV = new Keyword_Validations();
 
 	// ------------------Keyword CRM -------------------//
 	public String Siebel_Login() {
@@ -19,7 +21,7 @@ public class KeyWord {
 	}
 
 	public String Entp_AccountCreation() {
-		return KC.Entp_AccountCreation();	
+		return KC.Entp_AccountCreation();
 	}
 
 	public String Entp_ContactCreation() {
@@ -38,14 +40,6 @@ public class KeyWord {
 		return KC.PlanSelection();
 	}
 
-	/*public String Customize() {
-		return KC.Customize();
-	}
-
-	public String Validate() {
-		return KC.Validate();
-	}*/
-
 	public String OrderSubmission() {
 		return KC.OrderSubmission();
 	}
@@ -53,46 +47,62 @@ public class KeyWord {
 	public String Siebel_Logout() {
 		return KC.Siebel_Logout();
 	}
-	
+
 	public String Modify() {
 		return KC.Modify();
 	}
-	
+
 	public String Suspension() {
 		return KC.Suspension();
 	}
-	
+
 	public String Resume() {
 		return KC.Resume();
 	}
-	
+
 	public String Plan_UpgradeDowngrade() {
 		return KC.Plan_UpgradeDowngrade();
 	}
-	
+
 	public String Change_PrimaryNumber() {
 		return KC.Change_PrimaryNumber();
 	}
-	
+
 	public String Disconnect() {
 		return KC.Disconnect();
 	}
-	
+
 	public String SIMSwap() {
 		return KC.SIMSwap();
 	}
-	
+
 	// ------------------Keyword CRM -------------------//
-	
+
 	// ---------------------Keyword API------------------------//
-	
+
 	public String RTB_Login() {
 		return KA.RTB_Login();
 	}
-	
+
 	public String RTB() {
 		return KA.RTB();
 	}
-	
+
 	// ---------------------Keyword API------------------------//
+
+	// ---------------------Keyword SIPT------------------------//
+
+	public String SIPT() {
+		return KS.SIPT();
+	}
+
+	// ---------------------Keyword SIPT------------------------//
+
+	// ---------------------Keyword Validation------------------------//
+
+	public String RTB_Validation() {
+		return KV.RTB_Validation();
+	}
+
+	// ---------------------Keyword Validation------------------------//
 }

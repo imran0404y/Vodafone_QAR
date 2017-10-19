@@ -34,7 +34,7 @@ public class Utlities extends Driver {
 				cellval3 = rs.getField(3).value();
 				cellval4 = rs.getField(4).value();
 				cellval5 = rs.getField(5).value();
-				
+
 			}
 			String[] retval = { cellval1, cellval2, cellval3, cellval4, cellval5 };
 			rs.close();
@@ -43,7 +43,7 @@ public class Utlities extends Driver {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}		
+		}
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -59,7 +59,8 @@ public class Utlities extends Driver {
 			ArrayList<String[]> addresses = new ArrayList<String[]>();
 			Fillo nfillo = new Fillo();
 			Connection connection = nfillo.getConnection(TestDataDB_File.get());
-			//String strQuery = "Select * from TestData where Control = \'YES\' ORDER BY SeqNo ASC";
+			// String strQuery = "Select * from TestData where Control = \'YES\' ORDER BY
+			// SeqNo ASC";
 			String strQuery = "Select * from TestData where RunControl = \'YES\' ORDER BY SeqNo ASC";
 			Recordset rs = connection.executeQuery(strQuery);
 			rs.moveFirst();
@@ -72,7 +73,7 @@ public class Utlities extends Driver {
 
 			for (int currs = 1; currs <= rs.getCount(); currs++) {
 				ID[currs - 1] = rs.getField(2).value();
-				UseCases[currs - 1] = rs.getField(3).value();	
+				UseCases[currs - 1] = rs.getField(3).value();
 				Testcase[currs - 1] = rs.getField(4).value();
 				TC_Description[currs - 1] = rs.getField(5).value();
 				data[currs - 1] = rs.getField(6).value();
@@ -154,16 +155,16 @@ public class Utlities extends Driver {
 
 		for (int readloop = 0; readloop < DataSap.length; readloop++) {
 			String[] Sapdata = DataSap[readloop].split("--");
-			if(Sapdata.length==2) {
+			if (Sapdata.length == 2) {
 				dict.put(Sapdata[0], Sapdata[1]);
-			}else {
+			} else {
 				dict.put(Sapdata[0], "");
 			}
-			
+
 		}
 		return dict;
 	}
-	
+
 	/*----------------------------------------------------------------------------------------------------
 	 * Method Name			: fdatabase
 	 * Arguments			: The current Usecase that is being executed.
@@ -189,13 +190,13 @@ public class Utlities extends Driver {
 					dict.put(colname, "");
 				} else {
 					dict.put(colname, dat);
-				}	
+				}
 			}
 			rs.close();
 			connection.close();
 			return dict;
 		} catch (Exception e) {
-			Result.fUpdateLog("No data is available in database sheet for particular Usecase : "+ data);
+			Result.fUpdateLog("No data is available in database sheet for particular Usecase : " + data);
 			return null;
 		}
 	}
@@ -217,7 +218,7 @@ public class Utlities extends Driver {
 			String strQuery = "Select * from " + Screen + "  Where Application_Details = \'" + data + "\'";
 
 			Recordset rs = connection.executeQuery(strQuery);
-			int noOfColumns = rs.getFieldNames().size();	
+			int noOfColumns = rs.getFieldNames().size();
 			ArrayList<String> fieldnames = rs.getFieldNames();
 			rs.moveNext();
 			for (int readloop = 0; readloop < noOfColumns; readloop++) {
@@ -249,13 +250,13 @@ public class Utlities extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public static void StoreValue(String Name, String Value) {
 		try {
-			Result.fUpdateLog(Name +" : "+Value);
+			Result.fUpdateLog(Name + " : " + Value);
 			String StoreDBpth = Storage_FLD.get() + "/StoreDB.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
 			String StrQuery = "INSERT INTO Dynamic_DataStore(Dynamic_UseCase,Dynamic_TestCase,Dynamic_Name,Dynamic_Value,Keyword,Date) VALUES('"
-					+ UseCaseName.get() + "','"+ TestCaseN.get() + "','" + Name + "','" + Value + "','" + currKW.get() + "','"
-					+ keywordstartdate.get() + "')";
+					+ UseCaseName.get() + "','" + TestCaseN.get() + "','" + Name + "','" + Value + "','" + currKW.get()
+					+ "','" + keywordstartdate.get() + "')";
 			connection.executeUpdate(StrQuery);
 			connection.close();
 		} catch (Exception e) {
@@ -278,7 +279,8 @@ public class Utlities extends Driver {
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
 			String StrQuery = "Select * from Dynamic_DataStore where Dynamic_TestCase='" + TestCaseN.get()
-					+ "' and Date='" + keywordstartdate.get()+ "' and Dynamic_UseCase='" + UseCaseName.get() + "' and Keyword='" + keyword + "'";
+					+ "' and Date='" + keywordstartdate.get() + "' and Dynamic_UseCase='" + UseCaseName.get()
+					+ "' and Keyword='" + keyword + "'";
 			Recordset rs = connection.executeQuery(StrQuery);
 			rs.moveFirst();
 			// System.out.println(rs.getField("Dynamic_Name")+"
@@ -321,6 +323,68 @@ public class Utlities extends Driver {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: FetchStoredValue
+	 * Arguments			: -
+	 * Use 					: to get the data from the Product catalog sheet
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 23-Aug-2017
+	--------------------------------------------------------------------------------------------------------*/
+	@SuppressWarnings("deprecation")
+	public static ArrayList<String> FetchProcuctCatalogData() {
+		ArrayList<String> PCSAll = new ArrayList<String>();
+		try {
+			String BundleID,StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
+			Fillo fillo = new Fillo();
+			Connection connection = fillo.getConnection(StoreDBpth);
+
+			int k = 0;
+			for (int i = 0; i < LineItemData.size(); i++) {
+				String Product = LineItemData.get(i);
+				switch (Product) {
+				case "Smart Limit":
+				case "SIM Card":
+				case "Mobile Voicemail":
+				case "Bill Manager":
+				case "Mobile Service Bundle":
+					System.out.println("Item available in Line items");
+					break;
+				default:
+					if (!(Product.equalsIgnoreCase(Planname.get()))) {
+						String StrQuery = "Select SurePayID,Benefit,Product_Validity,BundleID,SubscriptionPrice,Siebel_Description from AutCatalogue where Siebel_Plan_Name='"
+								+ Product + "'";
+						Recordset rs = connection.executeQuery(StrQuery);
+						rs.moveNext();
+						for (int currs = 0; currs <= rs.getCount(); currs++) {
+							if (!(rs.getField(1).value().equals("DUMMY"))) {
+								BundleID=rs.getField(3).value();
+								if (BundleID.isEmpty())
+									BundleID=" ";
+									
+								String Type = rs.getField(5).value() + "||" + rs.getField(1).value() + "||"
+										+ rs.getField(0).value() + "||" + BundleID + "||"
+										+ rs.getField(4).value() + "||" + rs.getField(2).value();
+								PCSAll.add(k, Type);
+								k++;
+							}
+							if (rs.hasNext()) {
+								rs.moveNext();
+							}
+						}
+						rs.close();
+					}else {
+						System.out.println("Plan name matches");
+					}
+				}
+			}
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return PCSAll;
 	}
 	
 }

@@ -52,17 +52,22 @@ public class Driver {
 	public static ThreadLocal<String> currKW_Des = new ThreadLocal<String>();
 	public static ThreadLocal<String> browser = new ThreadLocal<String>();
 	public static ThreadLocal<String> keywordstartdate = new ThreadLocal<String>();
+	public static ThreadLocal<String> Planname = new ThreadLocal<String>();
+	public static ThreadLocal<String> OrderDate = new ThreadLocal<String>();
+	public static ThreadLocal<String> Def_Smart_limit = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> database = new ThreadLocal<Dictionary>();
 	protected static ThreadLocal<WebDriver> cDriver = new ThreadLocal<WebDriver>();
-	HashMap<String, Object> RTBOutputData = new HashMap<String, Object>();
-
+	static HashMap<String, String> RTBOutputData = new HashMap<String, String>();
+	static ArrayList<String> LineItemData = new ArrayList<String>();
+	//static String[] LineItemData = new String[15]; ;
+	
 	public static void main(String[] args) throws IOException {
 		System.out.println("Intialization");
 		killexeTask();
-
+		
 		WorkingDir.set(System.getProperty("user.dir").replace("\\", "/"));
 		Base_Path.set(WorkingDir.get() + "/Framework");
 		Storage_FLD.set(Base_Path.get() + "/Storage");
@@ -74,7 +79,7 @@ public class Driver {
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
 		String Keyword_Result = null;
-
+		
 		File resfold = new File(Result_FLD.get());
 		if ((!resfold.exists()))
 			resfold.mkdir();
@@ -174,7 +179,6 @@ public class Driver {
 						}
 
 					}
-
 				}
 
 			}
