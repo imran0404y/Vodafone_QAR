@@ -1,15 +1,11 @@
 package Libraries;
 
+import java.util.Random;
+
 public class Keyword_SIPT extends Driver {
 	Common CO = new Common();
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: SIPT
-	 * Arguments			: None
-	 * Use 					: SIPT
-	 * Designed By			: Vinodhini Raviprasad
-	 * Modified By			: Vinodhini Raviprasad
-	 * Last Modified Date 	: 09-Oct-2017
-	--------------------------------------------------------------------------------------------------------*/
+	Random R = new Random();
+
 	public String SIPT() {
 		String Test_OutPut = "", Status = "";
 		String PlanName = null;
@@ -17,15 +13,9 @@ public class Keyword_SIPT extends Driver {
 		try {
 
 			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Reserve, Category, GetData , COSP_Plan, ReservationToken, To, MSISDN,
-					 From = null;GetData="Corporate SIP Trunk Bundle";
-
-			if (Browser.WebButton.exist("LI_New"))
-				System.out.println("Proceeding Plan Selection");
-			else {
-				Continue.set(true);
-				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
-			}
+			String Category, GetData, COSP_Plan, ReservationToken, To, MSISDN, // ,Reserve
+					From = null;
+			GetData = "Corporate SIP Trunk Bundle";
 			CO.waitforload();
 
 			if (!(getdata("PlanName").equals(""))) {
@@ -33,16 +23,14 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				PlanName = pulldata("PlanName");
 			}
-			
-			
-			
-			// To use Catalog view uncomment the below lines
-			// Browser.WebLink.click("VQ_Catalog");
-			// CO.Category_Select(pulldata("Plan_View"),pulldata("Plan_Catagory"),PlanName);
-			// Browser.WebButton.click("LI_New");
-			// CO.waitforload();
 
-			// To use the catalog view comment the below line till '----'
+			// To use Catalog view uncomment the below lines
+			/*
+			 * Browser.WebLink.click("VQ_Catalog");
+			 * CO.Category_Select(pulldata("Plan_View"),pulldata("Plan_Catagory"),PlanName);
+			 * Browser.WebButton.click("LI_New"); CO.waitforload();
+			 */
+			// ------------------------------------------------------------
 			CO.scroll("LI_New", "WebButton");
 			Browser.WebButton.click("LI_New");
 			int Row = 2, Col;
@@ -53,9 +41,8 @@ public class Keyword_SIPT extends Driver {
 			// -----------------------
 
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			
+
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
-			// To select the Mobile Bundle
 			Col_V = Col + 2;
 
 			for (int i = 2; i <= Row_Count; i++) {
@@ -84,40 +71,32 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				To = pulldata("To");
 			}
-			
 
 			if (!(getdata("ReservationToken").equals(""))) {
 				ReservationToken = getdata("ReservationToken");
 			} else {
 				ReservationToken = pulldata("ReservationToken");
 			}
-			
+
 			if (!(getdata("MSISDN").equals(""))) {
 				MSISDN = getdata("MSISDN");
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
 
-			
-				Browser.WebButton.click("Customize");
-				/*if (ReservationToken != "") {
-					Browser.WebEdit.waittillvisible("NumberReservationToken");
-					Browser.WebEdit.Set("NumberReservationToken", ReservationToken);
-					Result.takescreenshot("Providing Number Reservation Token");
-				}*/
-				
-				CO.AddOnSelection("COSP Plans,"+COSP_Plan, "Add");
-				CO.NumberRangeProducts("DID Number Range","1",From,To,ReservationToken);
-				CO.waitforload();
-				CO.Text_Select("button", "Verify");
-				CO.isAlertExist();
-				CO.waitforload();
-				CO.Text_Select("button", "Done");
-				CO.waitforload();
-				if (CO.isAlertExist())
-					Continue.set(false);
-			
-			
+			Browser.WebButton.click("Customize");
+
+			CO.AddOnSelection("COSP Plans," + COSP_Plan, "Add");
+			CO.NumberRangeProducts("DID Number Range", "1", From, To, ReservationToken);
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			CO.waitforload();
+			if (CO.isAlertExist())
+				Driver.Continue.set(false);
+
 			if (ReservationToken.equals("")) {
 				CO.scroll("Numbers", "WebLink");
 				Browser.WebLink.click("Numbers");
@@ -135,9 +114,8 @@ public class Keyword_SIPT extends Driver {
 
 				if (!MSISDN.equals("")) {
 
-					Reserve = MSISDN.substring(3, MSISDN.length());
-					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
-					// Browser.WebButton.click("Number_Go");
+					// Reserve = MSISDN.substring(3, MSISDN.length());
+					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", MSISDN);
 					CO.waitmoreforload();
 				} else {
 					Browser.WebButton.click("Number_Go");
@@ -156,7 +134,8 @@ public class Keyword_SIPT extends Driver {
 					Result.takescreenshot("Number Resered");
 					Result.fUpdateLog("Alert Handled");
 				}
-				
+
+				CO.Link_Select("Line Items");
 				Col_S = CO.Select_Cell("Line_Items", "Service Id");
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -171,10 +150,11 @@ public class Keyword_SIPT extends Driver {
 				Browser.WebButton.waittillvisible("Reserved_Ok");
 				Browser.WebButton.waitTillEnabled("Reserved_Ok");
 				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
-				if (Row_Count > 1)
+				if (Row_Count > 1) {
 					Browser.WebButton.click("Reserved_Ok");
-				else
-					Continue.set(false);
+					Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				} else
+					Driver.Continue.set(false);
 			} else if (!ReservationToken.equals("")) {
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
@@ -192,8 +172,7 @@ public class Keyword_SIPT extends Driver {
 
 			}
 
-
-			if (Continue.get() & (Row_Count >= 3)) {
+			if (Driver.Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
 				Test_OutPut += "PlanName : " + PlanName + ",";
@@ -203,8 +182,8 @@ public class Keyword_SIPT extends Driver {
 				Test_OutPut += "From : " + From + ",";
 				Utlities.StoreValue("To", To);
 				Test_OutPut += "To : " + To + ",";
-				Utlities.StoreValue("ReservationToken", ReservationToken);
-				Test_OutPut += "ReservationToken : " + ReservationToken + ",";
+				Utlities.StoreValue("SIPT", MSISDN);
+				Test_OutPut += "SIPT : " + MSISDN + ",";
 				Result.takescreenshot("Plan Selection is Successful : " + PlanName);
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
@@ -224,5 +203,4 @@ public class Keyword_SIPT extends Driver {
 		Result.fUpdateLog("------SIPT Plan Selection Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
 }

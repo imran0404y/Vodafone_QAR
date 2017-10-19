@@ -1011,59 +1011,6 @@ public class Common extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: NumberRangeProducts
-	 * Use 					: To Add a Specific No of Item and customising From and To Range with Token if applicable
-	 * args					: Option, Quantity ,From , To , Token
-	 * Designed By			: Vinodhini Raviprasad
-	 * Last Modified Date 	: 11-October-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public void NumberRangeProducts(String Option, String Qantity, String From, String To, String Token) {
-		try {
-			int Operation_Done = 0;
-			Link_Select("Number Range Products");
-			ToWait();
-			List<WebElement> Label_Search = cDriver.get().findElements(
-					By.xpath("//div[@class='siebui-ecfg-header-title']//div[@class='siebui-ecfg-header-label']"));
-			List<WebElement> Option_Search = cDriver.get()
-					.findElements(By.xpath("//div[@class='NotSelected siebui-ecfg-module']//table//select"));
-			List<WebElement> input_Search = cDriver.get().findElements(By.xpath(
-					"//div[@class='NotSelected siebui-ecfg-module']//table//input[@class='siebui-ctrl-input ']"));
-			List<WebElement> button_Search = cDriver.get().findElements(By
-					.xpath("//div[@class='NotSelected siebui-ecfg-module']//table//button[@class='siebui-ctrl-btn ']"));
-			for (int i = 0; i < Label_Search.size(); i++)
-				if (Label_Search.get(i).getText().contains(Option)) {
-					Option_Search.get(i).click();
-					Option_Search.get(i).findElement(By.xpath("//option[text()='" + Option + "']")).click();
-					ToWait();
-					input_Search.get(i).sendKeys(Qantity);
-					button_Search.get(i).click();
-					ToWait();
-					Link_Select(Option);
-					ToWait();
-					Operation_Done = 1;
-					break;
-
-				}
-			if (Operation_Done == 1) {
-				List<WebElement> Field_Name = cDriver.get()
-						.findElements(By.xpath("//div[@id='MainPage']//div[@class='siebui-ecfg-header-label']]"));
-				List<WebElement> Field_Input = cDriver.get()
-						.findElements(By.xpath("//div[@id='MainPage']//input[@class='siebui-ctrl-input ']"));
-				for (int Index = 0; Index < Field_Name.size(); Index++) {
-					if (Field_Name.get(Index).getText().contains("From"))
-						Field_Input.get(Index).sendKeys(From);
-					if (Field_Name.get(Index).getText().contains("To"))
-						Field_Input.get(Index).sendKeys(To);
-					if (Field_Name.get(Index).getText().contains("Reservation Token"))
-						Field_Input.get(Index).sendKeys(Token);
-				}
-			} else
-				Continue.set(false);
-		} catch (Exception e) {
-		}
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Date1
 	 * Arguments			: None
 	 * Use 					:To fetch the date from home Browser
@@ -1126,6 +1073,74 @@ public class Common extends Driver {
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr2);
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: NumberRangeProducts
+	 * Use 					: To Add a Specific No of Item and customising From and To Range with Token if applicable
+	 * args					: Option, Quantity ,From , To , Token
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 11-October-2017
+	--------------------------------------------------------------------------------------------------------*/
+
+	public void NumberRangeProducts(String Option, String Qantity, String From, String To, String Token) {
+		try {
+			int Operation_Done;
+			Link_Select("Number Range Products");
+			ToWait();
+			Operation_Done = 0;
+			List<WebElement> Option_Search = cDriver.get()
+					.findElements(By.xpath("//div[@class='NotSelected siebui-ecfg-module']//table//select"));
+			List<WebElement> input_Search = cDriver.get().findElements(By.xpath(
+					"//div[@class='NotSelected siebui-ecfg-module']//table//input[@class='siebui-ctrl-input ']"));
+			List<WebElement> button_Search = cDriver.get().findElements(By
+					.xpath("//div[@class='NotSelected siebui-ecfg-module']//table//button[@class='siebui-ctrl-btn ']"));
+			List<WebElement> Label_Search = cDriver.get().findElements(
+					By.xpath("//div[@class='siebui-ecfg-header-title']//div[@class='siebui-ecfg-header-label']"));
+			System.out.println(Label_Search.size() + "  " + Option_Search.size() + " " + input_Search.size() + " "
+					+ button_Search.size());
+			for (int i = 0; i < Label_Search.size(); i++) {
+				if (Label_Search.get(i).getText().contains(Option)) {
+					((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)",
+							Option_Search.get(i));
+					ToWait();
+					Option_Search.get(i).click();
+					Option_Search.get(i).findElement(By.xpath("//option[text()='" + Option + "']")).click();
+					ToWait();
+					input_Search.get(i).sendKeys(Qantity);
+					button_Search.get(i).click();
+					ToWait();
+					Link_Select(Option);
+					ToWait();
+					Operation_Done = 1;
+					break;
+
+				} else
+					((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)",
+							Option_Search.get(i));
+				ToWait();
+			}
+			if (Operation_Done == 1) {
+				waitforload();
+				List<WebElement> Field_Name = cDriver.get()
+						.findElements(By.xpath("//div[@id='MainPage']//div[@class='siebui-ecfg-header-label']"));
+				List<WebElement> Field_Input = cDriver.get()
+						.findElements(By.xpath("//div[@id='MainPage']//input[@class='siebui-ctrl-input ']"));
+				for (int Index = 0; Index < Field_Name.size(); Index++) {
+					((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)",
+							Field_Input.get(Index));
+					ToWait();
+					if (Field_Name.get(Index).getText().contains("From"))
+						Field_Input.get(Index).sendKeys(From);
+					if (Field_Name.get(Index).getText().contains("To"))
+						Field_Input.get(Index).sendKeys(To);
+					if (Field_Name.get(Index).getText().contains("Reservation Token"))
+						Field_Input.get(Index).sendKeys(Token);
+				}
+			} else
+				Continue.set(false);
+		} catch (Exception e) {
+		}
 	}
 
 }
