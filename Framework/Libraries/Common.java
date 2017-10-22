@@ -890,47 +890,55 @@ public class Common extends Driver {
 	public String FindBillingCycle() {
 		try {
 			String billingcycle;
-			Date DD_3 = new Date();
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
+			int Order_Day, Order_Year, Add_Year;
 			String Submission_Date = OrderDate.get();
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
 			String Order_Month, Add_Month;
-			int Order_Day, Order_Year, Add_Year;
 			DateFormat Month = new SimpleDateFormat("MMM");
 			DateFormat Year = new SimpleDateFormat("yyyy");
 			Order_Month = Month.format(cals.getTime());
 			Order_Year = Integer.parseInt(Year.format(cals.getTime()));
 			Order_Day = Integer.parseInt(Submission_Date.split("-")[0]);
-
 			cals.add(Calendar.MONTH, 1);
 			Add_Month = Month.format(cals.getTime());
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
-
-			cals.add(Calendar.DATE, 3);
-			DD_3 = Date_Format.parse(Date_Format.format(cals.getTime()));// .parse(Date_Format.parse(cals.getTime().toString()));DD_3=Day.parse(Day.format(Submission_Date.toString()));
-
-			Date Date_15 = Date_Format.parse(("15-" + Order_Month + "-" + Order_Year));
-			Date Date_1 = Date_Format.parse(("1-" + Add_Month + "-" + Order_Year));
-
-			if (TestCaseN.get().contains("black")) {
-				if (Order_Day < 4)
-					billingcycle = "07-" + Order_Month + "-" + Order_Year;
+			if (!billDate.get().isEmpty()) {
+				int GetDate = Integer.parseInt(billDate.get());
+				if (Order_Day < GetDate)
+					billingcycle = GetDate + "-" + Order_Month + "-" + Order_Year;
+				else if (Order_Day == GetDate)
+					billingcycle = GetDate + "-" + Order_Month + "-" + Order_Year;
 				else
-					billingcycle = "07-" + Add_Month + "-" + Add_Year;
+					billingcycle = GetDate + "-" + Add_Month + "-" + Add_Year;
 			} else {
-				if (Order_Day < 15)
-					if (DD_3.equals(Date_15) || DD_3.after(Date_15))
-						billingcycle = "01-" + Add_Month + "-" + Add_Year;
+				Date DD_3 = new Date();
+				cals.add(Calendar.DATE, 3);
+				DD_3 = Date_Format.parse(Date_Format.format(cals.getTime()));// .parse(Date_Format.parse(cals.getTime().toString()));DD_3=Day.parse(Day.format(Submission_Date.toString()));
+
+				Date Date_15 = Date_Format.parse(("15-" + Order_Month + "-" + Order_Year));
+				Date Date_1 = Date_Format.parse(("1-" + Add_Month + "-" + Order_Year));
+
+				if (TestCaseN.get().contains("black")) {
+					if (Order_Day < 4)
+						billingcycle = "07-" + Order_Month + "-" + Order_Year;
 					else
-						billingcycle = "15-" + Order_Month + "-" + Order_Year;
-				else if (DD_3.equals(Date_1) || DD_3.after(Date_1))
-					billingcycle = "15-" + Add_Month + "-" + Add_Year;
-				else
-					billingcycle = "01-" + Add_Month + "-" + Add_Year;
+						billingcycle = "07-" + Add_Month + "-" + Add_Year;
+				} else {
+					if (Order_Day < 15)
+						if (DD_3.equals(Date_15) || DD_3.after(Date_15))
+							billingcycle = "01-" + Add_Month + "-" + Add_Year;
+						else
+							billingcycle = "15-" + Order_Month + "-" + Order_Year;
+					else if (DD_3.equals(Date_1) || DD_3.after(Date_1))
+						billingcycle = "15-" + Add_Month + "-" + Add_Year;
+					else
+						billingcycle = "01-" + Add_Month + "-" + Add_Year;
+				}
 			}
 			return billingcycle;
 		} catch (Exception e) {
@@ -1029,7 +1037,7 @@ public class Common extends Driver {
 					break;
 				}
 			}
-			OrderDate.set(Dateform[1] + "/" + Mon + "/" + Dateforma[0]);
+			OrderDate.set(Dateform[1] + "-" + Mon + "-" + Dateforma[0]);
 
 		} catch (Exception e) {
 			Utlities.StoreValue("Order_Creation_Date", OrderDate.get());

@@ -376,6 +376,19 @@ public class Browser extends Driver {
 				return "";
 			}
 		}
+		
+		public static String getCellData_title(String objname, int rownum, int columnnum) {
+			try {
+				String[] objprop = Utlities.FindObject(objname, "WebTable");
+
+				String cellXpath = objprop[0] + "//tr[" + rownum + "]" + "//td[" + columnnum + "]";
+				String celldata = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("title");
+
+				return celldata;
+			} catch (Exception e) {
+				return "";
+			}
+		}
 
 		public static String CellData(String objname, int rownum)
 		{

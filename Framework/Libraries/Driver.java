@@ -168,14 +168,6 @@ public class Driver {
 							e.printStackTrace();
 						}
 					}
-					try {
-						Class<?> cls = Class.forName("Libraries.KeyWord");
-						Object obj = cls.newInstance();
-						Method method = cls.getMethod(currKW.get());
-						Keyword_Result = (String) method.invoke(obj);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 
 					if (!Keyword_Result.equals(null)) {
 						String[] ResultandDes = Keyword_Result.split("@@");

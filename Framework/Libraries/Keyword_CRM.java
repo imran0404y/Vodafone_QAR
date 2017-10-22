@@ -603,9 +603,9 @@ public class Keyword_CRM extends Driver {
 			String OD_Date;
 			Col_new = CO.Actual_Cell("Order_Table", "Order Date");
 			Browser.WebTable.click("Order_Table", Row, Col_new);
-			OD_Date = Browser.WebTable.getCellData("Order_Table", 2, Col_new);
+			OD_Date = Browser.WebTable.getCellData_title ("Order_Table", 2, Col_new);
 			String[] Date = OD_Date.split(" ")[0].split("/");
-			OrderDate.set((Date[1] + "/" + Date[0] + "/" + Date[2]));
+			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
 
 			Browser.WebButton.waittillvisible("LI_New");

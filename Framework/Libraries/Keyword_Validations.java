@@ -22,10 +22,8 @@ public class Keyword_Validations extends Driver {
 		String Test_OutPut = "", Status = "";
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
-			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;// ,BID,SubscriptionPrice
+			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;
 
-			// ArrayList <String> FetchProduct =new ArrayList<String>(Arrays.asList(a));
-			// Comment the above two declarations to get the exact values
 			ArrayList<String> FetchProduct = Utlities.FetchProcuctCatalogData();
 			for (int i = 0; i < FetchProduct.size(); i++) {
 				String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
@@ -87,7 +85,6 @@ public class Keyword_Validations extends Driver {
 			Date endDate = Date_Format.parse(billcycledate);
 			int difInDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 			int Total_Days = cals.getActualMaximum(Calendar.DATE);
-
 			String Prorate = "";
 
 			Expiry = orderdate;
@@ -103,15 +100,20 @@ public class Keyword_Validations extends Driver {
 				Prorate = CO.Prorated(1, 1, Benifit, BucketValue, BucketUsageType);
 				Expiry = orderdate;
 				break;
-			case "month":
-			case "black":
+			case "month":case "black":
 				// Prorate = CO.Prorated(Total_Days, Total_Days, Benifit);
 				Prorate = CO.Prorated(Total_Days, difInDays, Benifit, BucketValue, BucketUsageType);
 				cals.add(Calendar.DATE, Total_Days);
 				Expiry = Date_Format.format(cals.getTime());// Total_Days+Month
 				break;
 			}
-
+			if(!Product_Validity.equalsIgnoreCase("day")) {  
+				SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MMM-yyyy" );   
+				Calendar cal1 = Calendar.getInstance();    
+				cal1.setTime( dateFormat.parse(Expiry));    
+				cal1.add( Calendar.DATE, -1 );    
+				Expiry=dateFormat.format(cal1.getTime()); 				
+			}
 			Desc = Desc.replace("&CV", " " + Prorate + " ");
 			Desc = Desc.replace("&BE", " " + Expiry + " ");
 			return Desc;

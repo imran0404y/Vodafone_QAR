@@ -342,7 +342,7 @@ public class Utlities extends Driver {
 
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
-				String Product = LineItemData.get(Integer.toString(k));
+				String Product = LineItemData.get(Integer.toString(i));
 				switch (Product) {
 				case "Smart Limit":
 				case "SIM Card":
@@ -352,20 +352,20 @@ public class Utlities extends Driver {
 					System.out.println("Item available in Line items");
 					break;
 				default:
-					if (!(Product.equalsIgnoreCase("Postpaid Red 750 Promotion"))) {
+					if (!(Product.equalsIgnoreCase(Planname.get()))) {
 						String StrQuery = "Select SurePayID,Benefit,BucketValue,BucketUsageType,ProductValidity,BundleID,SubscriptionPrice,Siebel_Description from AutCatalogue where Siebel_Plan_Name='"
 								+ Product + "'";
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 0; currs <= rs.getCount(); currs++) {
-							if ((!rs.getField(2).value().isEmpty())) {
-								BundleID = rs.getField(3).value();
+							if ((!rs.getField("Siebel_Description").isEmpty())) {
+								BundleID = rs.getField("BundleID");
 								if (BundleID.isEmpty())
 									BundleID = " ";
-								String Type = rs.getField(6).value() + "||" + rs.getField(0).value() + "||"
-										+ rs.getField(7).value() + "||" + rs.getField(1).value() + "||"
-										+ rs.getField(4).value() + "||" + BundleID + "||" + rs.getField(5).value()
-										+ "||" + rs.getField(2).value();
+								String Type = rs.getField("SurePayID") + "||" + rs.getField("Benefit") + "||"
+										+ rs.getField("BucketValue") + "||" + rs.getField("BucketUsageType") + "||"
+										+ rs.getField("ProductValidity") + "||" + BundleID + "||" + rs.getField("SubscriptionPrice")
+										+ "||" + rs.getField("Siebel_Description");
 								PCSAll.add(k, Type);
 								k++;
 								// }
@@ -376,7 +376,7 @@ public class Utlities extends Driver {
 						}
 						rs.close();
 					} else {
-						System.out.println("Plan name matches");
+						Result.fUpdateLog("Plan name matches");
 					}
 				}
 			}
@@ -401,7 +401,7 @@ public class Utlities extends Driver {
 			String StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			String StrQuery = "Select * from Smartlimit where PlanName='" + Planname.get() + "'";
+			String StrQuery = "Select * from Smartlimit where PlanName='" + "Postpaid Red 350 Promotion" + "'";
 			Recordset rs = connection.executeQuery(StrQuery);
 			rs.moveFirst();
 			// System.out.println(rs.getField("Dynamic_Name")+"
