@@ -339,7 +339,12 @@ public class Utlities extends Driver {
 			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-
+			/*LineItemData.put("0", "Mobile Service Bundle");
+			LineItemData.put("1", "Red 750");
+			LineItemData.put("2", "Postpaid Red 750 Promotion");
+			LineItemData.put("3", "Mobile Voicemail");
+			LineItemData.put("4", "SIM Card");
+			LineItemData.put("5", "Smart Limit");*/
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));
@@ -353,8 +358,7 @@ public class Utlities extends Driver {
 					break;
 				default:
 					if (!(Product.equalsIgnoreCase(Planname.get()))) {
-						String StrQuery = "Select SurePayID,Benefit,BucketValue,BucketUsageType,ProductValidity,BundleID,SubscriptionPrice,Siebel_Description from AutCatalogue where Siebel_Plan_Name='"
-								+ Product + "'";
+						String StrQuery = "Select * from AutCatalogue where Siebel_Plan_Name='" + Product + "'";
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 0; currs <= rs.getCount(); currs++) {
@@ -364,14 +368,13 @@ public class Utlities extends Driver {
 									BundleID = " ";
 								String Type = rs.getField("SurePayID") + "||" + rs.getField("Benefit") + "||"
 										+ rs.getField("BucketValue") + "||" + rs.getField("BucketUsageType") + "||"
-										+ rs.getField("ProductValidity") + "||" + BundleID + "||" + rs.getField("SubscriptionPrice")
-										+ "||" + rs.getField("Siebel_Description");
+										+ rs.getField("ProductValidity") + "||" + BundleID + "||"
+										+ rs.getField("SubscriptionPrice") + "||" + rs.getField("Siebel_Description");
 								PCSAll.add(k, Type);
-								k++;
-								// }
-								if (rs.hasNext()) {
-									rs.moveNext();
-								}
+								k++;	
+							}
+							if (rs.hasNext()) {
+								rs.moveNext();
 							}
 						}
 						rs.close();

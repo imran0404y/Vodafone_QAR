@@ -939,7 +939,7 @@ public class Keyword_CRM extends Driver {
 		String OS_Status;
 		Result.fUpdateLog("------Order Submission Event Details------");
 		try {
-			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col,Bill_Col;
+			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col,Bill_Col, Row_Count;
 			String EStatus = "Complete", FStatus = "Failed",Bill_Cycle;
 
 			if (Browser.WebTable.exist("Line_Items"))
@@ -988,7 +988,7 @@ public class Keyword_CRM extends Driver {
 			Result.takescreenshot("Order Submission is Successful");
 
 			Col = COL_FUL_STATUS;
-			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
 			if (Row_Count <= 3) {
 				Browser.WebButton.waittillvisible("Expand");
@@ -1030,7 +1030,7 @@ public class Keyword_CRM extends Driver {
 			if (Row_Count <= 3) {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
-				Bill_Col = CO.Select_Cell("Line_Items", "Bill_Col");
+				Bill_Col = CO.Actual_Cell("Line_Items", "Bill Cycle");
 				Bill_Cycle=Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
 				billDate.set(Bill_Cycle);
 			}
@@ -1042,7 +1042,7 @@ public class Keyword_CRM extends Driver {
 			}
 
 			CO.ToWait();
-			if (Continue.get() & (Complete_Status == 2)) {
+			if (Continue.get() ) {
 				Result.fUpdateLog("Order Status : " + OS_Status);
 				Test_OutPut += "Order Status : " + OS_Status + ",";
 				Result.takescreenshot("Order Status : " + OS_Status);

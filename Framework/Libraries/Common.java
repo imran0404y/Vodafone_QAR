@@ -893,7 +893,7 @@ public class Common extends Driver {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
-			String Submission_Date = OrderDate.get();
+			String Submission_Date = OrderDate.get();//"22-10-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -907,7 +907,8 @@ public class Common extends Driver {
 			Add_Month = Month.format(cals.getTime());
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
-			if (!billDate.get().isEmpty()) {
+			String dt = billDate.get();
+			if (dt!=null) {
 				int GetDate = Integer.parseInt(billDate.get());
 				if (Order_Day < GetDate)
 					billingcycle = GetDate + "-" + Order_Month + "-" + Order_Year;
