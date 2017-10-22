@@ -401,7 +401,7 @@ public class Utlities extends Driver {
 			String StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			String StrQuery = "Select * from Smartlimit where PlanName='" + "Postpaid Red 350 Promotion" + "'";
+			String StrQuery = "Select * from Smartlimit where PlanName='" + Planname.get() + "'";
 			Recordset rs = connection.executeQuery(StrQuery);
 			rs.moveFirst();
 			// System.out.println(rs.getField("Dynamic_Name")+"
