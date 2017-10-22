@@ -8,8 +8,6 @@ import java.util.Random;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import com.google.common.base.CharMatcher;
-
 //import org.openqa.selenium.By;
 //import org.openqa.selenium.Keys;
 
