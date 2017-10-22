@@ -120,7 +120,6 @@ public class Keyword_API extends Driver {
 				String Output1 = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:AccountName", i);
 				Result.fUpdateLog(Output + " : " + Output1);
 				RTBOutputData.put(Output, Output1);
-
 			}
 
 			if (Continue.get()) {

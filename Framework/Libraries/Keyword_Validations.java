@@ -23,25 +23,6 @@ public class Keyword_Validations extends Driver {
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
 			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;// ,BID,SubscriptionPrice
-			/*
-			 * String[]a=
-			 * {"399	||300_Mins||300_Mins||300_Mins	||Bill_Cycle	||Red3B	||750	||Red 750 roaming terminating voice: Your account has &CV minutes, expiring on &BE"
-			 * ,
-			 * "400	||0_Mins	||Bill_Cycle	||Red3D	||750	||Red 750 Roaming minutes to Vodafone Qatar: Your account has &CV minutes, expiring on &BE"
-			 * ,
-			 * "662	||50000_Units	||Bill_Cycle	||Red3A	||750	||Red 750 Local Voice/SMS: Your account has &CV Voice/SMS units, expiring on &BE"
-			 * ,
-			 * "665	||200_GB	||Bill_Cycle	||Red3B	||750	||Red 750 Local and Roaming Data: Your account has &CV Kbytes of data, expiring on &BE"
-			 * ,
-			 * "668	||0_kB	||Bill_Cycle	||Red3B	||750	||Red 750 Blackberry: Your account has &CV Kbytes of data, expiring on &BE"
-			 * ,
-			 * "790	||600_Mins	||Bill_Cycle	||Red3B	||750	||Red 750 international minutes: Your account has &CV minutes, expiring on &BE"
-			 * ,
-			 * "998	||15_GB	||Bill_Cycle	||Red3B	||750	||Red 750 data roaming: Your account has &CV Kbytes of data, expiring on &BE"
-			 * ,
-			 * "X92	||5_GB	||Bill_Cycle	||REDDTBS	||0	||Red Data Bonus:Your account has &CV Kbytes, expiring on &BE"
-			 * };
-			 */
 
 			// ArrayList <String> FetchProduct =new ArrayList<String>(Arrays.asList(a));
 			// Comment the above two declarations to get the exact values
@@ -57,9 +38,11 @@ public class Keyword_Validations extends Driver {
 
 				String BE = BE(Siebel_Desc, Benefits, Product_Validity, BucketValue, BucketUsageType);
 				Result.fUpdateLog(BE);
-				if (BE.equals(RTBOutputData.get(Surepay)))
-					Continue.set(true);
-				else
+				if (BE.equals(RTBOutputData.get(Surepay))) {
+					Result.fUpdateLog("Proration -- " + BE);
+					//Test_OutPut += "Proration -- "+BE + ",";
+					Test_OutPut += "RTB -- "+ RTBOutputData.get(Surepay) + ",";
+				}else
 					Continue.set(false);
 			}
 
@@ -95,7 +78,7 @@ public class Keyword_Validations extends Driver {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			String billcycledate, Expiry, orderdate = OrderDate.get();// "19-10-2017"
-			billcycledate = CO.FindBillingCycle(orderdate);
+			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
 			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(orderdate.split("-")[1]) - 1);

@@ -54,6 +54,7 @@ public class Driver {
 	public static ThreadLocal<String> keywordstartdate = new ThreadLocal<String>();
 	public static ThreadLocal<String> Planname = new ThreadLocal<String>();
 	public static ThreadLocal<String> OrderDate = new ThreadLocal<String>();
+	public static ThreadLocal<String> billDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> Def_Smart_limit = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();
@@ -130,7 +131,8 @@ public class Driver {
 			}
 
 			Result.createTCScreenshotFold();
-
+			ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
+			String RTB  = Validatedata("RTB_Validation");
 			for (int currKeyword = 0; currKeyword < totKeywords.length; currKeyword++) {
 				if (Continue.get() == true) {
 					DateFormat currkeywordstartdate = new SimpleDateFormat("dd-MMM-yyyy");
@@ -143,12 +145,29 @@ public class Driver {
 					currKWstatus.set("Pass");
 					if (currKW_DB.get().toString().equalsIgnoreCase("Data")) {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata(TestCaseData.get()));
-						ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
 					} else {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata_diff(currKW_DB.get()));
 						Environment.set(getdata("Environment"));
 					}
-
+					if(RTB.equalsIgnoreCase("yes")) {
+						try {
+							Class<?> cls = Class.forName("Libraries.KeyWord");
+							Object obj = cls.newInstance();
+							Method method = cls.getMethod(currKW.get());
+							Keyword_Result = (String) method.invoke(obj);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}else if(!currKW.get().contains("RTB")){
+						try {
+							Class<?> cls = Class.forName("Libraries.KeyWord");
+							Object obj = cls.newInstance();
+							Method method = cls.getMethod(currKW.get());
+							Keyword_Result = (String) method.invoke(obj);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 					try {
 						Class<?> cls = Class.forName("Libraries.KeyWord");
 						Object obj = cls.newInstance();

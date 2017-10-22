@@ -8,6 +8,8 @@ import java.util.Random;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import com.google.common.base.CharMatcher;
+
 //import org.openqa.selenium.By;
 //import org.openqa.selenium.Keys;
 
@@ -585,11 +587,6 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Sales Order Event Details------");
 		try {
 
-			if (Browser.WebButton.exist("Orders_Tab"))
-				System.out.println("Proceeding with Sales Order");
-			else if (!Utlities.FetchStoredValue("BillingProfileCreation").isEmpty()) {
-				Continue.set(true);
-			}
 			Browser.WebButton.click("Orders_Tab");
 			if (CO.isAlertExist())
 				Browser.WebButton.click("Orders_Tab");
@@ -653,15 +650,8 @@ public class Keyword_CRM extends Driver {
 		try {
 
 			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, SIM, MSISDN = null,
+			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken,StartNumber, SIM, MSISDN = null,
 					SData = "SIM Card";
-
-			if (Browser.WebButton.exist("LI_New"))
-				System.out.println("Proceeding Plan Selection");
-			else {
-				Continue.set(true);
-				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
-			}
 			CO.waitforload();
 
 			if (!(getdata("PlanName").equals(""))) {
@@ -731,6 +721,12 @@ public class Keyword_CRM extends Driver {
 				SIM = getdata("SIM");
 			} else {
 				SIM = pulldata("SIM");
+			}
+			
+			if (!(getdata("StartNumber").equals(""))) {
+				StartNumber = getdata("StartNumber");
+			} else {
+				StartNumber = pulldata("StartNumber");
 			}
 
 			if (!(getdata("ReservationToken").equals(""))) {
@@ -804,7 +800,7 @@ public class Keyword_CRM extends Driver {
 				CO.waitforload();
 				// Browser.WebLink.click("LI_Totals");
 				CO.waitforload();
-
+				Col = CO.Select_Cell("Line_Items", "Product");
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
@@ -817,8 +813,17 @@ public class Keyword_CRM extends Driver {
 						}
 					}
 					Browser.WebTable.click("Line_Items", Row_Val, Col_V);
-					Browser.WebButton.click("Customize");
-					CO.AddOnSelection(MSISDN, "STAR");
+					CO.Text_Select("span","Customize");
+					CO.Link_Select("Others");
+					CO.scroll("Star_Number_purch","WebEdit");
+					CO.waitforload();
+					CO.Text_Select("option","Default");
+					//CO.Tag_Select("option","For Testing Only");
+					CO.Text_Select("option","For Testing Only");
+					CO.waitforload();
+					CO.scroll("Star_Number_purch","WebEdit");
+					Browser.WebEdit.Set("Star_Number_purch", StartNumber);
+
 					CO.waitforload();
 					CO.Text_Select("button", "Verify");
 					CO.isAlertExist();
@@ -841,7 +846,7 @@ public class Keyword_CRM extends Driver {
 				 * if (Field.equalsIgnoreCase("previous service id")) Col_S =
 				 * CO.Actual_Cell("Line_Items", "Service Id");
 				 */
-
+				Col = CO.Select_Cell("Line_Items", "Product");
 				Col_S = CO.Select_Cell("Line_Items", "Service Id");
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -936,22 +941,21 @@ public class Keyword_CRM extends Driver {
 		String OS_Status;
 		Result.fUpdateLog("------Order Submission Event Details------");
 		try {
-			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col;
-			String EStatus = "Complete", FStatus = "Failed";
+			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col,Bill_Col;
+			String EStatus = "Complete", FStatus = "Failed",Bill_Cycle;
 
 			if (Browser.WebTable.exist("Line_Items"))
 				Result.fUpdateLog("Proceeding Order Submission");
-			String Product_Type;
-			if (!(getdata("Product_Type").equals(""))) {
-				Product_Type = getdata("Product_Type");
-			} else {
-				Product_Type = pulldata("Product_Type");
-			}
 
-			if (Product_Type.equalsIgnoreCase("Enterprise") || Product_Type.equalsIgnoreCase("VIP"))
+			if (UseCaseName.get().toLowerCase().contains("enterprise") || TestCaseN.get().toLowerCase().contains("vip")
+					|| UseCaseName.get().contains("SIPT")) {
+				CO.scroll("Ent_CreditLimit", "WebEdit");
+				Browser.WebEdit.click("Ent_CreditLimit");
 				Browser.WebEdit.Set("Ent_CreditLimit", "100");
-			else
+			} else {
+				CO.scroll("Credit_Limit", "WebEdit");
 				Browser.WebEdit.click("Credit_Limit");
+			}
 
 			// To get fulfillment status coloumn
 			CO.scroll("Ful_Status", "WebButton");
@@ -962,9 +966,18 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("Validate");
 			Browser.WebButton.click("Validate");
-			CO.waitmoreforload();
+
 			CO.isAlertExist();
-			CO.waitforload();
+			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
+				String Smartlimit = Utlities.FetchSmartlimit();
+				if(Def_Smart_limit.get().equals(Smartlimit)) {
+					Result.fUpdateLog("Default Smartlimit : " + Def_Smart_limit.get() );
+					Test_OutPut += "Default Smartlimit : " + Def_Smart_limit.get() + ",";
+				}else {
+					Continue.set(false);
+				}
+			}
+			CO.waitmoreforload();
 			if (CO.isAlertExist()) {
 				CO.waitmoreforload();
 			}
@@ -995,7 +1008,6 @@ public class Keyword_CRM extends Driver {
 						Complete_Status = Complete_Status + 1;
 						R_S++;
 						Wait = Wait + 80;
-						Continue.set(true);
 					} else {
 						if (FStatus.equalsIgnoreCase(OS_Status)) {
 							Continue.set(false);
@@ -1020,11 +1032,15 @@ public class Keyword_CRM extends Driver {
 			if (Row_Count <= 3) {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
+				Bill_Col = CO.Select_Cell("Line_Items", "Bill_Col");
+				Bill_Cycle=Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
+				billDate.set(Bill_Cycle);
 			}
 
 			if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
 				Complete_Status = 2;
-				Continue.set(true);
+			}else {
+				Continue.set(false);
 			}
 
 			CO.ToWait();
@@ -1411,7 +1427,8 @@ public class Keyword_CRM extends Driver {
 				// To Find the Record with Mobile Service Bundle and MSISDN
 				for (int i = 2; i <= Inst_RowCount; i++)
 					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
-							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID).equalsIgnoreCase(MSISDN)) {
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
 						CO.waitforload();
 						Browser.WebTable.click("Acc_Installed_Assert", i, Col_P + 1);
 						break;
@@ -1427,7 +1444,6 @@ public class Keyword_CRM extends Driver {
 			// wait
 			CO.waitmoreforload();
 			CO.AddOnSelection(Add_Addon, "Add");
-			Result.takescreenshot("");
 			CO.waitmoreforload();
 			CO.AddOnSelection(Remove_Addon, "Delete");
 			CO.waitforload();
@@ -1440,14 +1456,13 @@ public class Keyword_CRM extends Driver {
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
-
-			Result.takescreenshot("");
-			/* // Use for "Ent_CreditLimit"
-			 * String Product_Type; if (!(getdata("Product_Type").equals(""))) {
-			 * Product_Type = getdata("Product_Type"); } else { Product_Type =
-			 * pulldata("Product_Type"); } if (Product_Type.equals("Enterprise") ||
-			 * Product_Type.equals("VIP")) Browser.WebEdit.Set("Ent_CreditLimit", "100");//
-			 * click("Ent_CreditLimit"); else Browser.WebEdit.click("Credit_Limit");
+			/*
+			 * // Use for "Ent_CreditLimit" String Product_Type; if
+			 * (!(getdata("Product_Type").equals(""))) { Product_Type =
+			 * getdata("Product_Type"); } else { Product_Type = pulldata("Product_Type"); }
+			 * if (Product_Type.equals("Enterprise") || Product_Type.equals("VIP"))
+			 * Browser.WebEdit.Set("Ent_CreditLimit", "100");// click("Ent_CreditLimit");
+			 * else Browser.WebEdit.click("Credit_Limit");
 			 */
 			CO.waitforload();
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
@@ -1467,7 +1482,6 @@ public class Keyword_CRM extends Driver {
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);
 			Test_OutPut += "Order_no : " + Order_no + ",";
-			Result.takescreenshot("");
 
 			CO.ToWait();
 			CO.GetSiebelDate();

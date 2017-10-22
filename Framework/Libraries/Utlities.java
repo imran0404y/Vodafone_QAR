@@ -388,4 +388,32 @@ public class Utlities extends Driver {
 		return PCSAll;
 	}
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: FetchStoredValue
+	 * Arguments			: -
+	 * Use 					: to get the data from the storeDb
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 23-Aug-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public static String FetchSmartlimit() {
+		try {
+			String value;
+			String StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
+			Fillo fillo = new Fillo();
+			Connection connection = fillo.getConnection(StoreDBpth);
+			String StrQuery = "Select * from Smartlimit where PlanName='" + Planname.get() + "'";
+			Recordset rs = connection.executeQuery(StrQuery);
+			rs.moveFirst();
+			// System.out.println(rs.getField("Dynamic_Name")+"
+			// "+rs.getField("Dynamic_Value"));
+			value = rs.getField("DefaultSmartLimit");
+			rs.close();
+			connection.close();
+			return value;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 }

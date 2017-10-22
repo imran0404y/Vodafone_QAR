@@ -184,7 +184,7 @@ public class Common extends Driver {
 			if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
 				String popup = cDriver.get().switchTo().alert().getText();
 				Result.fUpdateLog(popup);
-				if (UseCaseName.get().equalsIgnoreCase("ConsumerPostpaid_Provisioning")) {
+				if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
 					String theDigits = CharMatcher.DIGIT.retainFrom(popup);
 					Def_Smart_limit.set(theDigits);
 				}
@@ -340,29 +340,19 @@ public class Common extends Driver {
 				if (Length > 1) {
 					Thread.sleep(3000);
 					Link_Select(Prod_array[0]);
-					if (Status.contains("STAR")) {
-						Thread.sleep(3000);
-						Text_Select("div", "Number Purchased Price");
-						// scroll("Number_Purchase_Price", "WebEdit");
-						Text_Select("option", Prod_array[2]);
-						Browser.WebEdit.click("Number_Purchase_Price");
-						Browser.WebEdit.Set("Number_Purchase_Price", Prod_array[1]);
-						// Browser.WebEdit.click("Discount_Reason");//,Prod_array[2]
-						// );
 
+					if (Status.equals("Delete")) {
+						Result.fUpdateLog("------Modify Remove Addon Event Details------");
+						for (int j = 1; j < Prod_array.length; j++)
+							Radio_None(Prod_array[j]);
+						Result.takescreenshot("Addition of Addon");
 					} else {
-						if (Status.equals("Delete")) {
-							Result.fUpdateLog("------Modify Remove Addon Event Details------");
-							for (int j = 1; j < Prod_array.length; j++)
-								Radio_None(Prod_array[j]);
-
-						} else {
-							Result.fUpdateLog("------Modify Add Addon Event Details------");
-							for (int j = 1; j < Prod_array.length; j++)
-								Radio_Select(Prod_array[j]);
-						}
-
+						Result.fUpdateLog("------Modify Add Addon Event Details------");
+						for (int j = 1; j < Prod_array.length; j++)
+							Radio_Select(Prod_array[j]);
+						Result.takescreenshot("Deletion of Addon");
 					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -897,13 +887,13 @@ public class Common extends Driver {
 	 * Modified By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 17-Oct-2017  
 	--------------------------------------------------------------------------------------------------------*/
-	public String FindBillingCycle(String Submission_Date) {
+	public String FindBillingCycle() {
 		try {
 			String billingcycle;
 			Date DD_3 = new Date();
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
-
+			String Submission_Date = OrderDate.get();
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
