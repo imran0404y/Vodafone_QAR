@@ -1466,7 +1466,7 @@ public class Keyword_CRM extends Driver {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
 			CO.Assert_Search(MSISDN, "Active", GetData);
-
+			CO.waitmoreforload();
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
 				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
@@ -1486,6 +1486,7 @@ public class Keyword_CRM extends Driver {
 
 			} else
 				CO.InstalledAssertChange("Modify");
+			
 			CO.waitforload();
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
