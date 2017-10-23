@@ -2,6 +2,7 @@ package Libraries;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -895,7 +896,8 @@ public class Common extends Driver {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
-			String Submission_Date = OrderDate.get();
+			// String Submission_Date = OrderDate.get();
+			String Submission_Date = "23-10-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -910,7 +912,7 @@ public class Common extends Driver {
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
 			String dt = billDate.get();
-			if (dt!=null) {
+			if (dt != null) {
 				int GetDate = Integer.parseInt(billDate.get());
 				if (Order_Day < GetDate)
 					billingcycle = GetDate + "-" + Order_Month + "-" + Order_Year;
@@ -981,11 +983,12 @@ public class Common extends Driver {
 		double Prorateq = (ben * Remaingdays / TotalDays);
 		Prorateq = Math.ceil(Prorateq);
 		int i = (int) Prorateq;
-		return i+"";
+		return i + "";
 	}
 
 	public String Prorated(int TotalDays, int Remaingdays, String Benifit, String BucketValue, String BucketUsageType) {
 		double ben = 0;
+		String pro = null;
 		switch (BucketUsageType) {
 		case "Cost":
 			ben = Double.parseDouble(BucketValue);
@@ -1009,9 +1012,23 @@ public class Common extends Driver {
 			break;
 		}
 		double Prorateq = (ben * Remaingdays / TotalDays);
-		Prorateq = Math.ceil(Prorateq);
-		int i = (int) Prorateq;
-		return i+"";
+		if (Benifit.contains("_Flex")) {
+			String x = Benifit.split("_")[0];
+			if (!x.equals("0")) {
+				Double toBeTruncated = new Double(Prorateq);
+				Double truncatedDouble = new BigDecimal(toBeTruncated).setScale(1, BigDecimal.ROUND_HALF_UP)
+						.doubleValue();
+				pro = String.format("%.2f", truncatedDouble);
+				System.out.println(String.format("%.2f", truncatedDouble));
+			}else {	
+				int i = (int) Math.ceil(Prorateq);
+				pro = i + "";
+			}
+		}else {
+			int i = (int) Math.ceil(Prorateq);
+			pro = i + "";
+		}
+		return pro;
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -1023,14 +1040,15 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void GetSiebelDate() {
 		try {
-			//Browser.WebButton.waittillvisible("VFQ_LeftScroll");
+			// Browser.WebButton.waittillvisible("VFQ_LeftScroll");
 			Browser.WebButton.click("VFQ_LeftScroll");
-			
+
 			waitforload();
-			//Title_Select("a", "Home");
+			// Title_Select("a", "Home");
 			Browser.WebLink.click("VQ_Home");
 			waitforload();
-			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']")).getAttribute("innerHTML");
+			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']"))
+					.getAttribute("innerHTML");
 			String Mon = null;
 			String month[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
 					"October", "November", "December" };

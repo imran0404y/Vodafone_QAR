@@ -990,7 +990,7 @@ public class Keyword_CRM extends Driver {
 				e.getMessage();
 			}
 			
-			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
+			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")&&!(Planname.get().contains("Mobile Broadband"))) {
 				String Smartlimit = Utlities.FetchSmartlimit();
 				if (Def_Smart_limit.get().equals(Smartlimit)) {
 					Result.fUpdateLog("Default Smartlimit : " + Def_Smart_limit.get());

@@ -339,12 +339,16 @@ public class Utlities extends Driver {
 			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			/*Planname.set("Postpaid Red 250 Promotion");
+			Planname.set("Postpaid Connect 60 Promotionis");
 			LineItemData.put("0", "Mobile Service Bundle");
-			LineItemData.put("1", "Red 250");
-			LineItemData.put("2", "Postpaid Red 250 Promotion");
+			LineItemData.put("1", "Connect 60");
+			LineItemData.put("2", "Postpaid Connect 60 Promotionis");
 			LineItemData.put("3", "SIM Card");
-			LineItemData.put("4", "Smart Limit");*/
+			LineItemData.put("4", "Standard Pack");
+			LineItemData.put("5", "Unlimited Family Calls");
+			LineItemData.put("6", "Bill Manager");
+			LineItemData.put("7", "Smart Limit");
+			LineItemData.put("9", "Mobile Voicemail");
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));
@@ -361,7 +365,7 @@ public class Utlities extends Driver {
 						String StrQuery = "Select * from AutCatalogue where Siebel_Plan_Name='" + Product + "'";
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
-						for (int currs = 0; currs <= rs.getCount(); currs++) {
+						for (int currs = 1; currs <= rs.getCount(); currs++) {
 							if ((!rs.getField("Siebel_Description").isEmpty())) {
 								BundleID = rs.getField("BundleID");
 								if (BundleID.isEmpty())
