@@ -1005,22 +1005,21 @@ public class Keyword_CRM extends Driver {
 					if (EStatus.equalsIgnoreCase(OS_Status)) {// To Find the Complete Status
 						Complete_Status = Complete_Status + 1;
 						R_S++;
-						Wait = Wait + 80;
+						Wait = Wait + 98;
 					} else {
 						if (FStatus.equalsIgnoreCase(OS_Status)) {
 							Continue.set(false);
 							R_S = 2;
-							Wait = 101;
+							Wait = 201;
 						}
 						// To refresh Page
 						cDriver.get().navigate().refresh();
-						Wait = Wait + 10;
 						Browser.WebButton.waittillvisible("Submit");
 						CO.waitforload();
 					}
-
 				}
-			} while ((R_S < 2) || Wait < 100);
+				Wait = Wait + 1;
+			} while (Wait < 200);
 			Browser.WebButton.waittillvisible("Submit");
 
 			CO.waitforload();
