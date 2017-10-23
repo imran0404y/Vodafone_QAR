@@ -193,7 +193,7 @@ public class Common extends Driver {
 			Browser.Readystate();
 			return true;
 		} catch (Exception e) {
-			System.out.println("No Alert Exist");
+			Result.fUpdateLog("No Alert Exist");
 			e.getMessage();
 			return false;
 		}
@@ -1021,14 +1021,14 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void GetSiebelDate() {
 		try {
-
-			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
-				Browser.WebButton.click("VFQ_LeftScroll");
-			}
-			waitmoreforload();
-			Title_Select("a", "Home");
-			waitmoreforload();
-			String Date = Browser.WebEdit.gettext("Home_Date");
+			//Browser.WebButton.waittillvisible("VFQ_LeftScroll");
+			Browser.WebButton.click("VFQ_LeftScroll");
+			
+			waitforload();
+			//Title_Select("a", "Home");
+			Browser.WebLink.click("VQ_Home");
+			waitforload();
+			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']")).getAttribute("innerHTML");
 			String Mon = null;
 			String month[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
 					"October", "November", "December" };

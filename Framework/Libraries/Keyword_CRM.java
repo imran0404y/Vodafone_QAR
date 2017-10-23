@@ -54,7 +54,6 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waittillvisible("VF_Search_Identify");
 
 			CO.ToWait();
-
 			if (Continue.get()) {
 				Test_OutPut += "Successfully Login with : " + getdata("VQ_Login_User") + ",";
 				Result.takescreenshot("Login Successfully with user " + getdata("VQ_Login_User"));
@@ -601,7 +600,7 @@ public class Keyword_CRM extends Driver {
 			String OD_Date;
 			Col_new = CO.Actual_Cell("Order_Table", "Order Date");
 			Browser.WebTable.click("Order_Table", Row, Col_new);
-			OD_Date = Browser.WebTable.getCellData_title ("Order_Table", 2, Col_new);
+			OD_Date = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
 			String[] Date = OD_Date.split(" ")[0].split("/");
 			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
@@ -648,8 +647,8 @@ public class Keyword_CRM extends Driver {
 		try {
 
 			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken,StartNumber, SIM, MSISDN = null,
-					SData = "SIM Card";
+			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StartNumber, SIM,
+					MSISDN = null, SData = "SIM Card";
 			CO.waitforload();
 
 			if (!(getdata("PlanName").equals(""))) {
@@ -720,7 +719,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				SIM = pulldata("SIM");
 			}
-			
+
 			if (!(getdata("StartNumber").equals(""))) {
 				StartNumber = getdata("StartNumber");
 			} else {
@@ -811,15 +810,15 @@ public class Keyword_CRM extends Driver {
 						}
 					}
 					Browser.WebTable.click("Line_Items", Row_Val, Col_V);
-					CO.Text_Select("span","Customize");
+					CO.Text_Select("span", "Customize");
 					CO.Link_Select("Others");
-					CO.scroll("Star_Number_purch","WebEdit");
+					CO.scroll("Star_Number_purch", "WebEdit");
 					CO.waitforload();
-					CO.Text_Select("option","Default");
-					//CO.Tag_Select("option","For Testing Only");
-					CO.Text_Select("option","For Testing Only");
+					CO.Text_Select("option", "Default");
+					// CO.Tag_Select("option","For Testing Only");
+					CO.Text_Select("option", "For Testing Only");
 					CO.waitforload();
-					CO.scroll("Star_Number_purch","WebEdit");
+					CO.scroll("Star_Number_purch", "WebEdit");
 					Browser.WebEdit.Set("Star_Number_purch", StartNumber);
 
 					CO.waitforload();
@@ -936,15 +935,15 @@ public class Keyword_CRM extends Driver {
 	public String OrderSubmission() {
 		String Test_OutPut = "", Status = "";
 		int COL_FUL_STATUS = 0;
-		String OS_Status;
+		String OS_Status = "";
 		Result.fUpdateLog("------Order Submission Event Details------");
 		try {
-			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col,Bill_Col, Row_Count;
-			String EStatus = "Complete", FStatus = "Failed",Bill_Cycle;
+			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col, Bill_Col, Row_Count;
+			String EStatus = "Complete", FStatus = "Failed", Bill_Cycle;
 
 			if (Browser.WebTable.exist("Line_Items"))
 				Result.fUpdateLog("Proceeding Order Submission");
-
+			CO.waitforload();
 			if (UseCaseName.get().toLowerCase().contains("enterprise") || TestCaseN.get().toLowerCase().contains("vip")
 					|| UseCaseName.get().contains("SIPT")) {
 				CO.scroll("Ent_CreditLimit", "WebEdit");
@@ -952,6 +951,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebEdit.Set("Ent_CreditLimit", "100");
 			} else {
 				CO.scroll("Credit_Limit", "WebEdit");
+				CO.waitforload();
 				Browser.WebEdit.click("Credit_Limit");
 			}
 
@@ -968,10 +968,10 @@ public class Keyword_CRM extends Driver {
 			CO.isAlertExist();
 			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
 				String Smartlimit = Utlities.FetchSmartlimit();
-				if(Def_Smart_limit.get().equals(Smartlimit)) {
-					Result.fUpdateLog("Default Smartlimit : " + Def_Smart_limit.get() );
+				if (Def_Smart_limit.get().equals(Smartlimit)) {
+					Result.fUpdateLog("Default Smartlimit : " + Def_Smart_limit.get());
 					Test_OutPut += "Default Smartlimit : " + Def_Smart_limit.get() + ",";
-				}else {
+				} else {
 					Continue.set(false);
 				}
 			}
@@ -984,68 +984,71 @@ public class Keyword_CRM extends Driver {
 			CO.scroll("Submit", "WebButton");
 			Browser.WebButton.click("Submit");
 			CO.waitmoreforload();
-			CO.isAlertExist();
-			Result.takescreenshot("Order Submission is Successful");
-
-			Col = COL_FUL_STATUS;
-			cDriver.get().navigate().refresh();
-			Browser.WebButton.waittillvisible("Submit");
-			CO.waitforload();
-			Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
-			if (Row_Count <= 3) {
-				Browser.WebButton.waittillvisible("Expand");
-				Browser.WebButton.click("Expand");
-			}
-
-			Browser.WebButton.waittillvisible("Submit");
-			do {
-				for (int i = 2; i <= Row_Count; i++) {
-					CO.scroll("Submit", "WebButton");
-					CO.scroll("Ful_Status", "WebButton");
-					OS_Status = Browser.WebTable.getCellData("Line_Items", i, Col);
-					System.out.println("Round" + (i - 1) + " " + OS_Status);
-					if (EStatus.equalsIgnoreCase(OS_Status)) {// To Find the Complete Status
-						Complete_Status = Complete_Status + 1;
-						R_S++;
-						Wait = Wait + 90;
-					} else {
-						if (FStatus.equalsIgnoreCase(OS_Status)) {
-							Continue.set(false);
-							R_S = 2;
-							Wait = 201;
-						}
-						// To refresh Page
-						cDriver.get().navigate().refresh();
-						Browser.WebButton.waittillvisible("Submit");
-						CO.waitforload();
-					}
-					Wait = Wait + 5;
-				}
-				
-			} while (Wait < 200 || R_S==2);
-			Browser.WebButton.waittillvisible("Submit");
-
-			CO.waitforload();
-			Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			CO.scroll("Submit", "WebButton");
-			OS_Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
-			if (Row_Count <= 3) {
-				Browser.WebButton.waittillvisible("Expand");
-				Browser.WebButton.click("Expand");
-			}
-			Bill_Col = CO.Actual_Cell("Line_Items", "Bill Cycle");
-			Bill_Cycle=Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
-			billDate.set(Bill_Cycle);
-			
-			if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
-				Complete_Status = 2;
-			}else {
+			if (CO.isAlertExist()) {
 				Continue.set(false);
 			}
+			if (Continue.get()) {
+				Result.takescreenshot("Order Submission is Successful");
 
+				Col = COL_FUL_STATUS;
+				cDriver.get().navigate().refresh();
+				Browser.WebButton.waittillvisible("Submit");
+				CO.waitforload();
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
+				if (Row_Count <= 3) {
+					Browser.WebButton.waittillvisible("Expand");
+					Browser.WebButton.click("Expand");
+				}
+
+				Browser.WebButton.waittillvisible("Submit");
+				do {
+					for (int i = 2; i <= Row_Count; i++) {
+						CO.scroll("Submit", "WebButton");
+						CO.scroll("Ful_Status", "WebButton");
+						OS_Status = Browser.WebTable.getCellData("Line_Items", i, Col);
+						System.out.println("Round" + (i - 1) + " " + OS_Status);
+						if (EStatus.equalsIgnoreCase(OS_Status)) {// To Find the Complete Status
+							Complete_Status = Complete_Status + 1;
+							R_S++;
+							Wait = Wait + 90;
+						} else {
+							if (FStatus.equalsIgnoreCase(OS_Status)) {
+								Continue.set(false);
+								R_S = 2;
+								Wait = 201;
+							}
+							// To refresh Page
+							cDriver.get().navigate().refresh();
+							Browser.WebButton.waittillvisible("Submit");
+							CO.waitforload();
+						}
+						Wait = Wait + 5;
+					}
+
+				} while (Wait < 200 || R_S == 2);
+				Browser.WebButton.waittillvisible("Submit");
+
+				CO.waitforload();
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				CO.scroll("Submit", "WebButton");
+				OS_Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
+				if (Row_Count <= 3) {
+					Browser.WebButton.waittillvisible("Expand");
+					Browser.WebButton.click("Expand");
+				}
+				Bill_Col = CO.Actual_Cell("Line_Items", "Bill Cycle");
+				Bill_Cycle = Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
+				billDate.set(Bill_Cycle);
+
+				if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
+					Complete_Status = 2;
+				} else {
+					Continue.set(false);
+				}
+			}
 			CO.ToWait();
-			if (Continue.get() ) {
+			if (Continue.get()) {
 				Result.fUpdateLog("Order Status : " + OS_Status);
 				Test_OutPut += "Order Status : " + OS_Status + ",";
 				Result.takescreenshot("Order Status : " + OS_Status);
