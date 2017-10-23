@@ -50,7 +50,7 @@ public class Keyword_API extends Driver {
 
 		String Test_OutPut = "", Status = "";
 		String MSISDN, SOAP_Action, XMLResponse_Path = "", XMLRequest_Path = "";
-		Result.fUpdateLog("------RTBValidation------");
+		Result.fUpdateLog("------RTB Event Details------");
 
 		try {
 			if (!(getdata("MSISDN").equals(""))) {
@@ -133,7 +133,7 @@ public class Keyword_API extends Driver {
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("RTBValidation - Completed");
+		Result.fUpdateLog("RTB Event Details - Completed");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 

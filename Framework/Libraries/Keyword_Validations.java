@@ -23,7 +23,7 @@ public class Keyword_Validations extends Driver {
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
 			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;
-
+			Test_OutPut += "RTB -- " + ",";
 			ArrayList<String> FetchProduct = Utlities.FetchProcuctCatalogData();
 			for (int i = 0; i < FetchProduct.size(); i++) {
 				String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
@@ -35,11 +35,11 @@ public class Keyword_Validations extends Driver {
 				Siebel_Desc = FetchPC[7].trim();
 
 				String BE = BE(Siebel_Desc, Benefits, Product_Validity, BucketValue, BucketUsageType);
-				Result.fUpdateLog(BE);
+				Result.fUpdateLog("Proration -- " + BE);
 				if (BE.equals(RTBOutputData.get(Surepay))) {
-					Result.fUpdateLog("Proration -- " + BE);
 					//Test_OutPut += "Proration -- "+BE + ",";
-					Test_OutPut += "RTB -- "+ RTBOutputData.get(Surepay) + ",";
+					Result.fUpdateLog(RTBOutputData.get(Surepay));
+					Test_OutPut += RTBOutputData.get(Surepay) + ",";
 				}else
 					Continue.set(false);
 			}
@@ -75,7 +75,7 @@ public class Keyword_Validations extends Driver {
 	public String BE(String Desc, String Benifit, String Product_Validity, String BucketValue, String BucketUsageType) {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
-			String billcycledate, Expiry, orderdate =  OrderDate.get();//"22-10-2017"
+			String billcycledate, Expiry, orderdate =  "23-10-2017";//OrderDate.get();//
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
 			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));

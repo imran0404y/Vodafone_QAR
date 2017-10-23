@@ -895,7 +895,7 @@ public class Common extends Driver {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
-			String Submission_Date = OrderDate.get();//"22-10-2017";
+			String Submission_Date = "23-10-2017";//OrderDate.get();//;
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -1008,8 +1008,10 @@ public class Common extends Driver {
 			ben = Double.parseDouble(BucketValue);
 			break;
 		}
-		double Prorate = (ben * Remaingdays / TotalDays);
-		return Math.round(Prorate) + "";
+		double Prorateq = (ben * Remaingdays / TotalDays);
+		Prorateq = Math.ceil(Prorateq);
+		int i = (int) Prorateq;
+		return i+"";
 	}
 
 	/*---------------------------------------------------------------------------------------------------------

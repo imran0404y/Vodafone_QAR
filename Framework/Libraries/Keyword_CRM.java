@@ -985,15 +985,17 @@ public class Keyword_CRM extends Driver {
 				Browser.Readystate();
 			} catch (Exception e) {
 				Result.fUpdateLog("No Alert Exist");
+				Continue.set(false);
 				e.getMessage();
 			}
-
-			Browser.WebButton.waittillvisible("Submit");
-			CO.scroll("Submit", "WebButton");
-			Browser.WebButton.click("Submit");
-			CO.waitmoreforload();
-			if (CO.isAlertExist()) {
-				Continue.set(false);
+			if (Continue.get()) {
+				Browser.WebButton.waittillvisible("Submit");
+				CO.scroll("Submit", "WebButton");
+				Browser.WebButton.click("Submit");
+				CO.waitmoreforload();
+				if (CO.isAlertExist()) {
+					Continue.set(false);
+				}
 			}
 			if (Continue.get()) {
 				Result.takescreenshot("Order Submission is Successful");
