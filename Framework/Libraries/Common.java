@@ -978,9 +978,10 @@ public class Common extends Driver {
 			}
 		}
 
-		double Prorate = (ben * Remaingdays / TotalDays);
-		Prorate = Math.round(Prorate);
-		return Double.toString(Prorate);
+		double Prorateq = (ben * Remaingdays / TotalDays);
+		Prorateq = Math.ceil(Prorateq);
+		int i = (int) Prorateq;
+		return i+"";
 	}
 
 	public String Prorated(int TotalDays, int Remaingdays, String Benifit, String BucketValue, String BucketUsageType) {
