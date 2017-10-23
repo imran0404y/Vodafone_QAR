@@ -106,6 +106,11 @@ public class Keyword_Validations extends Driver {
 				cals.add(Calendar.DATE, Total_Days);
 				Expiry = Date_Format.format(cals.getTime());// Total_Days+Month
 				break;
+			case "week":
+				Prorate = CO.Prorated(7, 7, Benifit, BucketValue, BucketUsageType);
+				cals.add(Calendar.DATE, 7);
+				Expiry = Date_Format.format(cals.getTime());
+				break; 
 			}
 			if(!Product_Validity.equalsIgnoreCase("day")) {  
 				SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MMM-yyyy" );   
