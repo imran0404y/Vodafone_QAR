@@ -241,13 +241,11 @@ public class Keyword_SIPT extends Driver {
 		CO.Link_Select(Tab);
 		CO.ToWait();
 		String cellXpath = "//input[@value='" + Text + "']";
-
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 		if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed()) {
-			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 			Result.takescreenshot("-----------------------Default Addon View---------------------");
-
 		} else
 			Continue.set(false);
-	}
+	} 
 }

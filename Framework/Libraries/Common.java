@@ -227,6 +227,8 @@ public class Common extends Driver {
 	public void Link_Select(String Text) {
 		String[] objprop = Utlities.FindObject("Link", "WebTable");
 		String cellXpath = objprop[0] + Text + "']";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 	}
 
