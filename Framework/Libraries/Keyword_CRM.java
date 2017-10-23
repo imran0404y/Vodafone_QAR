@@ -7,9 +7,8 @@ import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-
-//import org.openqa.selenium.By;
-//import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Keyword_CRM extends Driver {
 	Common CO = new Common();
@@ -976,8 +975,17 @@ public class Keyword_CRM extends Driver {
 				}
 			}
 			CO.waitmoreforload();
-			if (CO.isAlertExist()) {
-				CO.waitmoreforload();
+			try {
+				WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);
+				if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
+					String popup = cDriver.get().switchTo().alert().getText();
+					Result.fUpdateLog(popup);
+				}
+				Browser.alert.accept();
+				Browser.Readystate();
+			} catch (Exception e) {
+				Result.fUpdateLog("No Alert Exist");
+				e.getMessage();
 			}
 
 			Browser.WebButton.waittillvisible("Submit");
