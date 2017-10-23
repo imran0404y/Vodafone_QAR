@@ -792,7 +792,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.click("Reserve");
 				CO.waitmoreforload();
 				if (CO.isAlertExist()) {
-					Result.takescreenshot("Number Resered");
+					Result.takescreenshot("Number Reseved");
 					Result.fUpdateLog("Alert Handled");
 				}
 
@@ -897,7 +897,8 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
-
+			Result.takescreenshot("Plan Selection is Successful : " + PlanName);
+			
 			Test_OutPut += OrderSubmission().split("@@")[1];
 			CO.Action_Update("Add", MSISDN);
 
@@ -906,7 +907,6 @@ public class Keyword_CRM extends Driver {
 				Utlities.StoreValue("PlanName", PlanName);
 				Utlities.StoreValue("MSISDN", MSISDN);
 				Utlities.StoreValue("SIM_NO", SIM);
-				Result.takescreenshot("Plan Selection is Successful : " + PlanName);
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
 				Status = "FAIL";
