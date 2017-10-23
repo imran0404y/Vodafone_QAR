@@ -658,6 +658,7 @@ public class Keyword_CRM extends Driver {
 				PlanName = pulldata("PlanName");
 			}
 			Planname.set(PlanName);
+			Test_OutPut += "PlanName : " + PlanName + ",";
 
 			if (!(getdata("GetData").equals(""))) {
 				GetData = getdata("GetData");
@@ -714,12 +715,14 @@ public class Keyword_CRM extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-
+			Test_OutPut += "MSISDN : " + MSISDN + ",";
+			
 			if (!(getdata("SIM").equals(""))) {
 				SIM = getdata("SIM");
 			} else {
 				SIM = pulldata("SIM");
 			}
+			Test_OutPut += "SIM_NO : " + SIM + ",";
 
 			if (!(getdata("StartNumber").equals(""))) {
 				StartNumber = getdata("StartNumber");
@@ -895,17 +898,14 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
 
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			CO.Action_Update("Add", MSISDN);
 
 			if (Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
-				Test_OutPut += "PlanName : " + PlanName + ",";
 				Utlities.StoreValue("MSISDN", MSISDN);
-				Test_OutPut += "MSISDN : " + MSISDN + ",";
 				Utlities.StoreValue("SIM_NO", SIM);
-				Test_OutPut += "SIM_NO : " + SIM + ",";
 				Result.takescreenshot("Plan Selection is Successful : " + PlanName);
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
@@ -1525,7 +1525,7 @@ public class Keyword_CRM extends Driver {
 			CO.Status(Remove_Addon);
 			CO.waitforload();
 
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			// fetching Order_no
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);
@@ -1633,7 +1633,7 @@ public class Keyword_CRM extends Driver {
 			}
 			CO.Action_Update("Suspend", MSISDN);
 
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			// fetching Order_no
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);
@@ -1737,7 +1737,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.click("Expand");
 			}
 			CO.Action_Update("Resume", MSISDN);
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 
 			// fetching Order_no
 			Order_no = CO.Order_ID();
@@ -1863,7 +1863,7 @@ public class Keyword_CRM extends Driver {
 			}
 
 			CO.waitforload();
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 
 			CO.ToWait();
 			CO.GetSiebelDate();
@@ -1941,7 +1941,7 @@ public class Keyword_CRM extends Driver {
 			}
 			Result.takescreenshot("");
 			CO.waitforload();
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			CO.waitforload();
 
 			// fetching Order_no
@@ -2079,7 +2079,7 @@ public class Keyword_CRM extends Driver {
 
 			}
 
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);
 			Test_OutPut += "Order_no : " + Order_no + ",";
@@ -2194,7 +2194,7 @@ public class Keyword_CRM extends Driver {
 				Continue.set(false);
 
 			Browser.WebButton.waittillvisible("Validate");
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 
 			// CO.Assert_Search(MSISDN, "Active");
 
@@ -2280,7 +2280,7 @@ public class Keyword_CRM extends Driver {
 				Continue.set(false);
 
 			Browser.WebButton.waittillvisible("Validate");
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 
 			// CO.Assert_Search(MSISDN, "Active");
 
@@ -2389,7 +2389,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
 
-			OrderSubmission();
+			Test_OutPut += OrderSubmission().split("@@")[1];
 			// fetching Order_no
 			Order_no = CO.Order_ID();
 			Utlities.StoreValue("Order_no", Order_no);

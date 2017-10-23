@@ -180,11 +180,11 @@ public class Driver {
 							Continue.set(false);
 						}
 						if (TestOutput == null) {
-							if (ResultandDes[1] != "") {
+							if (!(ResultandDes[1].equals("<br/>"))) {
 								TestOutput = ResultandDes[1];
 							}
 						} else {
-							if (ResultandDes[1] != "") {
+							if (!(ResultandDes[1].equals("<br/>"))) {
 								TestOutput = TestOutput + ResultandDes[1];
 							}
 						}

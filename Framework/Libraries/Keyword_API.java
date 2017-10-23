@@ -19,7 +19,7 @@ public class Keyword_API extends Driver {
 
 	public String RTB_Login() {
 
-		String Test_OutPut = "", Status = "";
+		String Test_OutPut = "RTB", Status = "";
 		Result.fUpdateLog("------RTB Login Event Details------");
 		try {
 
@@ -37,7 +37,7 @@ public class Keyword_API extends Driver {
 				Status = "FAIL";
 			}
 		} catch (Exception e) {
-			Test_OutPut += "Exception occurred" + ",";
+			Test_OutPut += "Failed at URL Fetch" + ",";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			Status = "FAIL";
 			e.printStackTrace();
