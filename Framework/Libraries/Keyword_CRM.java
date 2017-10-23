@@ -988,6 +988,9 @@ public class Keyword_CRM extends Driver {
 			Result.takescreenshot("Order Submission is Successful");
 
 			Col = COL_FUL_STATUS;
+			cDriver.get().navigate().refresh();
+			Browser.WebButton.waittillvisible("Submit");
+			CO.waitforload();
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
 			if (Row_Count <= 3) {
@@ -997,7 +1000,7 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.waittillvisible("Submit");
 			do {
-				for (int i = 2; i <= 3; i++) {
+				for (int i = 2; i <= Row_Count; i++) {
 					CO.scroll("Submit", "WebButton");
 					CO.scroll("Ful_Status", "WebButton");
 					OS_Status = Browser.WebTable.getCellData("Line_Items", i, Col);
@@ -1005,7 +1008,7 @@ public class Keyword_CRM extends Driver {
 					if (EStatus.equalsIgnoreCase(OS_Status)) {// To Find the Complete Status
 						Complete_Status = Complete_Status + 1;
 						R_S++;
-						Wait = Wait + 98;
+						Wait = Wait + 90;
 					} else {
 						if (FStatus.equalsIgnoreCase(OS_Status)) {
 							Continue.set(false);
@@ -1017,9 +1020,10 @@ public class Keyword_CRM extends Driver {
 						Browser.WebButton.waittillvisible("Submit");
 						CO.waitforload();
 					}
+					Wait = Wait + 5;
 				}
-				Wait = Wait + 1;
-			} while (Wait < 200);
+				
+			} while (Wait < 200 || R_S==2);
 			Browser.WebButton.waittillvisible("Submit");
 
 			CO.waitforload();
@@ -1029,11 +1033,11 @@ public class Keyword_CRM extends Driver {
 			if (Row_Count <= 3) {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
-				Bill_Col = CO.Actual_Cell("Line_Items", "Bill Cycle");
-				Bill_Cycle=Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
-				billDate.set(Bill_Cycle);
 			}
-
+			Bill_Col = CO.Actual_Cell("Line_Items", "Bill Cycle");
+			Bill_Cycle=Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
+			billDate.set(Bill_Cycle);
+			
 			if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
 				Complete_Status = 2;
 			}else {

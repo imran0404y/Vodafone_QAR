@@ -1024,10 +1024,10 @@ public class Common extends Driver {
 
 			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
 				Browser.WebButton.click("VFQ_LeftScroll");
-
 			}
+			waitmoreforload();
 			Title_Select("a", "Home");
-
+			waitmoreforload();
 			String Date = Browser.WebEdit.gettext("Home_Date");
 			String Mon = null;
 			String month[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
