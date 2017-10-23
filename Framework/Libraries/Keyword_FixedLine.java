@@ -10,6 +10,7 @@ public class Keyword_FixedLine extends Driver {
 	 * Designed By			: Imran Baig
 	 * Last Modified Date 	: 23-Aug-2017
 	--------------------------------------------------------------------------------------------------------*/
+	@SuppressWarnings("unused")
 	public String PlanSelection_FL() {
 		String Test_OutPut = "", Status = "";
 		String PlanName = null;
@@ -193,6 +194,7 @@ public class Keyword_FixedLine extends Driver {
 	 * Designed By			: Imran Baig
 	 * Last Modified Date 	: 23-Aug-2017
 	--------------------------------------------------------------------------------------------------------*/
+	@SuppressWarnings("unused")
 	public String PlanSelection_FL_ENT() {
 		String Test_OutPut = "", Status = "";
 		String PlanName = null;

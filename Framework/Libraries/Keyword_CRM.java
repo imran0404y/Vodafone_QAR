@@ -10,6 +10,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.base.CharMatcher;
+
 public class Keyword_CRM extends Driver {
 	Common CO = new Common();
 	Random R = new Random();
@@ -931,6 +933,7 @@ public class Keyword_CRM extends Driver {
 	 * Designed By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 22-March-2017
 	--------------------------------------------------------------------------------------------------------*/
+	@SuppressWarnings("deprecation")
 	public String OrderSubmission() {
 		String Test_OutPut = "", Status = "";
 		int COL_FUL_STATUS = 0;
@@ -964,7 +967,29 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waittillvisible("Validate");
 			Browser.WebButton.click("Validate");
 
-			CO.isAlertExist();
+			//CO.isAlertExist();
+			try {
+				WebDriverWait wait = new WebDriverWait(cDriver.get(), 15);
+				if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
+					String popup = cDriver.get().switchTo().alert().getText();
+					Result.fUpdateLog(popup);
+					if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
+						String theDigits = CharMatcher.DIGIT.retainFrom(popup);
+						Def_Smart_limit.set(theDigits);
+					}
+					if(popup.contains("Smart Limit")) {
+						Continue.set(true);
+					}else {
+						Continue.set(false);
+					}
+				}
+				Browser.alert.accept();
+				Browser.Readystate();
+			} catch (Exception e) {
+				Result.fUpdateLog("No Alert Exist");
+				e.getMessage();
+			}
+			
 			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")) {
 				String Smartlimit = Utlities.FetchSmartlimit();
 				if (Def_Smart_limit.get().equals(Smartlimit)) {
@@ -974,20 +999,29 @@ public class Keyword_CRM extends Driver {
 					Continue.set(false);
 				}
 			}
+			
 			CO.waitmoreforload();
-			try {
-				WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);
-				if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
-					String popup = cDriver.get().switchTo().alert().getText();
-					Result.fUpdateLog(popup);
+			if (Continue.get() && (UseCaseName.get().equalsIgnoreCase("ConsumerPostpaid_Provisioning") && TestCaseN.get().equalsIgnoreCase("Individualcustomer"))) {
+				try {
+					WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);
+					if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
+						String popup = cDriver.get().switchTo().alert().getText();
+						Result.fUpdateLog(popup);
+						if(popup.contains("Smart Limit")) {
+							Continue.set(true);
+						}else {
+							Continue.set(false);
+						}
+					}
+					Browser.alert.accept();
+					Browser.Readystate();
+				} catch (Exception e) {
+					Result.fUpdateLog("No Alert Exist");
+					Continue.set(false);
+					e.getMessage();
 				}
-				Browser.alert.accept();
-				Browser.Readystate();
-			} catch (Exception e) {
-				Result.fUpdateLog("No Alert Exist");
-				Continue.set(false);
-				e.getMessage();
 			}
+			
 			if (Continue.get()) {
 				Browser.WebButton.waittillvisible("Submit");
 				CO.scroll("Submit", "WebButton");
@@ -997,9 +1031,9 @@ public class Keyword_CRM extends Driver {
 					Continue.set(false);
 				}
 			}
+			
 			if (Continue.get()) {
 				Result.takescreenshot("Order Submission is Successful");
-
 				Col = COL_FUL_STATUS;
 				cDriver.get().navigate().refresh();
 				Browser.WebButton.waittillvisible("Submit");

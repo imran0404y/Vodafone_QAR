@@ -75,7 +75,7 @@ public class Keyword_Validations extends Driver {
 	public String BE(String Desc, String Benifit, String Product_Validity, String BucketValue, String BucketUsageType) {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
-			String billcycledate, Expiry, orderdate =  "23-10-2017";//OrderDate.get();//
+			String billcycledate, Expiry, orderdate =  OrderDate.get();//;//"23-10-2017"
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
 			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));
