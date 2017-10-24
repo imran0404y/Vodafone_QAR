@@ -620,8 +620,30 @@ public class Common extends Driver {
 					} else {
 						Result.fUpdateLog(LData + ":" + Action);
 						Continue.set(false);
-
 					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void LineItems_Data() {
+		int Row_Count1, Col, Col_P;
+		LineItemData.clear();
+		try {
+			Col = Select_Cell("Line_Items", "Product");
+			Col_P = Actual_Cell("Line_Items", "Action");
+			int k = 0;
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+				if (Action.equals("Add") || Action.equals("Update")) {
+					LineItemData.put(Integer.toString(k), LData);
+					Result.fUpdateLog("Action Update : " + LData + ":" + Action);
+					k++;
 				}
 			}
 		} catch (Exception e) {
@@ -890,7 +912,6 @@ public class Common extends Driver {
 	 * Modified By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 17-Oct-2017  
 	--------------------------------------------------------------------------------------------------------*/
-	@SuppressWarnings("unused")
 	public String FindBillingCycle() {
 		try {
 			String billingcycle;
@@ -898,7 +919,7 @@ public class Common extends Driver {
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
 			String Submission_Date = OrderDate.get();
-			//String Submission_Date = "24-10-2017";
+			// String Submission_Date = "24-10-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -913,7 +934,7 @@ public class Common extends Driver {
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
 			String dt = billDate.get();
-			//String dt = "1";
+			// String dt = "1";
 			if (dt != null) {
 				int GetDate = Integer.parseInt(dt);
 				if (Order_Day < GetDate)
@@ -1022,11 +1043,11 @@ public class Common extends Driver {
 						.doubleValue();
 				pro = String.format("%.2f", truncatedDouble);
 				System.out.println(String.format("%.2f", truncatedDouble));
-			}else {	
+			} else {
 				int i = (int) Math.ceil(Prorateq);
 				pro = i + "";
 			}
-		}else {
+		} else {
 			int i = (int) Math.ceil(Prorateq);
 			pro = i + "";
 		}
@@ -1043,11 +1064,11 @@ public class Common extends Driver {
 	public void GetSiebelDate() {
 		try {
 			// Browser.WebButton.waittillvisible("VFQ_LeftScroll");
-			Browser.WebButton.click("VFQ_LeftScroll");
+			// Browser.WebButton.click("VFQ_LeftScroll");
 
 			waitforload();
-			// Title_Select("a", "Home");
-			Browser.WebLink.click("VQ_Home");
+			Title_Select("a", "Home");
+			// Browser.WebLink.click("VQ_Home");
 			waitforload();
 			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']"))
 					.getAttribute("innerHTML");
@@ -1166,10 +1187,9 @@ public class Common extends Driver {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		
-		
+
 	}
-	
+
 }

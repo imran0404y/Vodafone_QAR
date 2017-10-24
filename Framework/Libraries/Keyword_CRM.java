@@ -716,7 +716,7 @@ public class Keyword_CRM extends Driver {
 				MSISDN = pulldata("MSISDN");
 			}
 			Test_OutPut += "MSISDN : " + MSISDN + ",";
-			
+
 			if (!(getdata("SIM").equals(""))) {
 				SIM = getdata("SIM");
 			} else {
@@ -898,7 +898,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
 			Result.takescreenshot("Plan Selection is Successful : " + PlanName);
-			
+
 			Test_OutPut += OrderSubmission().split("@@")[1];
 			CO.Action_Update("Add", MSISDN);
 
@@ -967,7 +967,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waittillvisible("Validate");
 			Browser.WebButton.click("Validate");
 
-			//CO.isAlertExist();
+			// CO.isAlertExist();
 			try {
 				WebDriverWait wait = new WebDriverWait(cDriver.get(), 15);
 				if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
@@ -977,9 +977,9 @@ public class Keyword_CRM extends Driver {
 						String theDigits = CharMatcher.DIGIT.retainFrom(popup);
 						Def_Smart_limit.set(theDigits);
 					}
-					if(popup.contains("Smart Limit")) {
+					if (popup.contains("Smart Limit")) {
 						Continue.set(true);
-					}else {
+					} else {
 						Continue.set(false);
 					}
 				}
@@ -989,8 +989,8 @@ public class Keyword_CRM extends Driver {
 				Result.fUpdateLog("No Alert Exist");
 				e.getMessage();
 			}
-			
-			if (Validatedata("SmartLimit").equalsIgnoreCase("yes")&&!(Planname.get().contains("Mobile Broadband"))) {
+
+			if (Validatedata("SmartLimit").equalsIgnoreCase("yes") && !(Planname.get().contains("Mobile Broadband"))) {
 				String Smartlimit = Utlities.FetchSmartlimit();
 				if (Def_Smart_limit.get().equals(Smartlimit)) {
 					Result.fUpdateLog("Default Smartlimit : " + Def_Smart_limit.get());
@@ -999,29 +999,39 @@ public class Keyword_CRM extends Driver {
 					Continue.set(false);
 				}
 			}
-			
+
 			CO.waitmoreforload();
-			if (Continue.get() && (UseCaseName.get().equalsIgnoreCase("ConsumerPostpaid_Provisioning") && TestCaseN.get().equalsIgnoreCase("Individualcustomer"))) {
-				try {
-					WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);
-					if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
-						String popup = cDriver.get().switchTo().alert().getText();
-						Result.fUpdateLog(popup);
-						if(popup.contains("Smart Limit")) {
-							Continue.set(true);
-						}else {
+			if (Continue.get()) {
+				switch (UseCaseName.get()) {
+				case "ConsumerPostpaid_Provisioning":
+				case "Plan_UpgradeDowngrade":
+					switch (TestCaseN.get()) {
+					case "Individualcustomer":
+					case "ConsumerPostpaid":
+						try {
+							WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);
+							if (!(wait.until(ExpectedConditions.alertIsPresent()) == null)) {
+								String popup = cDriver.get().switchTo().alert().getText();
+								Result.fUpdateLog(popup);
+								if (popup.contains("Smart Limit")) {
+									Continue.set(true);
+								} else {
+									Continue.set(false);
+								}
+							}
+							Browser.alert.accept();
+							Browser.Readystate();
+						} catch (Exception e) {
+							Result.fUpdateLog("No Alert Exist");
 							Continue.set(false);
+							e.getMessage();
 						}
+						break;
 					}
-					Browser.alert.accept();
-					Browser.Readystate();
-				} catch (Exception e) {
-					Result.fUpdateLog("No Alert Exist");
-					Continue.set(false);
-					e.getMessage();
+
 				}
 			}
-			
+
 			if (Continue.get()) {
 				Browser.WebButton.waittillvisible("Submit");
 				CO.scroll("Submit", "WebButton");
@@ -1031,7 +1041,7 @@ public class Keyword_CRM extends Driver {
 					Continue.set(false);
 				}
 			}
-			
+
 			if (Continue.get()) {
 				Result.takescreenshot("Order Submission is Successful");
 				Col = COL_FUL_STATUS;
@@ -1486,7 +1496,7 @@ public class Keyword_CRM extends Driver {
 
 			} else
 				CO.InstalledAssertChange("Modify");
-			
+
 			CO.waitforload();
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
@@ -1784,7 +1794,7 @@ public class Keyword_CRM extends Driver {
 	public String Plan_UpgradeDowngrade() {
 
 		String Test_OutPut = "", Status = "";
-		String MSISDN, New_PlanName, Existing_Plan, GetData;
+		String MSISDN, New_PlanName, Existing_Plan, GetData, Order_no;
 		int Row_Count, Col, Col_P;
 		Result.fUpdateLog("------Plan Upgrade/Downgrade Event Details------");
 		try {
@@ -1862,6 +1872,15 @@ public class Keyword_CRM extends Driver {
 					}
 				}
 			}
+			if (Row_Count <= 4) {
+				Browser.WebButton.waittillvisible("Expand");
+				Browser.WebButton.click("Expand");
+			}
+			CO.LineItems_Data();
+
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
 
 			CO.waitforload();
 			Test_OutPut += OrderSubmission().split("@@")[1];
