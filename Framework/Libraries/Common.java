@@ -890,14 +890,15 @@ public class Common extends Driver {
 	 * Modified By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 17-Oct-2017  
 	--------------------------------------------------------------------------------------------------------*/
+	@SuppressWarnings("unused")
 	public String FindBillingCycle() {
 		try {
 			String billingcycle;
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
-			// String Submission_Date = OrderDate.get();
-			String Submission_Date = "23-10-2017";
+			String Submission_Date = OrderDate.get();
+			//String Submission_Date = "24-10-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -912,8 +913,9 @@ public class Common extends Driver {
 			Add_Year = Integer.parseInt(Year.format(cals.getTime()));
 			cals.add(Calendar.MONTH, -1);
 			String dt = billDate.get();
+			//String dt = "1";
 			if (dt != null) {
-				int GetDate = Integer.parseInt(billDate.get());
+				int GetDate = Integer.parseInt(dt);
 				if (Order_Day < GetDate)
 					billingcycle = GetDate + "-" + Order_Month + "-" + Order_Year;
 				else if (Order_Day == GetDate)
@@ -923,7 +925,7 @@ public class Common extends Driver {
 			} else {
 				Date DD_3 = new Date();
 				cals.add(Calendar.DATE, 3);
-				DD_3 = Date_Format.parse(Date_Format.format(cals.getTime()));// .parse(Date_Format.parse(cals.getTime().toString()));DD_3=Day.parse(Day.format(Submission_Date.toString()));
+				DD_3 = Date_Format.parse(Date_Format.format(cals.getTime()));
 
 				Date Date_15 = Date_Format.parse(("15-" + Order_Month + "-" + Order_Year));
 				Date Date_1 = Date_Format.parse(("1-" + Add_Month + "-" + Order_Year));
@@ -1164,5 +1166,10 @@ public class Common extends Driver {
 		} catch (Exception e) {
 		}
 	}
-
+	
+	public static void main(String[] args) {
+		
+		
+	}
+	
 }

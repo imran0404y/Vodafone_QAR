@@ -339,7 +339,7 @@ public class Utlities extends Driver {
 			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			Planname.set("Postpaid Connect 60 Promotionis");
+			/*Planname.set("Postpaid Connect 60 Promotionis");
 			LineItemData.put("0", "Mobile Service Bundle");
 			LineItemData.put("1", "Connect 60");
 			LineItemData.put("2", "Postpaid Connect 60 Promotionis");
@@ -348,7 +348,8 @@ public class Utlities extends Driver {
 			LineItemData.put("5", "Unlimited Family Calls");
 			LineItemData.put("6", "Bill Manager");
 			LineItemData.put("7", "Smart Limit");
-			LineItemData.put("9", "Mobile Voicemail");
+			LineItemData.put("9", "Mobile Voicemail");*/
+			//LineItemData.put("0", "Vodafone Passport");
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));

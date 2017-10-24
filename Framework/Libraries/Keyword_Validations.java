@@ -23,7 +23,7 @@ public class Keyword_Validations extends Driver {
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
 			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;
-			Test_OutPut += "RTB -- " + ",";
+			Test_OutPut += "RTB -- ";
 			ArrayList<String> FetchProduct = Utlities.FetchProcuctCatalogData();
 			for (int i = 0; i < FetchProduct.size(); i++) {
 				String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
@@ -50,6 +50,7 @@ public class Keyword_Validations extends Driver {
 				Result.fUpdateLog("RTB Validation is done Successfully ");
 				Status = "PASS";
 			} else {
+				Test_OutPut += "RTB Validation Failed" + ",";
 				Result.fUpdateLog("RTB Validation Failed");
 				Status = "FAIL";
 			}
@@ -76,8 +77,8 @@ public class Keyword_Validations extends Driver {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			String billcycledate, Expiry;
-			String orderdate =  "23-10-2017";
-			//String orderdate =   OrderDate.get();
+			//String orderdate =  "24-10-2017";
+			String orderdate =   OrderDate.get();
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
 			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));
