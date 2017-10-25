@@ -1067,7 +1067,7 @@ public class Common extends Driver {
 			// Browser.WebButton.click("VFQ_LeftScroll");
 
 			waitforload();
-			Title_Select("a", "Home");
+			Title_Select("a", "Home");																							
 			// Browser.WebLink.click("VQ_Home");
 			waitforload();
 			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']"))
