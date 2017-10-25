@@ -1079,7 +1079,7 @@ public class Common extends Driver {
 			String Dateform[] = Datefor[1].trim().split(" ");
 			String Dateforma[] = Datefor[2].trim().split("\\.");
 			for (int i = 1; i <= 12; i++) {
-				if (month[i].equals(Dateform[0])) {
+				if (month[i-1].equals(Dateform[0])) {
 					Mon = Integer.toString(i);
 					break;
 				}
