@@ -647,8 +647,8 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
 
-			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StartNumber, SIM,
+			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S,Col_pri,Col_cat;
+			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StartNumber = null, SIM,
 					MSISDN = null, SData = "SIM Card";
 			CO.waitforload();
 
@@ -726,7 +726,7 @@ public class Keyword_CRM extends Driver {
 
 			if (!(getdata("StartNumber").equals(""))) {
 				StartNumber = getdata("StartNumber");
-			} else {
+			} else if (!(pulldata("StartNumber").equals(""))) {
 				StartNumber = pulldata("StartNumber");
 			}
 
@@ -770,6 +770,8 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Reserve");
 				COl_STyp = CO.Select_Cell("Numbers", "Service Type");
 				Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
+				Col_cat = CO.Select_Cell("Numbers", "Category");
+				Col_pri = CO.Select_Cell("Numbers", "Price From");
 				Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", "Mobile");
 
 				if (!MSISDN.equals("")) {
@@ -787,7 +789,11 @@ public class Keyword_CRM extends Driver {
 
 				}
 
-				Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
+				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
+				if (StartNumber!=null) {
+					StartNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
+				}
+				
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
 				CO.waitmoreforload();

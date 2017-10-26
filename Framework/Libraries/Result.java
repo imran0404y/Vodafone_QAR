@@ -174,8 +174,13 @@ public class Result extends Driver {
 				+ "<td align=\"center\"><b>Total</b></td>" + "<td align=\"center\"><b>Pass</b></td>"
 				+ "<td align=\"center\"><b>Fail</b></td>" + "</tr>" + "<tr>" + "<td align=\"center\" id=\"tot\">"
 				+ totalUC + "</td>" + "<td align=\"center\" id=\"totpass\">" + passUC + "</td>"
-				+ "<td align=\"center\" id=\"totfail\">" + failUC + "</td>" + "</tr>" + "</table>" + "</tr>"
-				+ "</table>" + "<table width='100%' border=2>" + "<tr>"
+				+ "<td align=\"center\" id=\"totfail\">" + failUC + "</td>" + "</tr>" + "</table><br/><br/>"
+				+ "<table border =1 width = 100%>" + " <tr>"
+				+ "<td align=\"center\" Style=\"color:GoldenRod\"><b>StartTime</b></td>"
+				+ "<td align=\"center\" Style=\"color:GoldenRod\"><b>EndTime</b></td>" + "</tr>" + "<tr>"
+				+ "<td align=\"center\" id=\"starttime\">" + ExecutionStarttimestr.get() + "</td>"
+				+ "<td align=\"center\" id=\"endtime\">" + ExecutionEndtimestr.get() + "</td>" + "</tr>" + "</table>"
+				+ "</tr>" + "</table>" + "<table width='100%' border=2>" + "<tr>"
 				+ "<td align=\"center\" width='50%' colspan=3 Style=\"color:blue\"><h3> Detail Summary Report </h3></td>"
 				+ "</tr>" + "<table border =1 width = 100%>" + "<tr>"
 				+ "<td width = 8%><b><center>Environment</center></b></td>"
@@ -237,7 +242,7 @@ public class Result extends Driver {
 			// killexeTask();
 			WebDriver driver = new ChromeDriver();
 			driver.get(url);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

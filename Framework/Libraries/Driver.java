@@ -15,7 +15,6 @@ import org.openqa.selenium.WebDriver;
 @SuppressWarnings("rawtypes")
 public class Driver {
 
-	static Calendar cal = Calendar.getInstance();
 	public static ThreadLocal<String> WorkingDir = new ThreadLocal<String>();
 	public static ThreadLocal<String> Base_Path = new ThreadLocal<String>();
 	public static ThreadLocal<String> Storage_FLD = new ThreadLocal<String>();
@@ -36,6 +35,7 @@ public class Driver {
 
 	public static ThreadLocal<Boolean> Continue = new ThreadLocal<Boolean>();
 	public static ThreadLocal<String> ExecutionStarttimestr = new ThreadLocal<String>();
+	public static ThreadLocal<String> ExecutionEndtimestr = new ThreadLocal<String>();
 	public static ThreadLocal<String> Environment = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseName = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseIDP = new ThreadLocal<String>();
@@ -79,15 +79,17 @@ public class Driver {
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsx");
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
-		String Keyword_Result = null;
+		
 
 		File resfold = new File(Result_FLD.get());
 		if ((!resfold.exists()))
 			resfold.mkdir();
 
-		DateFormat ExecutionStarttime = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-		ExecutionStarttimestr.set(ExecutionStarttime.format(cal.getTime()).toString());
-		System.out.println("Execution initiated at ---> " + ExecutionStarttime.format(cal.getTime()));
+		DateFormat For = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String SRT_Time= For.format(cal.getTime()).toString();
+		ExecutionStarttimestr.set(SRT_Time);	
+		System.out.println("Execution initiated at --- " + SRT_Time);
 
 		ArrayList<String[]> addUsecase = Utlities.floadUseCases();
 		String[] IDP = addUsecase.get(0);
@@ -118,7 +120,7 @@ public class Driver {
 			String DataBinding[] = addresses.get(1);
 			String Description[] = addresses.get(2);
 
-			System.out.println("No of Keywords to be executed in " + UseCaseName.get() + ":" + totKeywords.length);
+			Result.fUpdateLog("No of Keywords to be executed in " + UseCaseName.get() + ":" + totKeywords.length);
 			if (DP.equalsIgnoreCase("DP") && currUCstatus.get().equalsIgnoreCase("Fail")) {
 				currUCstatus.set("Fail");
 				Continue.set(false);
@@ -134,6 +136,7 @@ public class Driver {
 			ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
 			String RTB  = Validatedata("RTB_Validation");
 			for (int currKeyword = 0; currKeyword < totKeywords.length; currKeyword++) {
+				String Keyword_Result = null;
 				if (Continue.get() == true) {
 					DateFormat currkeywordstartdate = new SimpleDateFormat("dd-MMM-yyyy");
 					keywordstartdate.set(currkeywordstartdate.format(cal.getTime()).toString());
@@ -141,7 +144,7 @@ public class Driver {
 					currKW.set(totKeywords[currKeyword]);
 					currKW_DB.set(DataBinding[currKeyword]);
 					currKW_Des.set(Description[currKeyword]);
-					System.out.println("Current Keyword ----> " + currKW.get());
+					Result.fUpdateLog("Current Keyword ----> " + currKW.get());
 					currKWstatus.set("Pass");
 					if (currKW_DB.get().toString().equalsIgnoreCase("Data")) {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata(TestCaseData.get()));
@@ -169,7 +172,7 @@ public class Driver {
 						}
 					}
 
-					if (!Keyword_Result.equals(null)) {
+					if (Keyword_Result!=null) {
 						String[] ResultandDes = Keyword_Result.split("@@");
 
 						if (ResultandDes[0].equalsIgnoreCase("PASS")) {
@@ -199,6 +202,10 @@ public class Driver {
 			} else {
 				passUC = passUC + 1;
 			}
+			Calendar cal1 = Calendar.getInstance();
+			String End_Time= For.format(cal1.getTime()).toString();
+			ExecutionEndtimestr.set(End_Time);
+			System.out.println("Execution Completed at --- " + End_Time);
 			Result.fcreateMasterHTML();
 		}
 		Result.DisplayHTMLReport();
