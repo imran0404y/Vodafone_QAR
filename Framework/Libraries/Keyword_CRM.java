@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.base.CharMatcher;
 
 public class Keyword_CRM extends Driver {
+	static String Billprofile_No;
 	Common CO = new Common();
 	Random R = new Random();
 	public static int COL_FUL_STATUS;
@@ -485,52 +486,55 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Billing Profile Creation Event Details------");
 		try {
 			Browser.WebButton.exist("Profile_Tab");
-			System.out.println("Proceeds with BillingProfileCreation");
 			CO.scroll("Profile_Tab", "WebButton");
 			Browser.WebButton.click("Profile_Tab");
 			CO.waitforload();
 			int Row = 2, Col_Val = 0, Row_Count;
 
-			String Payment_Type;
+			String Payment_Type = null;
 
 			CO.waitforobj("Bill_Add", "WebButton");
 			Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
 			if (Row_Count < Row) {
 				CO.scroll("Bill_Add", "WebButton");
 				Browser.WebButton.click("Bill_Add");
+			}else if (pulldata("Bill_NewProfile").equals("Yes")) {
+				CO.scroll("Bill_Add", "WebButton");
+				Browser.WebButton.click("Bill_Add");
 			}
-
+			CO.waitforload();
+			
+			
 			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
-
-			CO.scroll("Bill_Prof", "WebTable");
 			if (!(getdata("Bill_PayType").equals(""))) {
-				Payment_Type = getdata("Bill_PayType");
-			} else {
-				Payment_Type = pulldata("Bill_PayType");
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", getdata("Bill_PayType"));
+			} else if (!(pulldata("Bill_PayType").equals(""))) {
+				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", pulldata("Bill_PayType"));
 			}
-			Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", Payment_Type);
-
+			
 			CO.waitforload();
 
 			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
 			if (!(getdata("Bill_PayMethod").equals(""))) {
 				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", getdata("Bill_PayMethod"));
-			} else {
+			} else if (!(pulldata("Bill_PayMethod").equals(""))) {
 				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", pulldata("Bill_PayMethod"));
 			}
 
+			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+			Payment_Type = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
 			if (Payment_Type.equalsIgnoreCase("Postpaid")) {
 				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
 				if (!(getdata("Bill_Media").equals(""))) {
 					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
-				} else {
+				} else if (!(pulldata("Bill_Media").equals(""))) {
 					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
 				}
 
 				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
 				if (!(getdata("Bill_Type").equals(""))) {
 					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
-				} else {
+				} else if (!(pulldata("Bill_Type").equals(""))) {
 					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
 				}
 
@@ -539,15 +543,16 @@ public class Keyword_CRM extends Driver {
 			Col_Val = CO.Select_Cell("Bill_Prof", "Language");
 			if (!(getdata("Bill_Lang").equals(""))) {
 				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
-			} else {
+			} else if (!(pulldata("Bill_Lang").equals(""))) {
 				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", pulldata("Bill_Lang"));
 			}
 
 			Col_Val = CO.Select_Cell("Bill_Prof", "Name");
 			Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
+			Billprofile_No = Bill_No;
 			Utlities.StoreValue("Billing_NO", Bill_No);
 			Test_OutPut += "Billing_NO : " + Bill_No + ",";
-
+			
 			Browser.WebButton.waittillvisible("Orders_Tab");
 
 			CO.ToWait();
@@ -604,10 +609,18 @@ public class Keyword_CRM extends Driver {
 			OD_Date = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
 			String[] Date = OD_Date.split(" ")[0].split("/");
 			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
+			
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
+			CO.waitforload();
+			Browser.WebLink.click("Line_Items");
+			CO.waitforload();
+			System.out.println(Billprofile_No);
+			if(Billprofile_No!=null) {
+				CO.Webtable_Value("Billing Profile", Billprofile_No);
+			}
 
 			Browser.WebButton.waittillvisible("LI_New");
-
+			
 			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
@@ -648,7 +661,7 @@ public class Keyword_CRM extends Driver {
 		try {
 
 			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S,Col_pri,Col_cat;
-			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StartNumber = null, SIM,
+			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StarNumber = null, SIM,
 					MSISDN = null, SData = "SIM Card";
 			CO.waitforload();
 
@@ -685,7 +698,7 @@ public class Keyword_CRM extends Driver {
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
-			// String Field = CO.Col_Data(Col_S);
+			
 			// To select the Mobile Bundle
 			Col_V = Col + 2;
 
@@ -724,10 +737,10 @@ public class Keyword_CRM extends Driver {
 			}
 			Test_OutPut += "SIM_NO : " + SIM + ",";
 
-			if (!(getdata("StartNumber").equals(""))) {
-				StartNumber = getdata("StartNumber");
-			} else if (!(pulldata("StartNumber").equals(""))) {
-				StartNumber = pulldata("StartNumber");
+			if (!(getdata("StarNumber").equals(""))) {
+				StarNumber = getdata("StarNumber");
+			} else if (!(pulldata("StarNumber").equals(""))) {
+				StarNumber = pulldata("StarNumber");
 			}
 
 			if (!(getdata("ReservationToken").equals(""))) {
@@ -743,10 +756,8 @@ public class Keyword_CRM extends Driver {
 					Browser.WebEdit.Set("NumberReservationToken", ReservationToken);
 					Result.takescreenshot("Providing Number Reservation Token");
 				}
-				CO.AddOnSelection(getdata("Addons_Add"), "Add");
-				// Result.takescreenshot("");
-				CO.AddOnSelection(getdata("Addons_Delete"), "Delete");
-				// Result.takescreenshot("");
+				CO.AddOnSelection(Add_Addon, "Add");
+				CO.AddOnSelection(Remove_Addon, "Delete");
 				CO.waitforload();
 				CO.Text_Select("button", "Verify");
 				CO.isAlertExist();
@@ -790,8 +801,8 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
-				if (StartNumber!=null) {
-					StartNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
+				if (StarNumber!=null) {
+					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
 				}
 				
 				Result.fUpdateLog("Category " + Category);
@@ -807,7 +818,7 @@ public class Keyword_CRM extends Driver {
 				CO.waitforload();
 				// Browser.WebLink.click("LI_Totals");
 				CO.waitforload();
-				Col = CO.Select_Cell("Line_Items", "Product");
+				Col = CO.Actual_Cell("Line_Items", "Product");
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 				if (Category.contains("STAR")) {
@@ -825,11 +836,10 @@ public class Keyword_CRM extends Driver {
 					CO.scroll("Star_Number_purch", "WebEdit");
 					CO.waitforload();
 					CO.Text_Select("option", "Default");
-					// CO.Tag_Select("option","For Testing Only");
 					CO.Text_Select("option", "For Testing Only");
 					CO.waitforload();
 					CO.scroll("Star_Number_purch", "WebEdit");
-					Browser.WebEdit.Set("Star_Number_purch", StartNumber);
+					Browser.WebEdit.Set("Star_Number_purch", StarNumber);
 
 					CO.waitforload();
 					CO.Text_Select("button", "Verify");
@@ -848,13 +858,8 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.waittillvisible("Expand");
 					Browser.WebButton.click("Expand");
 				}
-
-				/*
-				 * if (Field.equalsIgnoreCase("previous service id")) Col_S =
-				 * CO.Actual_Cell("Line_Items", "Service Id");
-				 */
-				Col = CO.Select_Cell("Line_Items", "Product");
-				Col_S = CO.Select_Cell("Line_Items", "Service Id");
+				Col = CO.Actual_Cell("Line_Items", "Product");
+				Col_S = CO.Actual_Cell("Line_Items", "Service Id");
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 					if (GetData.equalsIgnoreCase(LData)) {
@@ -878,7 +883,7 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.waittillvisible("Expand");
 					Browser.WebButton.click("Expand");
 				}
-
+				Col_S=CO.Actual_Cell("Line_Items", "Service Id");
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 					if (GetData.equalsIgnoreCase(LData))
@@ -1012,7 +1017,7 @@ public class Keyword_CRM extends Driver {
 				case "ConsumerPostpaid_Provisioning":
 				case "Plan_UpgradeDowngrade":
 					switch (TestCaseN.get()) {
-					case "Individualcustomer":
+					case "NewCustomer":
 					case "ConsumerPostpaid":
 						try {
 							WebDriverWait wait = new WebDriverWait(cDriver.get(), 60);

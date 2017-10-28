@@ -718,6 +718,7 @@ public class Common extends Driver {
 		String cellXpath = "//span[text()='" + Text + "']/../../following-sibling::td[1]//input";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		cDriver.get().findElement(By.xpath(cellXpath)).clear();
 		cDriver.get().findElement(By.xpath(cellXpath)).sendKeys(Val);
 
 	}

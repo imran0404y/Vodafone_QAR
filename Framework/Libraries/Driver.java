@@ -56,6 +56,7 @@ public class Driver {
 	public static ThreadLocal<String> OrderDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> billDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> Def_Smart_limit = new ThreadLocal<String>();
+	//public static ThreadLocal<String> Billprofile_No = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
@@ -75,7 +76,7 @@ public class Driver {
 		OR_File.set(Storage_FLD.get() + "/ObjectRepository.xlsx");
 		StoreDB_File.set(Storage_FLD.get() + "/StoreDB.xlsx");
 		Database_File.set(Storage_FLD.get() + "/CommonDirectory.xlsx");
-		Directory_FLD.set(Base_Path.get() + "/Directory");
+		Directory_FLD.set(Base_Path.get() + "/Database");
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsx");
 		Result_FLD.set(Base_Path.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
