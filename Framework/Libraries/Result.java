@@ -235,7 +235,7 @@ public class Result extends Driver {
 	}
 
 	public static void DisplayHTMLReport() {
-		System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", WorkingDir.get() + "Drivers\\chromedriver.exe");
 		String url = masterrephtml.get();
 		System.out.println(url);
 		try {
