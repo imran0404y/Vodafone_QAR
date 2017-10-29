@@ -78,7 +78,7 @@ public class Driver {
 		Database_File.set(Storage_FLD.get() + "/CommonDirectory.xlsx");
 		Directory_FLD.set(Base_Path.get() + "/Database");
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsx");
-		Result_FLD.set(Base_Path.get() + "/Results");
+		Result_FLD.set(WorkingDir.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
 		
 
