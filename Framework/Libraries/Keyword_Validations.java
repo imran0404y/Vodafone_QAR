@@ -22,39 +22,41 @@ public class Keyword_Validations extends Driver {
 		String Test_OutPut = "", Status = "";
 		Result.fUpdateLog("------RTB Validation Event Details------");
 		try {
-			String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;
-			Test_OutPut += "RTB -- ";
-			ArrayList<String> FetchProduct = Utlities.FetchProcuctCatalogData();
-			for (int i = 0; i < FetchProduct.size(); i++) {
-				String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
-				Surepay = FetchPC[0].trim();
-				Benefits = FetchPC[1].trim();
-				BucketValue = FetchPC[2].trim();
-				BucketUsageType = FetchPC[3].trim();
-				Product_Validity = FetchPC[4].trim();
-				Siebel_Desc = FetchPC[7].trim();
+			String RTB = Validatedata("RTB_Validation");
+			if (RTB.equalsIgnoreCase("yes")) {
+				String Surepay, Benefits, Product_Validity, Siebel_Desc, BucketValue, BucketUsageType;
+				Test_OutPut += "RTB -- ";
+				ArrayList<String> FetchProduct = Utlities.FetchProcuctCatalogData();
+				for (int i = 0; i < FetchProduct.size(); i++) {
+					String FetchPC[] = FetchProduct.get(i).split("\\|\\|");
+					Surepay = FetchPC[0].trim();
+					Benefits = FetchPC[1].trim();
+					BucketValue = FetchPC[2].trim();
+					BucketUsageType = FetchPC[3].trim();
+					Product_Validity = FetchPC[4].trim();
+					Siebel_Desc = FetchPC[7].trim();
 
-				String BE = BE(Siebel_Desc, Benefits, Product_Validity, BucketValue, BucketUsageType);
-				Result.fUpdateLog("Proration -- " + BE);
-				if (BE.equals(RTBOutputData.get(Surepay))) {
-					//Test_OutPut += "Proration -- "+BE + ",";
-					Result.fUpdateLog(RTBOutputData.get(Surepay));
-					Test_OutPut += RTBOutputData.get(Surepay) + ",";
-				}else
-					Continue.set(false);
+					String BE = BE(Siebel_Desc, Benefits, Product_Validity, BucketValue, BucketUsageType);
+					Result.fUpdateLog("Proration -- " + BE);
+					if (BE.equals(RTBOutputData.get(Surepay))) {
+						// Test_OutPut += "Proration -- "+BE + ",";
+						Result.fUpdateLog(RTBOutputData.get(Surepay));
+						Test_OutPut += RTBOutputData.get(Surepay) + ",";
+					} else
+						Continue.set(false);
+				}
+
+				CO.ToWait();
+				if (Continue.get()) {
+					Test_OutPut += "RTB Validation is done Successfully " + ",";
+					Result.fUpdateLog("RTB Validation is done Successfully ");
+					Status = "PASS";
+				} else {
+					Test_OutPut += "RTB Validation Failed" + ",";
+					Result.fUpdateLog("RTB Validation Failed");
+					Status = "FAIL";
+				}
 			}
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Test_OutPut += "RTB Validation is done Successfully " + ",";
-				Result.fUpdateLog("RTB Validation is done Successfully ");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "RTB Validation Failed" + ",";
-				Result.fUpdateLog("RTB Validation Failed");
-				Status = "FAIL";
-			}
-
 		} catch (Exception e) {
 			Test_OutPut += "Exception occurred" + ",";
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
@@ -77,8 +79,8 @@ public class Keyword_Validations extends Driver {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			String billcycledate, Expiry;
-			//String orderdate =  "24-10-2017";
-			String orderdate =   OrderDate.get();
+			// String orderdate = "24-10-2017";
+			String orderdate = OrderDate.get();
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
 			cals.set(Calendar.YEAR, Integer.parseInt(orderdate.split("-")[2]));
@@ -103,7 +105,8 @@ public class Keyword_Validations extends Driver {
 				Prorate = CO.Prorated(1, 1, Benifit, BucketValue, BucketUsageType);
 				Expiry = orderdate;
 				break;
-			case "month":case "black":
+			case "month":
+			case "black":
 				// Prorate = CO.Prorated(Total_Days, Total_Days, Benifit);
 				Prorate = CO.Prorated(Total_Days, difInDays, Benifit, BucketValue, BucketUsageType);
 				cals.add(Calendar.DATE, Total_Days);
@@ -113,14 +116,14 @@ public class Keyword_Validations extends Driver {
 				Prorate = CO.Prorated(7, 7, Benifit, BucketValue, BucketUsageType);
 				cals.add(Calendar.DATE, 7);
 				Expiry = Date_Format.format(cals.getTime());
-				break; 
+				break;
 			}
-			if(!Product_Validity.equalsIgnoreCase("day")) {  
-				SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MMM-yyyy" );   
-				Calendar cal1 = Calendar.getInstance();    
-				cal1.setTime( dateFormat.parse(Expiry));    
-				cal1.add( Calendar.DATE, -1 );    
-				Expiry=dateFormat.format(cal1.getTime()); 				
+			if (!Product_Validity.equalsIgnoreCase("day")) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+				Calendar cal1 = Calendar.getInstance();
+				cal1.setTime(dateFormat.parse(Expiry));
+				cal1.add(Calendar.DATE, -1);
+				Expiry = dateFormat.format(cal1.getTime());
 			}
 			Desc = Desc.replace("&CV", " " + Prorate + " ");
 			Desc = Desc.replace("&BE", " " + Expiry + " ");

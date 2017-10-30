@@ -156,7 +156,15 @@ public class Utlities extends Driver {
 		for (int readloop = 0; readloop < DataSap.length; readloop++) {
 			String[] Sapdata = DataSap[readloop].split("--");
 			if (Sapdata.length == 2) {
-				dict.put(Sapdata[0], Sapdata[1]);
+				if(Sapdata[1].equals("Fetch#IDP")) {
+					String value = FetchStoredValue(UseCaseIDP.get(), TestCaseIDP.get(), Sapdata[0]);
+					dict.put(Sapdata[0], value);
+				}else if(Sapdata[1].equals("Fetch#DP")) {
+					String value = FetchStoredValue(UseCaseDP.get(), TestCaseDP.get(), Sapdata[0]);
+					dict.put(Sapdata[0], value);
+				}else {
+					dict.put(Sapdata[0], Sapdata[1]);
+				}
 			} else {
 				dict.put(Sapdata[0], "");
 			}
@@ -254,9 +262,17 @@ public class Utlities extends Driver {
 			String StoreDBpth = Storage_FLD.get() + "/StoreDB.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			String StrQuery = "INSERT INTO Dynamic_DataStore(Dynamic_UseCase,Dynamic_TestCase,Dynamic_Name,Dynamic_Value,Keyword,Date) VALUES('"
-					+ UseCaseName.get() + "','" + TestCaseN.get() + "','" + Name + "','" + Value + "','" + currKW.get()
-					+ "','" + keywordstartdate.get() + "')";
+			String StrQuery;
+			String val = FetchStoredValue(UseCaseName.get(), TestCaseN.get(), Name);
+			if (val == null) {
+				StrQuery = "INSERT INTO Dynamic_DataStore(Dynamic_UseCase,Dynamic_TestCase,Dynamic_Name,Dynamic_Value,Keyword,Date) VALUES('"
+						+ UseCaseName.get() + "','" + TestCaseN.get() + "','" + Name + "','" + Value + "','"
+						+ currKW.get() + "')";
+			} else {
+				StrQuery = "Update Dynamic_DataStore set Dynamic_Value='" + Value + "'where Dynamic_TestCase='"
+						+ TestCaseN.get() + "' and Dynamic_UseCase='" + UseCaseName.get() + "' and Dynamic_Name='"
+						+ Name + "'";
+			}
 			connection.executeUpdate(StrQuery);
 			connection.close();
 		} catch (Exception e) {
@@ -271,27 +287,28 @@ public class Utlities extends Driver {
 	 * Designed By			: Imran Baig
 	 * Last Modified Date 	: 23-Aug-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public static String FetchStoredValue(String keyword) {
+	public static String FetchStoredValue(String Usecase, String Testcase, String Name) {
 		try {
+			String returnValue = null;
 			String StoreDBpth = Storage_FLD.get() + "/StoreDB.xlsx";
 			// System.out.println(StoreDBpth+","+keywordstartdate.get());//tempfold.get() +
 			// "/" + BatchName.get() + "/StoreDB/StoreDB.xls";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			String StrQuery = "Select * from Dynamic_DataStore where Dynamic_TestCase='" + TestCaseN.get()
-					+ "' and Date='" + keywordstartdate.get() + "' and Dynamic_UseCase='" + UseCaseName.get()
-					+ "' and Keyword='" + keyword + "'";
+			String StrQuery = "Select * from Dynamic_DataStore where Dynamic_TestCase='" + Testcase
+					+ "' and Dynamic_UseCase='" + Usecase + "' and Dynamic_Name='" + Name + "'";
 			Recordset rs = connection.executeQuery(StrQuery);
 			rs.moveFirst();
+			returnValue = rs.getField("Dynamic_Value");
 			// System.out.println(rs.getField("Dynamic_Name")+"
 			// "+rs.getField("Dynamic_Value"));
 			rs.close();
 			connection.close();
-			return rs.getField("Dynamic_Value");
+			return returnValue;
+
 
 		} catch (Exception e) {
-			// System.out.println("No Values");
-			return "";
+			return null;
 		}
 	}
 
@@ -339,17 +356,16 @@ public class Utlities extends Driver {
 			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
-			/*Planname.set("Postpaid Connect 60 Promotionis");
-			LineItemData.put("0", "Mobile Service Bundle");
-			LineItemData.put("1", "Connect 60");
-			LineItemData.put("2", "Postpaid Connect 60 Promotionis");
-			LineItemData.put("3", "SIM Card");
-			LineItemData.put("4", "Standard Pack");
-			LineItemData.put("5", "Unlimited Family Calls");
-			LineItemData.put("6", "Bill Manager");
-			LineItemData.put("7", "Smart Limit");
-			LineItemData.put("9", "Mobile Voicemail");*/
-			//LineItemData.put("0", "Vodafone Passport");
+			/*
+			 * Planname.set("Postpaid Connect 60 Promotionis"); LineItemData.put("0",
+			 * "Mobile Service Bundle"); LineItemData.put("1", "Connect 60");
+			 * LineItemData.put("2", "Postpaid Connect 60 Promotionis");
+			 * LineItemData.put("3", "SIM Card"); LineItemData.put("4", "Standard Pack");
+			 * LineItemData.put("5", "Unlimited Family Calls"); LineItemData.put("6",
+			 * "Bill Manager"); LineItemData.put("7", "Smart Limit"); LineItemData.put("9",
+			 * "Mobile Voicemail");
+			 */
+			// LineItemData.put("0", "Vodafone Passport");
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));
@@ -376,7 +392,7 @@ public class Utlities extends Driver {
 										+ rs.getField("ProductValidity") + "||" + BundleID + "||"
 										+ rs.getField("SubscriptionPrice") + "||" + rs.getField("Siebel_Description");
 								PCSAll.add(k, Type);
-								k++;	
+								k++;
 							}
 							if (rs.hasNext()) {
 								rs.moveNext();

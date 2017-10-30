@@ -405,6 +405,62 @@ public class Common extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: ParentAssertSearch
+	 * Use 					: Searching based on Input to decide whether to move on Account Search or Asert Search
+	 * Designed By			: Vinodhini
+	 * Last Modified Date 	: 29-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void ParentAssertSearch(String Reference, String Status, String Prod) {
+		try {
+			if (Reference.substring(0, 3).equals("974"))
+				Assert_Search(Reference, Status, Prod);
+			else
+				Account_Search(Reference);
+
+		} catch (Exception e) {
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Account Search
+	 * Use 					: To send combination of keys 
+	 * Args					: Account
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 29-October-2017
+	--------------------------------------------------------------------------------------------------------*/
+
+	public void Account_Search(String AccountNo) {
+		try {
+			int Row, Col;
+			Browser.WebLink.click("VQ_Account");
+			Link_Select("All Accounts");
+			waitforload();
+			Browser.WebButton.click("Account_Query");
+			Col = Select_Cell("Account", "Account #");
+			Row = Browser.WebTable.getRowCount("Account");
+			if (Row == 2)
+				Browser.WebTable.SetData("Account", 2, Col, "Account_Number", AccountNo);
+			else
+				Continue.set(false);
+			waitforload();
+			Row = Browser.WebTable.getRowCount("Account");
+			if (Row >= 2) {
+				int ColN = Select_Cell("Account", "Name");
+				for (int row = 2; row <= Row; row++)
+					Browser.WebTable.clickL("Account", row, ColN);
+				waitforload();
+			} else
+				Continue.set(false);
+
+			Browser.WebLink.waittillvisible("Acc_Portal");
+			waitforload();
+			Browser.WebLink.click("Acc_Portal");
+
+		} catch (Exception e) {
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Assert_Search
 	 * Use 					: Customizing the specific Plan is done
 	 * Designed By			: Vinodhini
@@ -1068,7 +1124,7 @@ public class Common extends Driver {
 			// Browser.WebButton.click("VFQ_LeftScroll");
 
 			waitforload();
-			Title_Select("a", "Home");																							
+			Title_Select("a", "Home");
 			// Browser.WebLink.click("VQ_Home");
 			waitforload();
 			String Date = cDriver.get().findElement(By.xpath("//p[@class='vfqa-salutation-date']"))
@@ -1080,7 +1136,7 @@ public class Common extends Driver {
 			String Dateform[] = Datefor[1].trim().split(" ");
 			String Dateforma[] = Datefor[2].trim().split("\\.");
 			for (int i = 1; i <= 12; i++) {
-				if (month[i-1].equals(Dateform[0])) {
+				if (month[i - 1].equals(Dateform[0])) {
 					Mon = Integer.toString(i);
 					break;
 				}

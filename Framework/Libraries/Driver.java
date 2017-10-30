@@ -14,7 +14,7 @@ import org.openqa.selenium.WebDriver;
 
 @SuppressWarnings("rawtypes")
 public class Driver {
-
+ 
 	public static ThreadLocal<String> WorkingDir = new ThreadLocal<String>();
 	public static ThreadLocal<String> Base_Path = new ThreadLocal<String>();
 	public static ThreadLocal<String> Storage_FLD = new ThreadLocal<String>();
@@ -39,8 +39,10 @@ public class Driver {
 	public static ThreadLocal<String> Environment = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseName = new ThreadLocal<String>();
 	public static ThreadLocal<String> UseCaseIDP = new ThreadLocal<String>();
+	public static ThreadLocal<String> UseCaseDP = new ThreadLocal<String>();
 	public static ThreadLocal<String> Dependancy = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseIDP = new ThreadLocal<String>();
+	public static ThreadLocal<String> TestCaseDP = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseN = new ThreadLocal<String>();
 	public static ThreadLocal<String> TestCaseData = new ThreadLocal<String>();
 	public static ThreadLocal<String> ValidationData = new ThreadLocal<String>();
@@ -56,7 +58,7 @@ public class Driver {
 	public static ThreadLocal<String> OrderDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> billDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> Def_Smart_limit = new ThreadLocal<String>();
-	//public static ThreadLocal<String> Billprofile_No = new ThreadLocal<String>();
+	// public static ThreadLocal<String> Billprofile_No = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();
 	public static ThreadLocal<Dictionary> ValidateDT = new ThreadLocal<Dictionary>();
@@ -80,7 +82,6 @@ public class Driver {
 		TestDataDB_File.set(Directory_FLD.get() + "/TestDataDB.xlsx");
 		Result_FLD.set(WorkingDir.get() + "/Results");
 		Templete_FLD.set(Base_Path.get() + "/Templates");
-		
 
 		File resfold = new File(Result_FLD.get());
 		if ((!resfold.exists()))
@@ -88,8 +89,8 @@ public class Driver {
 
 		DateFormat For = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		String SRT_Time= For.format(cal.getTime()).toString();
-		ExecutionStarttimestr.set(SRT_Time);	
+		String SRT_Time = For.format(cal.getTime()).toString();
+		ExecutionStarttimestr.set(SRT_Time);
 		System.out.println("Execution initiated at --- " + SRT_Time);
 
 		ArrayList<String[]> addUsecase = Utlities.floadUseCases();
@@ -107,6 +108,9 @@ public class Driver {
 			if (DP.equalsIgnoreCase("IDP")) {
 				UseCaseIDP.set(totUseCases[currUseCase]);
 				TestCaseIDP.set(totTestCases[currUseCase]);
+			} else if (currUseCase != 0) {
+				UseCaseDP.set(totUseCases[currUseCase - 1]);
+				TestCaseDP.set(totTestCases[currUseCase - 1]);
 			}
 			UseCaseName.set(totUseCases[currUseCase]);
 			TestCaseN.set(totTestCases[currUseCase]);
@@ -135,7 +139,6 @@ public class Driver {
 
 			Result.createTCScreenshotFold();
 			ValidateDT.set((Dictionary<?, ?>) Utlities.freaddata(ValidationData.get()));
-			String RTB  = Validatedata("RTB_Validation");
 			for (int currKeyword = 0; currKeyword < totKeywords.length; currKeyword++) {
 				String Keyword_Result = null;
 				if (Continue.get() == true) {
@@ -153,35 +156,25 @@ public class Driver {
 						TestData.set((Dictionary<?, ?>) Utlities.freaddata_diff(currKW_DB.get()));
 						Environment.set(getdata("Environment"));
 					}
-					if(RTB.equalsIgnoreCase("yes")) {
-						try {
-							Class<?> cls = Class.forName("Libraries.KeyWord");
-							Object obj = cls.newInstance();
-							Method method = cls.getMethod(currKW.get());
-							Keyword_Result = (String) method.invoke(obj);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}else if(!currKW.get().contains("RTB")){
-						try {
-							Class<?> cls = Class.forName("Libraries.KeyWord");
-							Object obj = cls.newInstance();
-							Method method = cls.getMethod(currKW.get());
-							Keyword_Result = (String) method.invoke(obj);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+
+					try {
+						Class<?> cls = Class.forName("Libraries.KeyWord");
+						Object obj = cls.newInstance();
+						Method method = cls.getMethod(currKW.get());
+						Keyword_Result = (String) method.invoke(obj);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 
-					if (Keyword_Result!=null) {
+					if (Keyword_Result != null) {
 						String[] ResultandDes = Keyword_Result.split("@@");
 
-						if (ResultandDes[0].equalsIgnoreCase("PASS")) {
-							currKWstatus.set("Pass");
-							Continue.set(true);
-						} else {
+						if (ResultandDes[0].equalsIgnoreCase("FAIL")) {
 							currKWstatus.set("Fail");
 							Continue.set(false);
+						} else {
+							currKWstatus.set("Pass");
+							Continue.set(true);
 						}
 						if (TestOutput == null) {
 							if (!(ResultandDes[1].equals("<br/>"))) {
@@ -204,7 +197,7 @@ public class Driver {
 				passUC = passUC + 1;
 			}
 			Calendar cal1 = Calendar.getInstance();
-			String End_Time= For.format(cal1.getTime()).toString();
+			String End_Time = For.format(cal1.getTime()).toString();
 			ExecutionEndtimestr.set(End_Time);
 			System.out.println("Execution Completed at --- " + End_Time);
 			Result.fcreateMasterHTML();

@@ -136,165 +136,168 @@ public class Keyword_CRM extends Driver {
 		String Last_Name = null;
 		Result.fUpdateLog("------Contact Creation Event Details------");
 		try {
-			String IDType = "", IDNumber = "";
-			CO.waitforobj("VQ_Contact", "WebLink");
-			CO.waitforload();
-			Browser.WebLink.click("VQ_Contact");
-			Browser.WebLink.waittillvisible("My_Contacts");
-
-			CO.waitforobj("My_Contacts", "WebLink");
-			Browser.WebLink.click("My_Contacts");
-			Browser.WebButton.waittillvisible("New_Contact");
-
-			Browser.WebButton.click("New_Contact");
-
-			if (!(getdata("LastName").equals(""))) {
-				Last_Name = getdata("LastName");
-			} else if (!(pulldata("LastName").equals(""))) {
-				Last_Name = pulldata("LastName") + R.nextInt(1000);
-			}
-			CO.scroll("LastName", "WebEdit");
-			Browser.WebEdit.Set("LastName", Last_Name);
-			Result.fUpdateLog("LastName : " + Last_Name);
-
-			if (!(getdata("FirstName").equals(""))) {
-				Browser.WebEdit.Set("FirstName", getdata("FirstName"));
-			} else if (!(pulldata("FirstName").equals(""))) {
-				Browser.WebEdit.Set("FirstName", pulldata("FirstName"));
-			}
-
-			if (!(getdata("Mr/Ms").equals(""))) {
-				Browser.ListBox.select("Mr/Ms", getdata("Mr/Ms"));
-			} else {
-				Browser.ListBox.select("Mr/Ms", pulldata("Mr/Ms"));
-			}
-
-			if (!(getdata("PrefLanguage").equals(""))) {
-				Browser.ListBox.select("PrefLanguage", getdata("PrefLanguage"));
-			} else {
-				Browser.ListBox.select("PrefLanguage", pulldata("PrefLanguage"));
-			}
-
-			if (!(getdata("DOB").equals(""))) {
-				Browser.WebEdit.Set("DOB", getdata("DOB"));
-			} else {
-				Browser.WebEdit.Set("DOB", pulldata("DOB"));
-			}
-
-			if (!(getdata("Gender").equals(""))) {
-				Browser.ListBox.select("Gender", getdata("Gender"));
-			} else {
-				Browser.ListBox.select("Gender", pulldata("Gender"));
-			}
-
-			if (!(getdata("Email").equals(""))) {
-				Browser.WebEdit.Set("Email", getdata("Email"));
-			} else {
-				Browser.WebEdit.Set("Email", pulldata("Email"));
-			}
-
-			// CO.scroll("ID_Type", "ListBox");
-			if (!(getdata("ID_Type").equals(""))) {
-				IDType = getdata("ID_Type");
-			} else {
-				IDType = pulldata("ID_Type");
-			}
-			Browser.ListBox.select("ID_Type", IDType);
-
-			// CO.scroll("ID_Number", "WebEdit");
-			if (!(getdata("ID_Number").equals(""))) {
-				IDNumber = getdata("ID_Number");
-			} else {
-				IDNumber = pulldata("ID_Number") + R.nextInt(100000);
-			}
-			Browser.WebEdit.Set("ID_Number", IDNumber);
-			Result.fUpdateLog("Customer ID : " + IDNumber);
-			Test_OutPut += "Customer ID : " + IDNumber + ",";
-
-			// CO.scroll("ID_ExpDate", "WebEdit");
-			if (!(getdata("ID_ExpDate").equals(""))) {
-				Browser.WebEdit.Set("ID_ExpDate", getdata("ID_ExpDate"));
-			} else {
-				Browser.WebEdit.Set("ID_ExpDate", pulldata("ID_ExpDate"));
-			}
-
-			// CO.scroll("Nationality", "ListBox");
-			if (!(getdata("Nationality").equals(""))) {
-				Browser.ListBox.select("Nationality", getdata("Nationality"));
-			} else {
-				Browser.ListBox.select("Nationality", pulldata("Nationality"));
-			}
-
-			// CO.scroll("Phone", "WebEdit");
-			if (!(getdata("Phone").equals(""))) {
-				Browser.WebEdit.Set("Phone", getdata("Phone"));
-			} else {
-				Browser.WebEdit.Set("Phone", pulldata("Phone"));
-			}
-
-			Browser.WebLink.waittillvisible("Con_Link");
-			Browser.WebLink.click("Con_Link");
-
-			// Handles Alerts
-			if (CO.isAlertExist())
+			String Exi = getdata("Account_No");
+			if (Exi.equals("")) {
+				String IDType = "", IDNumber = "";
+				CO.waitforobj("VQ_Contact", "WebLink");
 				CO.waitforload();
+				Browser.WebLink.click("VQ_Contact");
+				Browser.WebLink.waittillvisible("My_Contacts");
 
-			String Address;
-			if (!(getdata("Address").equals(""))) {
-				Address = getdata("Address");
-			} else if (!(getdata("Kahramaa_ID").equals(""))) {
-				Address = "Kar#" + getdata("Kahramaa_ID");
-			} else if (!(pulldata("Kahramaa_ID").equals(""))) {
-				Address = "Kar#" + pulldata("Kahramaa_ID");
-			} else {
-				Address = pulldata("Address");
-			}
-			Result.takescreenshot("Customer Creation with Customer ID : " + IDNumber);
+				CO.waitforobj("My_Contacts", "WebLink");
+				Browser.WebLink.click("My_Contacts");
+				Browser.WebButton.waittillvisible("New_Contact");
 
-			if (!(Address.equals(""))) {
+				Browser.WebButton.click("New_Contact");
 
-				CO.waitforobj("Add_Address", "WebButton");
-				Browser.WebButton.click("Add_Address");
+				if (!(getdata("LastName").equals(""))) {
+					Last_Name = getdata("LastName");
+				} else if (!(pulldata("LastName").equals(""))) {
+					Last_Name = pulldata("LastName") + R.nextInt(1000);
+				}
+				CO.scroll("LastName", "WebEdit");
+				Browser.WebEdit.Set("LastName", Last_Name);
+				Result.fUpdateLog("LastName : " + Last_Name);
 
-				// Search for Specific Address
-				CO.waitforobj("Add_Go", "WebButton");
-				CO.scroll("Add_Go", "WebButton");
-
-				if (Address.contains("Kar#")) {
-					Browser.ListBox.select("Add_List", "Kahramaa ID");
-					Browser.WebEdit.Set("Add_Search", Address.split("#")[1]);
-				} else {
-					Browser.ListBox.select("Add_List", "Address Line 1");
-					Browser.WebEdit.Set("Add_Search", Address);
+				if (!(getdata("FirstName").equals(""))) {
+					Browser.WebEdit.Set("FirstName", getdata("FirstName"));
+				} else if (!(pulldata("FirstName").equals(""))) {
+					Browser.WebEdit.Set("FirstName", pulldata("FirstName"));
 				}
 
-				Browser.WebButton.click("Add_Go");
+				if (!(getdata("Mr/Ms").equals(""))) {
+					Browser.ListBox.select("Mr/Ms", getdata("Mr/Ms"));
+				} else {
+					Browser.ListBox.select("Mr/Ms", pulldata("Mr/Ms"));
+				}
 
-				CO.scroll("Add_OK", "WebButton");
-				Browser.WebButton.click("Add_OK");
+				if (!(getdata("PrefLanguage").equals(""))) {
+					Browser.ListBox.select("PrefLanguage", getdata("PrefLanguage"));
+				} else {
+					Browser.ListBox.select("PrefLanguage", pulldata("PrefLanguage"));
+				}
 
-				CO.waitmoreforload();
-				Browser.WebButton.waittillvisible("Create_A/c");
-				Result.takescreenshot("Address Selected : " + Address);
-				Result.fUpdateLog("Contact created with given Existing Address : " + Address);
-			} else {
-				String[] stat_add = AddressCreation().split("@@");
-				Status = stat_add[0];
-				Address = stat_add[1].split(",")[0];
-				Result.takescreenshot("Address Created : " + Address);
-				Result.fUpdateLog("Created new Address : " + Address);
-			}
+				if (!(getdata("DOB").equals(""))) {
+					Browser.WebEdit.Set("DOB", getdata("DOB"));
+				} else {
+					Browser.WebEdit.Set("DOB", pulldata("DOB"));
+				}
 
-			CO.ToWait();
-			if (Continue.get()) {
-				Utlities.StoreValue("LastName", Last_Name);
-				Utlities.StoreValue("Address", Address);
-				Status = "PASS";
-			} else {
-				Result.takescreenshot("Create_A/c button not exist");
-				Test_OutPut += "Create_A/c button not exist" + ",";
-				Result.fUpdateLog("Create_A/c button not exist");
-				Status = "FAIL";
+				if (!(getdata("Gender").equals(""))) {
+					Browser.ListBox.select("Gender", getdata("Gender"));
+				} else {
+					Browser.ListBox.select("Gender", pulldata("Gender"));
+				}
+
+				if (!(getdata("Email").equals(""))) {
+					Browser.WebEdit.Set("Email", getdata("Email"));
+				} else {
+					Browser.WebEdit.Set("Email", pulldata("Email"));
+				}
+
+				// CO.scroll("ID_Type", "ListBox");
+				if (!(getdata("ID_Type").equals(""))) {
+					IDType = getdata("ID_Type");
+				} else {
+					IDType = pulldata("ID_Type");
+				}
+				Browser.ListBox.select("ID_Type", IDType);
+
+				// CO.scroll("ID_Number", "WebEdit");
+				if (!(getdata("ID_Number").equals(""))) {
+					IDNumber = getdata("ID_Number");
+				} else {
+					IDNumber = pulldata("ID_Number") + R.nextInt(100000);
+				}
+				Browser.WebEdit.Set("ID_Number", IDNumber);
+				Result.fUpdateLog("Customer ID : " + IDNumber);
+				Test_OutPut += "Customer ID : " + IDNumber + ",";
+
+				// CO.scroll("ID_ExpDate", "WebEdit");
+				if (!(getdata("ID_ExpDate").equals(""))) {
+					Browser.WebEdit.Set("ID_ExpDate", getdata("ID_ExpDate"));
+				} else {
+					Browser.WebEdit.Set("ID_ExpDate", pulldata("ID_ExpDate"));
+				}
+
+				// CO.scroll("Nationality", "ListBox");
+				if (!(getdata("Nationality").equals(""))) {
+					Browser.ListBox.select("Nationality", getdata("Nationality"));
+				} else {
+					Browser.ListBox.select("Nationality", pulldata("Nationality"));
+				}
+
+				// CO.scroll("Phone", "WebEdit");
+				if (!(getdata("Phone").equals(""))) {
+					Browser.WebEdit.Set("Phone", getdata("Phone"));
+				} else {
+					Browser.WebEdit.Set("Phone", pulldata("Phone"));
+				}
+
+				Browser.WebLink.waittillvisible("Con_Link");
+				Browser.WebLink.click("Con_Link");
+
+				// Handles Alerts
+				if (CO.isAlertExist())
+					CO.waitforload();
+
+				String Address;
+				if (!(getdata("Address").equals(""))) {
+					Address = getdata("Address");
+				} else if (!(getdata("Kahramaa_ID").equals(""))) {
+					Address = "Kar#" + getdata("Kahramaa_ID");
+				} else if (!(pulldata("Kahramaa_ID").equals(""))) {
+					Address = "Kar#" + pulldata("Kahramaa_ID");
+				} else {
+					Address = pulldata("Address");
+				}
+				Result.takescreenshot("Customer Creation with Customer ID : " + IDNumber);
+
+				if (!(Address.equals(""))) {
+
+					CO.waitforobj("Add_Address", "WebButton");
+					Browser.WebButton.click("Add_Address");
+
+					// Search for Specific Address
+					CO.waitforobj("Popup_Go", "WebButton");
+					CO.scroll("Popup_Go", "WebButton");
+
+					if (Address.contains("Kar#")) {
+						Browser.ListBox.select("PopupQuery_List", "Kahramaa ID");
+						Browser.WebEdit.Set("PopupQuery_Search", Address.split("#")[1]);
+					} else {
+						Browser.ListBox.select("PopupQuery_List", "Address Line 1");
+						Browser.WebEdit.Set("PopupQuery_Search", Address);
+					}
+
+					Browser.WebButton.click("Popup_Go");
+
+					CO.scroll("Add_OK", "WebButton");
+					Browser.WebButton.click("Add_OK");
+
+					CO.waitmoreforload();
+					Browser.WebButton.waittillvisible("Create_A/c");
+					Result.takescreenshot("Address Selected : " + Address);
+					Result.fUpdateLog("Contact created with given Existing Address : " + Address);
+				} else {
+					String[] stat_add = AddressCreation().split("@@");
+					Status = stat_add[0];
+					Address = stat_add[1].split(",")[0];
+					Result.takescreenshot("Address Created : " + Address);
+					Result.fUpdateLog("Created new Address : " + Address);
+				}
+
+				CO.ToWait();
+				if (Continue.get()) {
+					Utlities.StoreValue("LastName", Last_Name);
+					Utlities.StoreValue("Address", Address);
+					Status = "PASS";
+				} else {
+					Result.takescreenshot("Create_A/c button not exist");
+					Test_OutPut += "Create_A/c button not exist" + ",";
+					Result.fUpdateLog("Create_A/c button not exist");
+					Status = "FAIL";
+				}
 			}
 		} catch (Exception e) {
 			Result.takescreenshot("Exception occurred");
@@ -320,50 +323,52 @@ public class Keyword_CRM extends Driver {
 		String Account_No = null;
 		Result.fUpdateLog("------Account Creation Event Details------");
 		try {
+			String Exi = getdata("Account_No");
+			if (Exi.equals("")) {
+				int Row_Count = Browser.WebTable.getRowCount("Address");
+				if (Row_Count > 1) {
+					Browser.WebButton.waittillvisible("Create_A/c");
+					Browser.WebButton.waitTillEnabled("Create_A/c");
+					CO.waitforobj("Create_A/c", "WebButton");
+					CO.scroll("Create_A/c", "WebButton");
+					CO.Text_Select("span", "Create A/c");
 
-			int Row_Count = Browser.WebTable.getRowCount("Address");
-			if (Row_Count > 1) {
-				Browser.WebButton.waittillvisible("Create_A/c");
-				Browser.WebButton.waitTillEnabled("Create_A/c");
-				CO.waitforobj("Create_A/c", "WebButton");
-				CO.scroll("Create_A/c", "WebButton");
-				CO.Text_Select("span", "Create A/c");
+					Browser.ListBox.waittillvisible("CR_Type");
+					String CR = "12" + R.nextInt(100000);
+					if (!(getdata("CR_Type").equals(""))) {
+						Browser.ListBox.select("CR_Type", getdata("CR_Type"));
+						Browser.WebEdit.Set("CR_Number", getdata("CR_Number"));
+					} else if (!(pulldata("CR_Type").equals(""))) {
+						Browser.ListBox.select("CR_Type", pulldata("CR_Type"));
+						Browser.WebEdit.Set("CR_Number", CR);
+					}
 
-				Browser.ListBox.waittillvisible("CR_Type");
-				String CR = "12" + R.nextInt(100000);
-				if (!(getdata("CR_Type").equals(""))) {
-					Browser.ListBox.select("CR_Type", getdata("CR_Type"));
-					Browser.WebEdit.Set("CR_Number", getdata("CR_Number"));
-				} else if (!(pulldata("CR_Type").equals(""))) {
-					Browser.ListBox.select("CR_Type", pulldata("CR_Type"));
-					Browser.WebEdit.Set("CR_Number", CR);
-				}
+					if (!(getdata("SpecialManagement").equals(""))) {
+						Browser.ListBox.select("Spcl_Mang", getdata("SpecialManagement"));
+						Result.fUpdateLog("SpecialManagement : " + getdata("SpecialManagement"));
+					} else {
+						Browser.ListBox.select("Spcl_Mang", pulldata("SpecialManagement"));
+						Result.fUpdateLog("SpecialManagement : " + pulldata("SpecialManagement"));
+					}
 
-				if (!(getdata("SpecialManagement").equals(""))) {
-					Browser.ListBox.select("Spcl_Mang", getdata("SpecialManagement"));
-					Result.fUpdateLog("SpecialManagement : " + getdata("SpecialManagement"));
+					Account_No = Browser.WebEdit.gettext("Account_No");
+					Utlities.StoreValue("Account_No", Account_No);
+					Test_OutPut += "Account_No : " + Account_No + ",";
 				} else {
-					Browser.ListBox.select("Spcl_Mang", pulldata("SpecialManagement"));
-					Result.fUpdateLog("SpecialManagement : " + pulldata("SpecialManagement"));
+					Continue.set(false);
+					Result.fUpdateLog("No records Founded - Create a address for the customer");
+					System.exit(0);
 				}
 
-				Account_No = Browser.WebEdit.gettext("Account_No");
-				Utlities.StoreValue("Account_No", Account_No);
-				Test_OutPut += "Account_No : " + Account_No + ",";
-			} else {
-				Continue.set(false);
-				Result.fUpdateLog("No records Founded - Create a address for the customer");
-				System.exit(0);
-			}
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Status = "PASS";
-				Result.takescreenshot("Account Created Account_No : " + Account_No);
-			} else {
-				Test_OutPut += "Account Creation is Failed" + ",";
-				Result.takescreenshot("Account Creation is Failed");
-				Status = "FAIL";
+				CO.ToWait();
+				if (Continue.get()) {
+					Status = "PASS";
+					Result.takescreenshot("Account Created Account_No : " + Account_No);
+				} else {
+					Test_OutPut += "Account Creation is Failed" + ",";
+					Result.takescreenshot("Account Creation is Failed");
+					Status = "FAIL";
+				}
 			}
 		} catch (Exception e) {
 			Test_OutPut += "Exception occurred" + ",";
@@ -388,81 +393,83 @@ public class Keyword_CRM extends Driver {
 		String Test_OutPut = "", Status = "";
 		Result.fUpdateLog("------Address Creation Event Details------");
 		try {
+			String Exi = getdata("Account_No");
+			if (Exi.equals("")) {
+				// Browser.WebLink.waittillvisible("Acc_address");
+				CO.waitforload();
+				if (Browser.WebLink.exist("Acc_address"))
+					Result.fUpdateLog("Proceeding Consumer Address Creation");
+				else if (Browser.WebButton.exist("Address_Tab")) {
+					Result.fUpdateLog("Proceeding Enterprise Address Creation");
+				}
 
-			// Browser.WebLink.waittillvisible("Acc_address");
-			CO.waitforload();
-			if (Browser.WebLink.exist("Acc_address"))
-				Result.fUpdateLog("Proceeding Consumer Address Creation");
-			else if (Browser.WebButton.exist("Address_Tab")) {
-				Result.fUpdateLog("Proceeding Enterprise Address Creation");
-			}
+				Browser.WebButton.click("Add_Address");
 
-			Browser.WebButton.click("Add_Address");
+				int Row = 2, Col;
+				CO.scroll("Acc_Add_New", "WebButton");
+				Browser.WebButton.click("Acc_Add_New");
 
-			int Row = 2, Col;
-			CO.scroll("Acc_Add_New", "WebButton");
-			Browser.WebButton.click("Acc_Add_New");
+				String Add1 = null, Add2 = null;
+				Col = CO.Select_Cell("Address", "Address Line 1");
+				if (!(getdata("Add_AddressLine1").equals(""))) {
+					Add1 = getdata("Add_AddressLine1");
+				} else if (!(pulldata("Add_AddressLine1").equals(""))
+						&& !(pulldata("Add_AddressLine1").equalsIgnoreCase("Autogenerated"))) {
+					Add1 = pulldata("Add_AddressLine1");
+				} else if (pulldata("Add_AddressLine1").equalsIgnoreCase("Autogenerated")) {
+					Add1 = Utlities.randname();
+				}
+				CO.waitforload();
+				Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address", Add1);
+				Utlities.StoreValue("Address line1", Add1);
 
-			String Add1 = null, Add2 = null;
-			Col = CO.Select_Cell("Address", "Address Line 1");
-			if (!(getdata("Add_AddressLine1").equals(""))) {
-				Add1 = getdata("Add_AddressLine1");
-			} else if (!(pulldata("Add_AddressLine1").equals(""))
-					&& !(pulldata("Add_AddressLine1").equalsIgnoreCase("Autogenerated"))) {
-				Add1 = pulldata("Add_AddressLine1");
-			} else if (pulldata("Add_AddressLine1").equalsIgnoreCase("Autogenerated")) {
-				Add1 = Utlities.randname();
-			}
-			CO.waitforload();
-			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address", Add1);
-			Utlities.StoreValue("Address line1", Add1);
+				Col = CO.Select_Cell("Address", "Address Line 2");
+				if (!(getdata("Add_AddressLine2").equals(""))) {
+					Add2 = getdata("Add_AddressLine2");
+				} else if (!(pulldata("Add_AddressLine2").equals(""))
+						&& !(pulldata("Add_AddressLine2").equalsIgnoreCase("Autogenerated"))) {
+					Add2 = pulldata("Add_AddressLine2");
+				} else if (pulldata("Add_AddressLine2").equalsIgnoreCase("Autogenerated")) {
+					Add2 = Utlities.randname();
+				}
+				Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address_2", Add2);
+				Utlities.StoreValue("Address line2", Add2);
 
-			Col = CO.Select_Cell("Address", "Address Line 2");
-			if (!(getdata("Add_AddressLine2").equals(""))) {
-				Add2 = getdata("Add_AddressLine2");
-			} else if (!(pulldata("Add_AddressLine2").equals(""))
-					&& !(pulldata("Add_AddressLine2").equalsIgnoreCase("Autogenerated"))) {
-				Add2 = pulldata("Add_AddressLine2");
-			} else if (pulldata("Add_AddressLine2").equalsIgnoreCase("Autogenerated")) {
-				Add2 = Utlities.randname();
-			}
-			Browser.WebTable.SetDataE("Address", Row, Col, "Street_Address_2", Add2);
-			Utlities.StoreValue("Address line2", Add2);
+				Col = CO.Select_Cell("Address", "PO Box");
+				if (!(getdata("Add_POBox").equals(""))) {
+					Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_PO_Box", getdata("Add_POBox"));
+				} else {
+					Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_PO_Box", pulldata("Add_POBox"));
+				}
 
-			Col = CO.Select_Cell("Address", "PO Box");
-			if (!(getdata("Add_POBox").equals(""))) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_PO_Box", getdata("Add_POBox"));
-			} else {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_PO_Box", pulldata("Add_POBox"));
-			}
+				Col = CO.Select_Cell("Address", "Postal Code");
+				if (!(getdata("Add_Zip").equals(""))) {
+					Browser.WebTable.SetDataE("Address", Row, Col, "Postal_Code", getdata("Add_PostalCode"));
+				} else {
+					Browser.WebTable.SetDataE("Address", Row, Col, "Postal_Code", pulldata("Add_PostalCode"));
+				}
 
-			Col = CO.Select_Cell("Address", "Postal Code");
-			if (!(getdata("Add_Zip").equals(""))) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "Postal_Code", getdata("Add_PostalCode"));
-			} else {
-				Browser.WebTable.SetDataE("Address", Row, Col, "Postal_Code", pulldata("Add_PostalCode"));
-			}
+				Col = CO.Select_Cell("Address", "Kahramaa ID");
+				if (!(getdata("Add_Kahramaa_ID").equals(""))) {
+					Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
+				} else if (pulldata("Add_Kahramaa_ID").equalsIgnoreCase("Autogenerated")) {
+					Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", "1" + R.nextInt(10000000));
+				} else {
+					Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));
+				}
 
-			Col = CO.Select_Cell("Address", "Kahramaa ID");
-			if (!(getdata("Add_Kahramaa_ID").equals(""))) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", getdata("Add_Kahramaa_ID"));
-			} else if (pulldata("Add_Kahramaa_ID").equalsIgnoreCase("Autogenerated")) {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", "1" + R.nextInt(10000000));
-			} else {
-				Browser.WebTable.SetDataE("Address", Row, Col, "VFQA_Kahramaa_ID", pulldata("Add_Kahramaa_ID"));
-			}
+				CO.waitforload();
+				int Row_Count = Browser.WebTable.getRowCount("Address");
+				// Browser.WebLink.waittillvisible("Acc_Contacts");
+				CO.waitforload();
 
-			CO.waitforload();
-			int Row_Count = Browser.WebTable.getRowCount("Address");
-			// Browser.WebLink.waittillvisible("Acc_Contacts");
-			CO.waitforload();
-
-			if (Continue.get() && Row_Count > 1) {
-				Test_OutPut += Add1 + ",";
-				Status = "PASS";
-			} else {
-				Result.fUpdateLog("Create_A/c button not exist");
-				Status = "FAIL";
+				if (Continue.get() && Row_Count > 1) {
+					Test_OutPut += Add1 + ",";
+					Status = "PASS";
+				} else {
+					Result.fUpdateLog("Create_A/c button not exist");
+					Status = "FAIL";
+				}
 			}
 		} catch (Exception e) {
 			Status = "FAIL";
@@ -483,8 +490,15 @@ public class Keyword_CRM extends Driver {
 	public String BillingProfileCreation() {
 		String Test_OutPut = "", Status = "";
 		String Bill_No = null;
+		int Col_Nam, Row_va = 0;
 		Result.fUpdateLog("------Billing Profile Creation Event Details------");
 		try {
+			String Exi = getdata("Account_No");
+			if (!Exi.equals("")) {
+				CO.Account_Search(Exi);
+				Test_OutPut += "Account_No : " + Exi + ",";
+				CO.waitforload();
+			}
 			Browser.WebButton.exist("Profile_Tab");
 			CO.scroll("Profile_Tab", "WebButton");
 			Browser.WebButton.click("Profile_Tab");
@@ -492,67 +506,82 @@ public class Keyword_CRM extends Driver {
 			int Row = 2, Col_Val = 0, Row_Count;
 
 			String Payment_Type = null;
+			if (!(getdata("Bill_PayType").equals(""))) {
+				Payment_Type = getdata("Bill_PayType");
+			} else if (!(pulldata("Bill_PayType").equals(""))) {
+				Payment_Type = pulldata("Bill_PayType");
+			}
 
 			CO.waitforobj("Bill_Add", "WebButton");
 			Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
-			if (Row_Count < Row) {
-				CO.scroll("Bill_Add", "WebButton");
-				Browser.WebButton.click("Bill_Add");
-			}else if (pulldata("Bill_NewProfile").equals("Yes")) {
-				CO.scroll("Bill_Add", "WebButton");
-				Browser.WebButton.click("Bill_Add");
-			}
-			CO.waitforload();
-			
-			
-			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
-			if (!(getdata("Bill_PayType").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", getdata("Bill_PayType"));
-			} else if (!(pulldata("Bill_PayType").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", pulldata("Bill_PayType"));
-			}
-			
-			CO.waitforload();
-
-			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
-			if (!(getdata("Bill_PayMethod").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", getdata("Bill_PayMethod"));
-			} else if (!(pulldata("Bill_PayMethod").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", pulldata("Bill_PayMethod"));
+			if (Row_Count > Row) {
+				Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+				Col_Nam = CO.Select_Cell("Bill_Prof", "Name");
+				for (int i = 2; i <= Row_Count; i++) {
+					String LData = Browser.WebTable.getCellData_title("Bill_Prof", i, Col_Val);
+					if (Payment_Type.equalsIgnoreCase(LData)) {
+						Bill_No = Browser.WebTable.getCellData_title("Bill_Prof", i, Col_Nam);
+						break;
+					}
+					Row_va = i;
+				}
 			}
 
-			Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
-			Payment_Type = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
-			if (Payment_Type.equalsIgnoreCase("Postpaid")) {
-				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
-				if (!(getdata("Bill_Media").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
-				} else if (!(pulldata("Bill_Media").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
+			if (Row_Count <= Row || pulldata("Bill_NewProfile").equals("Yes") || Row_Count == Row_va) {
+				if (Payment_Type.equalsIgnoreCase("Prepaid") || pulldata("Bill_NewProfile").equals("Yes")
+						|| Row_Count == Row_va) {
+					CO.scroll("Bill_Add", "WebButton");
+					Browser.WebButton.click("Bill_Add");
+					CO.waitforload();
 				}
 
-				Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
-				if (!(getdata("Bill_Type").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
-				} else if (!(pulldata("Bill_Type").equals(""))) {
-					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
+				Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+				if (!(getdata("Bill_PayType").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", getdata("Bill_PayType"));
+				} else if (!(pulldata("Bill_PayType").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", pulldata("Bill_PayType"));
 				}
 
+				Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
+				if (!(getdata("Bill_PayMethod").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", getdata("Bill_PayMethod"));
+				} else if (!(pulldata("Bill_PayMethod").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", pulldata("Bill_PayMethod"));
+				}
+
+				if (Payment_Type.equalsIgnoreCase("Postpaid")) {
+					Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
+					if (!(getdata("Bill_Media").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
+					} else if (!(pulldata("Bill_Media").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
+					}
+
+					Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
+					if (!(getdata("Bill_Type").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
+					} else if (!(pulldata("Bill_Type").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
+					}
+
+				}
+
+				Col_Val = CO.Select_Cell("Bill_Prof", "Language");
+				if (!(getdata("Bill_Lang").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
+				} else if (!(pulldata("Bill_Lang").equals(""))) {
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", pulldata("Bill_Lang"));
+				}
+
+				int Col_v;
+				Col_v = CO.Actual_Cell("Bill_Prof", "Name");
+				Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_v);
 			}
 
-			Col_Val = CO.Select_Cell("Bill_Prof", "Language");
-			if (!(getdata("Bill_Lang").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
-			} else if (!(pulldata("Bill_Lang").equals(""))) {
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", pulldata("Bill_Lang"));
-			}
-
-			Col_Val = CO.Select_Cell("Bill_Prof", "Name");
-			Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Val);
 			Billprofile_No = Bill_No;
 			Utlities.StoreValue("Billing_NO", Bill_No);
 			Test_OutPut += "Billing_NO : " + Bill_No + ",";
-			
+
 			Browser.WebButton.waittillvisible("Orders_Tab");
 
 			CO.ToWait();
@@ -609,18 +638,18 @@ public class Keyword_CRM extends Driver {
 			OD_Date = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
 			String[] Date = OD_Date.split(" ")[0].split("/");
 			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
-			
+
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
 			CO.waitforload();
 			Browser.WebLink.click("Line_Items");
 			CO.waitforload();
 			System.out.println(Billprofile_No);
-			if(Billprofile_No!=null) {
+			if (Billprofile_No != null) {
 				CO.Webtable_Value("Billing Profile", Billprofile_No);
 			}
 
 			Browser.WebButton.waittillvisible("LI_New");
-			
+
 			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
@@ -660,7 +689,7 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
 
-			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S,Col_pri,Col_cat;
+			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S, Col_pri, Col_cat;
 			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StarNumber = null, SIM,
 					MSISDN = null, SData = "SIM Card";
 			CO.waitforload();
@@ -698,7 +727,7 @@ public class Keyword_CRM extends Driver {
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
 
 			Col_S = CO.Select_Cell("Line_Items", "Service Id");
-			
+
 			// To select the Mobile Bundle
 			Col_V = Col + 2;
 
@@ -801,10 +830,10 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
-				if (StarNumber!=null) {
+				if (StarNumber != null) {
 					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
 				}
-				
+
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");
 				CO.waitmoreforload();
@@ -883,7 +912,7 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.waittillvisible("Expand");
 					Browser.WebButton.click("Expand");
 				}
-				Col_S=CO.Actual_Cell("Line_Items", "Service Id");
+				Col_S = CO.Actual_Cell("Line_Items", "Service Id");
 				for (int i = 2; i <= Row_Count; i++) {
 					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 					if (GetData.equalsIgnoreCase(LData))
@@ -1270,18 +1299,18 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.click("Add_Address");
 
 				// Search for Specific Address
-				CO.waitforobj("Add_Go", "WebButton");
-				CO.scroll("Add_Go", "WebButton");
+				CO.waitforobj("Popup_Go", "WebButton");
+				CO.scroll("Popup_Go", "WebButton");
 
 				if (Address.contains("Kar#")) {
-					Browser.ListBox.select("Add_List", "Kahramaa ID");
-					Browser.WebEdit.Set("Add_Search", Address.split("#")[1]);
+					Browser.ListBox.select("PopupQuery_List", "Kahramaa ID");
+					Browser.WebEdit.Set("PopupQuery_Search", Address.split("#")[1]);
 				} else {
-					Browser.ListBox.select("Add_List", "Address Line 1");
-					Browser.WebEdit.Set("Add_Search", Address);
+					Browser.ListBox.select("PopupQuery_List", "Address Line 1");
+					Browser.WebEdit.Set("PopupQuery_Search", Address);
 				}
 
-				Browser.WebButton.click("Add_Go");
+				Browser.WebButton.click("Popup_Go");
 
 				CO.scroll("Add_OK", "WebButton");
 				Browser.WebButton.click("Add_OK");
@@ -1622,8 +1651,6 @@ public class Keyword_CRM extends Driver {
 
 			CO.scroll("Due_Date_chicklet", "WebButton");
 			Browser.WebButton.click("Due_Date_chicklet");
-			Browser.WebButton.click("Date_Now");
-			Browser.WebButton.click("Date_Done");
 			CO.waitforload();
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
 				Continue.set(false);
@@ -1727,8 +1754,6 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.scroll("Due_Date_chicklet", "WebButton");
 			Browser.WebButton.click("Due_Date_chicklet");
-			Browser.WebButton.click("Date_Now");
-			Browser.WebButton.click("Date_Done");
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
 				Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
@@ -1846,8 +1871,8 @@ public class Keyword_CRM extends Driver {
 
 			}
 			CO.waitmoreforload();
-			Browser.WebEdit.Set("Promotion_Upgrade", New_PlanName);
-			String Path[] = Utlities.FindObject("Promotion_Upgrade", "WebEdit");
+			Browser.WebEdit.Set("PopupQuery_Search", New_PlanName);
+			String Path[] = Utlities.FindObject("PopupQuery_Search", "WebEdit");
 			cDriver.get().findElement(By.xpath(Path[0])).sendKeys(Keys.ENTER);
 			CO.waitforload();
 
@@ -2079,8 +2104,6 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.scroll("Due_Date_chicklet", "WebButton");
 			Browser.WebButton.click("Due_Date_chicklet");
-			Browser.WebButton.click("Date_Now");
-			Browser.WebButton.click("Date_Done");
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
 				Continue.set(false);
 			CO.scroll("Date_Continue", "WebButton");
