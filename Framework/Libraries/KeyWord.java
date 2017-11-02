@@ -12,20 +12,16 @@ public class KeyWord {
 		return KC.Siebel_Login();
 	}
 
+	public String Siebel_Logout() {
+		return KC.Siebel_Logout();
+	}
+	
 	public String ContactCreation() {
 		return KC.ContactCreation();
 	}
 
 	public String AccountCreation() {
 		return KC.AccountCreation();
-	}
-
-	public String Entp_AccountCreation() {
-		return KC.Entp_AccountCreation();
-	}
-
-	public String Entp_ContactCreation() {
-		return KC.Entp_ContactCreation();
 	}
 
 	public String BillingProfileCreation() {
@@ -44,10 +40,14 @@ public class KeyWord {
 		return KC.OrderSubmission();
 	}
 
-	public String Siebel_Logout() {
-		return KC.Siebel_Logout();
+	public String Entp_AccountCreation() {
+		return KC.Entp_AccountCreation();
 	}
 
+	public String Entp_ContactCreation() {
+		return KC.Entp_ContactCreation();
+	}
+	
 	public String Modify() {
 		return KC.Modify();
 	}
@@ -59,23 +59,35 @@ public class KeyWord {
 	public String Resume() {
 		return KC.Resume();
 	}
-
+	
 	public String Plan_UpgradeDowngrade() {
 		return KC.Plan_UpgradeDowngrade();
 	}
-
+	
 	public String Change_PrimaryNumber() {
 		return KC.Change_PrimaryNumber();
 	}
-
+	
 	public String Disconnect() {
 		return KC.Disconnect();
 	}
-
-	public String SIMSwap() {
-		return KC.SIMSwap();
+	
+	public String UnBarring() {
+		return KC.UnBarring();
 	}
 
+	public String Barring() {
+		return KC.Barring();
+	}
+	
+	public String SIMSwap() {
+		return KC.SIMSwap();
+	}	
+	
+	public String Change_MSISDN() {
+		return KC.Change_MSISDN();
+	}
+	
 	// ------------------Keyword CRM -------------------//
 
 	// ---------------------Keyword API------------------------//

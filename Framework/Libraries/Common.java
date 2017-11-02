@@ -431,30 +431,29 @@ public class Common extends Driver {
 
 	public void Account_Search(String AccountNo) {
 		try {
-			int Row, Col;
+			int Row;
 			Browser.WebLink.click("VQ_Account");
 			Link_Select("All Accounts");
 			waitforload();
 			Browser.WebButton.click("Account_Query");
-			Col = Select_Cell("Account", "Account #");
-			Row = Browser.WebTable.getRowCount("Account");
-			if (Row == 2)
-				Browser.WebTable.SetData("Account", 2, Col, "Account_Number", AccountNo);
-			else
-				Continue.set(false);
+			Webtable_Value("Account #", AccountNo);
+			/*
+			 * Col = Select_Cell("Account", "Account #"); Row =
+			 * Browser.WebTable.getRowCount("Account"); if (Row == 2)
+			 * Browser.WebTable.SetData("Account", 2, Col, "Account_Number", AccountNo);
+			 * else Continue.set(false);
+			 */
+			Browser.WebButton.click("Account_Go");
 			waitforload();
 			Row = Browser.WebTable.getRowCount("Account");
-			if (Row >= 2) {
-				int ColN = Select_Cell("Account", "Name");
-				for (int row = 2; row <= Row; row++)
-					Browser.WebTable.clickL("Account", row, ColN);
+			if (Row == 2) {
+				Browser.WebButton.click("Account360");
 				waitforload();
+				Browser.WebLink.waittillvisible("Acc_Portal");
+				waitforload();
+				Browser.WebLink.click("Acc_Portal");
 			} else
 				Continue.set(false);
-
-			Browser.WebLink.waittillvisible("Acc_Portal");
-			waitforload();
-			Browser.WebLink.click("Acc_Portal");
 
 		} catch (Exception e) {
 		}
@@ -1164,19 +1163,73 @@ public class Common extends Driver {
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 	}
 
-	public void Popup(String objname, int rownum, int columnnum) {
-		String[] objprop = Utlities.FindObject(objname, "WebTable");
-		String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
-		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		cDriver.get().findElement(By.xpath(cellXpathX)).click();
-		String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//span";
-		WebElement scr2 = cDriver.get().findElement(By.xpath(cellXpath));
-		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr2);
-		cDriver.get().findElement(By.xpath(cellXpath)).click();
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: PopupHeader
+	 * Use 					: To get a Particular Column Value with the Column Name
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 31-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public int PopupHeader(String objname, String objTyp) {
+		int Col = 1;
+		String Expected = objTyp;
+		String[] obj = objTyp.split("_");
+		if (obj.length > 1)
+			Expected = objTyp.replace('_', ' ');
+		int Col_Count = Browser.WebTable.getColCount(objname);
+		for (int i = 1; i < Col_Count; i++) {
+			Col = i;
+			String cellXpath = "//div[@class='AppletStylePopup']//table[@class='ui-jqgrid-htable']//th[" + i + "]";
+			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+			String celldata = cDriver.get().findElements(By.xpath(cellXpath)).get(0).getText();
+			if (celldata.equalsIgnoreCase(Expected))
+				break;
+		}
+		return Col;
+	}
+	
+	
+	public void Popup(String objname, int rownum, int columnnum, String Variable, String val) {
+		try {
+			String[] objprop = Utlities.FindObject(objname, "WebTable");
+			String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
+			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+			cDriver.get().findElement(By.xpath(cellXpathX)).click();
+			String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//span";
+			cDriver.get().findElement(By.xpath(cellXpath)).click();
+			Browser.ListBox.select("PopupQuery_List", Variable);
+			waitforload();
+			Browser.WebEdit.Set("PopupQuery_Search", val);
+			waitforload();
+			Browser.WebButton.click("Popup_Go");
+			waitforload();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
+	public void Popup_Selection(String objname, String Name, String MSISDN) {
+		try {
+			waitforload();
+			int Row_Count = Browser.WebTable.getRowCount(objname);
+			int Col=PopupHeader(objname, Name);
+			Browser.WebButton.click("PopupQuery");
+			waitforload();
+			if ((Row_Count > 1) &  (Browser.WebTable.getRowCount(objname)==2)) {
+				Browser.WebTable.SetData(objname, 2, Col, Name,MSISDN);
+				Row_Count=Browser.WebTable.getRowCount(objname);
+				if(Row_Count>1)
+					Browser.WebButton.click("Popup_OK");
+				else
+					Driver.Continue.set(false);
+			}else
+				Driver.Continue.set(false);
+		}
+		catch(Exception e) {}
+	}
+	
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: NumberRangeProducts
 	 * Use 					: To Add a Specific No of Item and customising From and To Range with Token if applicable
@@ -1187,7 +1240,7 @@ public class Common extends Driver {
 
 	public void NumberRangeProducts(String Option, String Qantity, String From, String To, String Token) {
 		try {
-			int Operation_Done;
+			int Operation_Done;String CCODE="974";
 			Link_Select("Number Range Products");
 			ToWait();
 			Operation_Done = 0;
@@ -1212,6 +1265,7 @@ public class Common extends Driver {
 					input_Search.get(i).sendKeys(Qantity);
 					button_Search.get(i).click();
 					ToWait();
+					Result.takescreenshot(Option + " with " +Qantity+" Qantity is added");
 					Link_Select(Option);
 					ToWait();
 					Operation_Done = 1;
@@ -1233,17 +1287,104 @@ public class Common extends Driver {
 							Field_Input.get(Index));
 					ToWait();
 					if (Field_Name.get(Index).getText().contains("From"))
-						Field_Input.get(Index).sendKeys(From);
+						Field_Input.get(Index).sendKeys(CCODE+From);
 					if (Field_Name.get(Index).getText().contains("To"))
-						Field_Input.get(Index).sendKeys(To);
+						Field_Input.get(Index).sendKeys(CCODE+To);
 					if (Field_Name.get(Index).getText().contains("Reservation Token"))
 						Field_Input.get(Index).sendKeys(Token);
+					Result.takescreenshot("Providing From and To Values "+From+ " "+ To );
 				}
 			} else
 				Continue.set(false);
 		} catch (Exception e) {
 		}
 	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: TabNavigator
+	 * Use 					: To click on the tab
+	 * args					: Option, Quantity ,From , To , Token
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 11-October-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void TabNavigator(String value) {
+		cDriver.get().manage().timeouts().implicitlyWait(45, TimeUnit.SECONDS);
+		Boolean finder = false;
+		try {
+			Thread.sleep(2);
+			List<WebElement> options1 = (List<WebElement>) cDriver.get()
+					.findElements(By.xpath("//div[@class='siebui-nav-tab siebui-subview-navs']/div/ul/li/a"));
+
+			for (WebElement option1 : options1) {
+				if ((option1.getText().equalsIgnoreCase(value))) {
+					option1.click();
+					finder = true;
+					break;
+				}
+			}
+
+			if (finder == false) {
+				List<WebElement> options = cDriver.get()
+						.findElements(By.xpath("//div[@class='siebui-nav-tab siebui-subview-navs']//option"));
+				for (WebElement option : options) {
+					if ((option.getText().equalsIgnoreCase(value))) {
+						option.click();
+						break;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Plan_selection(String GetData, String MSISDN) {
+		int Col, Col_S, Row_Count;
+		String msd = null, LData;
+		Col = Actual_Cell("Acc_Installed_Assert", "Product");
+		Col_S = Actual_Cell("Acc_Installed_Assert", "Service ID");
+		Row_Count = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+		for (int i = 2; i <= Row_Count; i++) {
+			LData = Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col);
+			msd = Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_S);
+			if ((LData.equalsIgnoreCase(GetData)) && (MSISDN.equalsIgnoreCase(msd))) {
+				if ((i % 2) == 0) {
+					Browser.WebTable.click("Acc_Installed_Assert", (i + 1), Col_S);
+					InstalledAssertChange("Upgrade Promotion");
+					waitforload();
+					break;
+				} else {
+					Browser.WebTable.click("Acc_Installed_Assert", (i - 1), Col_S);
+					InstalledAssertChange("Upgrade Promotion");
+					waitforload();
+					break;
+				}
+			}
+
+		}
+
+	}
+	// Plan_selection using existing plane name
+
+	/*
+	 * public void Plan_selection(String GetData, String MSISDN, String
+	 * Existing_Plan) { int Col, Row_Count; String msd = null; Col =
+	 * Actual_Cell("Acc_Installed_Assert", "Product"); Row_Count =
+	 * Browser.WebTable.getRowCount("Acc_Installed_Assert"); for (int i = 1; i <=
+	 * Row_Count; i++) { String LData =
+	 * Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col); if
+	 * (LData.equalsIgnoreCase(Existing_Plan)) { int Col_S =
+	 * Actual_Cell("Acc_Installed_Assert", "Service ID"); for (int j = i - 1; j <=
+	 * (i + 1); j = j + 2) { LData =
+	 * Browser.WebTable.getCellData("Acc_Installed_Assert", j, Col); msd =
+	 * Browser.WebTable.getCellData("Acc_Installed_Assert", j, Col_S); if
+	 * ((LData.equalsIgnoreCase(GetData)) && (MSISDN.equalsIgnoreCase(msd))) {
+	 * Browser.WebTable.click("Acc_Installed_Assert", i, (Col + 1));
+	 * InstalledAssertChange("Upgrade Promotion"); waitforload(); break; } } } if
+	 * ((LData.equalsIgnoreCase(GetData)) && (MSISDN.equalsIgnoreCase(msd))) {
+	 * break; } } }
+	 */
 
 	public static void main(String[] args) {
 

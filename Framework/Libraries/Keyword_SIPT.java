@@ -10,15 +10,21 @@ public class Keyword_SIPT extends Driver {
 	Common CO = new Common();
 	Random R = new Random();
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: PopupHeader
+	 * Use 					: To get a Particular Column Value with the Column Name
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 01-Oct-2017
+	--------------------------------------------------------------------------------------------------------*/
 	public String SIPT() {
 		String Test_OutPut = "", Status = "";
 		String PlanName = null;
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
 
-			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S;
-			String Category, GetData, COSP_Plan, ReservationToken, Qty, To, MSISDN,Default_Plan_Tab,Default_Addon, // ,Reserve
-					From = null;
+			int Row_Val = 3, Col_V, Col_S;
+			String GetData, COSP_Plan, ReservationToken, Qty, To, MSISDN, Default_Plan_Tab, Default_Addon, // ,Reserve
+					From, PData = "Pilot Number", CCODE = "974";
 			GetData = "Corporate SIP Trunk Bundle";
 			CO.waitforload();
 
@@ -36,10 +42,12 @@ public class Keyword_SIPT extends Driver {
 			 */
 			// ------------------------------------------------------------
 			CO.scroll("LI_New", "WebButton");
-			Result.takescreenshot("SIPT Plan Selection "+ PlanName);
+			Result.takescreenshot("SIPT Plan Selection " + PlanName);
 			Browser.WebButton.click("LI_New");
+			CO.waitforload();
 			int Row = 2, Col;
 			Col = CO.Select_Cell("Line_Items", "Product");
+			CO.waitforload();
 			Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
 			Browser.WebTable.click("Line_Items", Row, Col + 1);
 			CO.waitforload();
@@ -88,30 +96,33 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			
+
 			if (!(getdata("Default_Plan_Tab").equals(""))) {
 				Default_Plan_Tab = getdata("Default_Plan_Tab");
 			} else {
 				Default_Plan_Tab = pulldata("Default_Plan_Tab");
 			}
-			
+
 			if (!(getdata("Default_Addon").equals(""))) {
 				Default_Addon = getdata("Default_Addon");
 			} else {
 				Default_Addon = pulldata("Default_Addon");
 			}
-			
+
 			if (!(getdata("Qty").equals(""))) {
 				Qty = getdata("Qty");
 			} else {
 				Qty = pulldata("Qty");
 			}
-			
-			CO.Text_Select("span","Customize");
+
+			CO.Text_Select("span", "Customize");
 			Result.takescreenshot("SIPT Number Resered");
-			//Default_Plan_Tab  Default_Addon
+			// Default_Plan_Tab Default_Addon
 			View_Selection(Default_Plan_Tab, Default_Addon);
-			CO.AddOnSelection("COSP Plans," + COSP_Plan, "Add");
+			CO.Link_Select("COSP Plans");
+			CO.waitforload();
+			CO.Radio_Select(COSP_Plan);
+			Result.takescreenshot(COSP_Plan + "is selected from COSP Plans");
 			CO.waitforload();
 			CO.ToWait();
 			CO.NumberRangeProducts("DID Number Range", Qty, From, To, ReservationToken);
@@ -122,84 +133,82 @@ public class Keyword_SIPT extends Driver {
 			CO.Text_Select("button", "Done");
 			CO.waitforload();
 			if (CO.isAlertExist())
-				Driver.Continue.set(false);
-
-			if (ReservationToken.equals("")) {
-				CO.scroll("Numbers", "WebLink");
-				Browser.WebLink.click("Numbers");
-				CO.waitforload();
-				Row_Count = Browser.WebTable.getRowCount("Numbers");
-				if (Row_Count == 1)
-					Browser.WebButton.click("Number_Query");
-				Browser.WebLink.click("Num_Manage");
-				CO.waitforload();
-				Browser.WebButton.waitTillEnabled("Reserve");
-				Browser.WebButton.waittillvisible("Reserve");
-				COl_STyp = CO.Select_Cell("Numbers", "Service Type");
-				Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
-				Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", "SIPT");
-
-				if (!MSISDN.equals("")) {
-					// Reserve = MSISDN.substring(3, MSISDN.length());
-					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", MSISDN);
-					Result.takescreenshot("SIPT Number Reservation "+MSISDN);
-					CO.waitmoreforload();
-				} else {
-					Browser.WebButton.click("Number_Go");
-					CO.waitmoreforload();
+				Continue.set(false);
+			
+			
+			if (Continue.get()) {
+				if (ReservationToken.equals("")) {
+					
+					 CO.scroll("Numbers", "WebLink"); 
+					 Browser.WebLink.click("Numbers");
+					 Number_Reservation("SIPT",MSISDN); 
+					 Number_Reservation("SIPT",From);
+					 Number_Reservation("SIPT",To);
+					 
+					CO.Link_Select("Line Items");
 					CO.waitforload();
-					Browser.WebTable.click("Numbers", (Row + 1), Col);
-					MSISDN = Browser.WebTable.getCellData("Numbers", (Row + 1), Col_Res);
-					Result.takescreenshot("SIPT Number Rervation "+MSISDN);
-				}
 
-				Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
-				Result.fUpdateLog("Category " + Category);
-				Browser.WebButton.click("Reserve");
-				CO.waitmoreforload();
-				if (CO.isAlertExist()) {
-					Result.takescreenshot("SIPT Number Resered");
-					Result.fUpdateLog("Alert Handled");
-				}
-				
-				CO.Link_Select("Line Items");
-				Col_S = CO.Select_Cell("Line_Items", "Service Id");
-				for (int i = 2; i <= Row_Count; i++) {
-					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-					if (GetData.equals(LData)) {
-						Row_Val = i;
+					if (Row_Count <= 3) {
+						Browser.WebButton.waittillvisible("Expand");
+						Browser.WebButton.click("Expand");
 					}
-				}
-				CO.waitforload();
-				CO.waitforload();
-				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
-				CO.waitforload();
-				Browser.WebButton.waittillvisible("Reserved_Ok");
-				Browser.WebButton.waitTillEnabled("Reserved_Ok");
-				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
-				if (Row_Count > 1) {
-					Result.takescreenshot("SIPT Number Selection "+MSISDN);
-					Browser.WebButton.click("Reserved_Ok");
+					CO.waitforload();
+					CO.waitforload();
+					Col_S = CO.Select_Cell("Line_Items", "Service Id");
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+						if (GetData.equals(LData)) {
+							Row_Val = i;
+						}
+					}
+					Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
+					CO.waitforload();
+					CO.Popup_Selection("Number_Selection", "Number", MSISDN);
+					//Number_Selection(CCODE + MSISDN);
+					CO.ToWait();
+					CO.waitforload();
+					CO.ToWait();
 					Row_Count = Browser.WebTable.getRowCount("Line_Items");
-				} else
-					Driver.Continue.set(false);
-			} else if (!ReservationToken.equals("")) {
-				Row_Count = Browser.WebTable.getRowCount("Line_Items");
-				if (Row_Count <= 3) {
-					Browser.WebButton.waittillvisible("Expand");
-					Browser.WebButton.click("Expand");
-				}
 
-				for (int i = 2; i <= Row_Count; i++) {
-					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-					if (GetData.equals(LData))
-						Row_Val = i;
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+						if (PData.equals(LData)) {
+							Row_Val = i;
+						}
+					}
+
+					Col_S = CO.Select_Cell("Line_Items", "Service Id");
+					CO.Popup_Selection("Number_Selection", "Number", MSISDN);
+					//Number_Selection(CCODE+MSISDN);
+					
+
+				} else if (!ReservationToken.equals("")) {
+					Row_Count = Browser.WebTable.getRowCount("Line_Items");
+					if (Row_Count <= 3) {
+						Browser.WebButton.waittillvisible("Expand");
+						Browser.WebButton.click("Expand");
+					}
+
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+						if (GetData.equals(LData))
+							Row_Val = i;
+					}
+					Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+					Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", CCODE + MSISDN);
+
+					// To Provide Pilot Number
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+						if (PData.equals(LData)) {
+							Row_Val = i;
+						}
+					}
+					Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+					Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", CCODE + MSISDN);
 				}
-				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
-				Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", MSISDN);
 			}
-
-			if (Driver.Continue.get() & (Row_Count >= 3)) {
+			if (Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
 				Test_OutPut += "PlanName : " + PlanName + ",";
@@ -230,22 +239,90 @@ public class Keyword_SIPT extends Driver {
 		Result.fUpdateLog("------SIPT Plan Selection Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: View_Selection
 	 * Use 					: To view a spectific Radio Button or check box
-	 * Designed By			: Vinodhini
+	 * Designed By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 12-October-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void View_Selection(String Tab,String Text) {
+	public void View_Selection(String Tab, String Text) {
 		CO.Link_Select(Tab);
 		CO.ToWait();
+		CO.waitforload();
 		String cellXpath = "//input[@value='" + Text + "']";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-		if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed()) {
-			Result.takescreenshot("-----------------------Default Addon View---------------------");
-		} else
+		if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed())
+			Result.takescreenshot("-----------------------Default Addon View-----------------------");
+		else
 			Continue.set(false);
-	} 
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Number_Reservation
+	 * Use 					: To Reserve a Number
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 12-October-2017
+	--------------------------------------------------------------------------------------------------------*/
+
+	public void Number_Reservation(String SType, String MSISDN) {
+		try {
+			String Category;
+
+			CO.waitforload();
+			int Row = 2, COl_STyp, Col_Res, Row_Count = Browser.WebTable.getRowCount("Numbers");
+			if (Row_Count == 1)
+				Browser.WebButton.click("Number_Query");
+			Browser.WebLink.click("Num_Manage");
+			CO.waitforload();
+			Browser.WebButton.waitTillEnabled("Reserve");
+			Browser.WebButton.waittillvisible("Reserve");
+			COl_STyp = CO.Select_Cell("Numbers", "Service Type");
+			Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
+			Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", SType);
+			Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", MSISDN);
+			Result.takescreenshot("SIPT Number Reservation " + MSISDN);
+			CO.waitmoreforload();
+			Category = Browser.WebTable.getCellData("Numbers", Row, COl_STyp + 1);
+			Result.fUpdateLog("Category " + Category);
+			Browser.WebButton.click("Reserve");
+			CO.waitmoreforload();
+			if (CO.isAlertExist()) {
+				Result.takescreenshot("SIPT Number Resered");
+				Result.fUpdateLog("Alert Handled");
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Number_Selection
+	 * Use 					: To Select a specific Number from Number Popup
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 29-October-2017
+	--------------------------------------------------------------------------------------------------------
+
+	public void Number_Selection(String MSISDN) {
+		try {
+			Browser.WebButton.waittillvisible("Reserved_Ok");
+			Browser.WebButton.waitTillEnabled("Reserved_Ok");
+			CO.waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Number_Selection");
+			int Col = CO.PopupHeader("Number_Selection", "Number");
+			if (Row_Count > 1) {
+				for (int R = 2; R <= Row_Count; R++)
+					if ((Browser.WebTable.getCellData("Number_Selection", R, Col)).equals(MSISDN)) {
+						Browser.WebTable.click("Number_Selection", R, Col + 1);
+						Result.takescreenshot("Number Selection " + MSISDN);
+						Browser.WebButton.click("Reserved_Ok");
+						break;
+					}
+			} else
+				Continue.set(false);
+		} catch (Exception e) {
+		}
+	}*/
+
+	
 }

@@ -23,7 +23,7 @@ public class Keyword_FixedLine extends Driver {
 			if (Browser.WebButton.exist("LI_New"))
 				System.out.println("Proceeding Plan Selection");
 			else {
-				Driver.Continue.set(true);
+				Continue.set(true);
 				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
 			}
 			CO.waitforload();
@@ -150,7 +150,10 @@ public class Keyword_FixedLine extends Driver {
 				}
 			}
 			CO.waitforload();
-			CO.Popup("Line_Items", Row_Val, Con_No);
+			Browser.WebTable.Popup("Line_Items", Row_Val, Con_No);
+			CO.waitforload();
+			CO.Popup_Selection("Number_Selection", "Number", MSISDN);
+			
 			CO.Title_Select("button", "Pick Contact:OK");
 
 			Browser.WebButton.click("Activ_New");
@@ -160,7 +163,7 @@ public class Keyword_FixedLine extends Driver {
 
 			CO.Action_Update("Add", "MSISDN");
 
-			if (Driver.Continue.get()) {
+			if (Continue.get()) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
 				Test_OutPut += "PlanName : " + PlanName + ",";
@@ -206,7 +209,7 @@ public class Keyword_FixedLine extends Driver {
 			if (Browser.WebButton.exist("LI_New"))
 				System.out.println("Proceeding Plan Selection");
 			else {
-				Driver.Continue.set(true);
+				Continue.set(true);
 				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
 			}
 			CO.waitforload();
@@ -280,7 +283,7 @@ public class Keyword_FixedLine extends Driver {
 			CO.waitforload();
 			CO.Text_Select("button", "Done");
 			if (CO.isAlertExist()) {
-				Driver.Continue.set(false);
+				Continue.set(false);
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
