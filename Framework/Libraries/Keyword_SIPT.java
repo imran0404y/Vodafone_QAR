@@ -78,12 +78,14 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				From = pulldata("From");
 			}
+			From = From.substring(3, From.length());
 
 			if (!(getdata("To").equals(""))) {
 				To = getdata("To");
 			} else {
 				To = pulldata("To");
 			}
+			To = To.substring(3, To.length());
 
 			if (!(getdata("ReservationToken").equals(""))) {
 				ReservationToken = getdata("ReservationToken");
@@ -96,7 +98,8 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-
+			MSISDN = MSISDN.substring(3, MSISDN.length());
+			
 			if (!(getdata("Default_Plan_Tab").equals(""))) {
 				Default_Plan_Tab = getdata("Default_Plan_Tab");
 			} else {
@@ -267,7 +270,6 @@ public class Keyword_SIPT extends Driver {
 	public void Number_Reservation(String SType, String MSISDN) {
 		try {
 			String Category;
-
 			CO.waitforload();
 			int Row = 2, COl_STyp, Col_Res, Row_Count = Browser.WebTable.getRowCount("Numbers");
 			if (Row_Count == 1)

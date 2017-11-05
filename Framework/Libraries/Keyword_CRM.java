@@ -845,6 +845,7 @@ public class Keyword_CRM extends Driver {
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
 				if (StarNumber != null) {
 					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
+					StarNumber = StarNumber.substring(2, StarNumber.length());
 				}
 
 				Result.fUpdateLog("Category " + Category);
@@ -2646,6 +2647,7 @@ public class Keyword_CRM extends Driver {
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
 				if (StarNumber != null) {
 					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
+					StarNumber = StarNumber.substring(2, StarNumber.length());
 				}
 				Result.fUpdateLog("Category " + Category);
 				Browser.WebButton.click("Reserve");

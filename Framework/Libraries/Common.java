@@ -1181,7 +1181,7 @@ public class Common extends Driver {
 			String cellXpath = "//div[@class='AppletStylePopup']//table[@class='ui-jqgrid-htable']//th[" + i + "]";
 			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-			String celldata = cDriver.get().findElements(By.xpath(cellXpath)).get(0).getText();
+			String celldata = cDriver.get().findElements(By.xpath(cellXpath)).get(0).getText().trim();
 			if (celldata.equalsIgnoreCase(Expected))
 				break;
 		}
