@@ -716,9 +716,12 @@ public class Common extends Driver {
 		try {
 			waitforload();
 			int Row = 2, Col;
-			if (Browser.WebButton.exist("VFQ_LeftScroll")) {
-				Browser.WebButton.click("VFQ_LeftScroll");
-			}
+			/*
+			 * if (Browser.WebButton.exist("VFQ_LeftScroll")) {
+			 * Browser.WebButton.click("VFQ_LeftScroll"); }
+			 */
+			Title_Select("a", "Home");
+			waitforload();
 			Browser.WebLink.waittillvisible("VQ_Assert");
 			Browser.WebLink.click("VQ_Assert");
 			scroll("Assert_Search", "WebLink");
@@ -755,8 +758,9 @@ public class Common extends Driver {
 				}
 			}
 			Text_Select("a", "Unbilled Usage");
-			waitforload();
-
+			// waitforload();
+			TabNavigator("Real Time Balance");
+			Tag_Select("div", "Real Time Balance");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1187,8 +1191,7 @@ public class Common extends Driver {
 		}
 		return Col;
 	}
-	
-	
+
 	public void Popup_Data(String objname, int rownum, int columnnum, String Variable, String val) {
 		try {
 			String[] objprop = Utlities.FindObject(objname, "WebTable");
@@ -1223,27 +1226,27 @@ public class Common extends Driver {
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 
 	}
-	
+
 	public void Popup_Selection(String objname, String Name, String MSISDN) {
 		try {
 			waitforload();
 			int Row_Count = Browser.WebTable.getRowCount(objname);
-			int Col=PopupHeader(objname, Name);
+			int Col = PopupHeader(objname, Name);
 			Browser.WebButton.click("PopupQuery");
 			waitforload();
-			if ((Row_Count > 1) &  (Browser.WebTable.getRowCount(objname)==2)) {
-				Browser.WebTable.SetData(objname, 2, Col, Name,MSISDN);
-				Row_Count=Browser.WebTable.getRowCount(objname);
-				if(Row_Count>1)
+			if ((Row_Count > 1) & (Browser.WebTable.getRowCount(objname) == 2)) {
+				Browser.WebTable.SetData(objname, 2, Col, Name, MSISDN);
+				Row_Count = Browser.WebTable.getRowCount(objname);
+				if (Row_Count > 1)
 					Browser.WebButton.click("Popup_OK");
 				else
 					Driver.Continue.set(false);
-			}else
+			} else
 				Driver.Continue.set(false);
+		} catch (Exception e) {
 		}
-		catch(Exception e) {}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: NumberRangeProducts
 	 * Use 					: To Add a Specific No of Item and customising From and To Range with Token if applicable
@@ -1254,7 +1257,8 @@ public class Common extends Driver {
 
 	public void NumberRangeProducts(String Option, String Qantity, String From, String To, String Token) {
 		try {
-			int Operation_Done;String CCODE="974";
+			int Operation_Done;
+			String CCODE = "974";
 			Link_Select("Number Range Products");
 			ToWait();
 			Operation_Done = 0;
@@ -1279,7 +1283,7 @@ public class Common extends Driver {
 					input_Search.get(i).sendKeys(Qantity);
 					button_Search.get(i).click();
 					ToWait();
-					Result.takescreenshot(Option + " with " +Qantity+" Qantity is added");
+					Result.takescreenshot(Option + " with " + Qantity + " Qantity is added");
 					Link_Select(Option);
 					ToWait();
 					Operation_Done = 1;
@@ -1301,12 +1305,12 @@ public class Common extends Driver {
 							Field_Input.get(Index));
 					ToWait();
 					if (Field_Name.get(Index).getText().contains("From"))
-						Field_Input.get(Index).sendKeys(CCODE+From);
+						Field_Input.get(Index).sendKeys(CCODE + From);
 					if (Field_Name.get(Index).getText().contains("To"))
-						Field_Input.get(Index).sendKeys(CCODE+To);
+						Field_Input.get(Index).sendKeys(CCODE + To);
 					if (Field_Name.get(Index).getText().contains("Reservation Token"))
 						Field_Input.get(Index).sendKeys(Token);
-					Result.takescreenshot("Providing From and To Values "+From+ " "+ To );
+					Result.takescreenshot("Providing From and To Values " + From + " " + To);
 				}
 			} else
 				Continue.set(false);

@@ -15,7 +15,7 @@ public class KeyWord {
 	public String Siebel_Logout() {
 		return KC.Siebel_Logout();
 	}
-	
+
 	public String ContactCreation() {
 		return KC.ContactCreation();
 	}
@@ -47,7 +47,7 @@ public class KeyWord {
 	public String Entp_ContactCreation() {
 		return KC.Entp_ContactCreation();
 	}
-	
+
 	public String Modify() {
 		return KC.Modify();
 	}
@@ -59,19 +59,19 @@ public class KeyWord {
 	public String Resume() {
 		return KC.Resume();
 	}
-	
+
 	public String Plan_UpgradeDowngrade() {
 		return KC.Plan_UpgradeDowngrade();
 	}
-	
+
 	public String Change_PrimaryNumber() {
 		return KC.Change_PrimaryNumber();
 	}
-	
+
 	public String Disconnect() {
 		return KC.Disconnect();
 	}
-	
+
 	public String UnBarring() {
 		return KC.UnBarring();
 	}
@@ -79,15 +79,27 @@ public class KeyWord {
 	public String Barring() {
 		return KC.Barring();
 	}
-	
+
 	public String SIMSwap() {
 		return KC.SIMSwap();
-	}	
-	
+	}
+
 	public String Change_MSISDN() {
 		return KC.Change_MSISDN();
 	}
-	
+
+	public String Consumer_Migration() {
+		return KC.Consumer_Migration();
+	}
+
+	public String Enterprise_Migration() {
+		return KC.Enterprise_Migration();
+	}
+
+	public String RealTimeBalance_Screen() {
+		return KC.RealTimeBalance_Screen();
+	}
+
 	// ------------------Keyword CRM -------------------//
 
 	// ---------------------Keyword API------------------------//
@@ -102,6 +114,14 @@ public class KeyWord {
 
 	// ---------------------Keyword API------------------------//
 
+	// ---------------------Keyword Validation------------------------//
+
+	public String RTB_Validation() {
+		return KV.RTB_Validation();
+	}
+
+	// ---------------------Keyword Validation------------------------//
+
 	// ---------------------Keyword SIPT------------------------//
 
 	public String SIPT() {
@@ -110,11 +130,4 @@ public class KeyWord {
 
 	// ---------------------Keyword SIPT------------------------//
 
-	// ---------------------Keyword Validation------------------------//
-
-	public String RTB_Validation() {
-		return KV.RTB_Validation();
-	}
-
-	// ---------------------Keyword Validation------------------------//
 }

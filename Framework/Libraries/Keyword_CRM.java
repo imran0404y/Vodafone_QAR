@@ -3017,6 +3017,27 @@ public class Keyword_CRM extends Driver {
 		}
 		Result.fUpdateLog("------Enterprise_Migration Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
+	}
 
+	public String RealTimeBalance_Screen() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN;
+		Result.fUpdateLog("------RealTimeBalance_Screen Event Details------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+			CO.RTBScreen(MSISDN, "Active", Billprofile_No);
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------RealTimeBalance_Screen Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 }
