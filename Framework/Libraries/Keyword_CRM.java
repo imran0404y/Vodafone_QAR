@@ -910,19 +910,18 @@ public class Keyword_CRM extends Driver {
 				}
 				CO.waitforload();
 				CO.waitforload();
-				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
+				CO.Popup_Click("Line_Items", Row_Val, Col_S);
 				CO.waitforload();
 				Reserve = MSISDN.substring(3, MSISDN.length());
 				CO.Popup_Selection("Number_Selection", "Number", Reserve);
-				CO.waitforload();
-				
-				Browser.WebButton.waittillvisible("Reserved_Ok");
-				Browser.WebButton.waitTillEnabled("Reserved_Ok");
-				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
-				if (Row_Count > 1)
-					Browser.WebButton.click("Reserved_Ok");
-				else
-					Continue.set(false);
+				/*
+				 * CO.waitforload();
+				 * 
+				 * Browser.WebButton.waittillvisible("Reserved_Ok");
+				 * Browser.WebButton.waitTillEnabled("Reserved_Ok"); Row_Count =
+				 * Browser.WebTable.getRowCount("Number_Selection"); if (Row_Count > 1)
+				 * Browser.WebButton.click("Reserved_Ok"); else Continue.set(false);
+				 */
 			} else if (!ReservationToken.equals("")) {
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
@@ -1861,8 +1860,8 @@ public class Keyword_CRM extends Driver {
 	public String Plan_UpgradeDowngrade() {
 
 		String Test_OutPut = "", Status = "";
-		String MSISDN, New_PlanName, Existing_Plan, GetData, Order_no;
-		int Row_Count, Col, Col_P;
+		String MSISDN, New_PlanName, GetData, Order_no;
+		int Col, Col_P;
 		Result.fUpdateLog("------Plan Upgrade/Downgrade Event Details------");
 		try {
 			if (!(getdata("MSISDN").equals(""))) {
@@ -1878,29 +1877,18 @@ public class Keyword_CRM extends Driver {
 			}
 			Planname.set(New_PlanName);
 
-			if (!(getdata("Existing_PlanName").equals(""))) {
-				Existing_Plan = getdata("Existing_PlanName");
-			} else {
-				Existing_Plan = pulldata("Existing_PlanName");
-			}
+			/*
+			 * if (!(getdata("Existing_PlanName").equals(""))) { Existing_Plan =
+			 * getdata("Existing_PlanName"); } else { Existing_Plan =
+			 * pulldata("Existing_PlanName"); }
+			 */
 			if (!(getdata("GetData").equals(""))) {
 				GetData = getdata("GetData");
 			} else {
 				GetData = pulldata("GetData");
 			}
 			CO.Assert_Search(MSISDN, "Active", GetData);
-			Col = CO.Select_Cell("Acc_Installed_Assert", "Product");
-			Row_Count = Browser.WebTable.getRowCount("Acc_Installed_Assert");
-			for (int i = 1; i <= Row_Count; i++) {
-				String LData = Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col);
-				if (LData.equalsIgnoreCase(Existing_Plan)) {
-					Browser.WebTable.click("Acc_Installed_Assert", i, (Col + 1));
-					CO.InstalledAssertChange("Upgrade Promotion");
-
-					break;
-				}
-
-			}
+			CO.Plan_selection(GetData, MSISDN);
 			CO.waitmoreforload();
 			Browser.WebEdit.Set("PopupQuery_Search", New_PlanName);
 			String Path[] = Utlities.FindObject("PopupQuery_Search", "WebEdit");
@@ -1930,16 +1918,14 @@ public class Keyword_CRM extends Driver {
 						Result.fUpdateLog(LData + ":" + Action);
 						Continue.set(false);
 					}
-				} else if (LData.equalsIgnoreCase(Existing_Plan)) {
-					if (Action.equalsIgnoreCase("Delete")) {
-						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
-					} else {
-						Result.fUpdateLog(LData + ":" + Action);
-						Continue.set(false);
-					}
-				}
+				} /*
+					 * else if (LData.equalsIgnoreCase(Existing_Plan)) { if
+					 * (Action.equalsIgnoreCase("Delete")) { Result.fUpdateLog("Action Update   " +
+					 * LData + ":" + Action); } else { Result.fUpdateLog(LData + ":" + Action);
+					 * Continue.set(false); } }
+					 */
 			}
-			if (Row_Count <= 4) {
+			if (Row_Count1 <= 4) {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
@@ -2724,18 +2710,17 @@ public class Keyword_CRM extends Driver {
 				}
 				CO.waitforload();
 				CO.waitforload();
-				Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
+				CO.Popup_Click("Line_Items", Row_Val, Col_S);
 				CO.waitforload();
 				Reserve = MSISDN.substring(3, MSISDN.length());
 				CO.Popup_Selection("Number_Selection", "Number", Reserve);
 				CO.waitforload();
-				Browser.WebButton.waittillvisible("Reserved_Ok");
-				Browser.WebButton.waitTillEnabled("Reserved_Ok");
-				Row_Count = Browser.WebTable.getRowCount("Number_Selection");
-				if (Row_Count > 1)
-					Browser.WebButton.click("Reserved_Ok");
-				else
-					Continue.set(false);
+				/*
+				 * Browser.WebButton.waittillvisible("Reserved_Ok");
+				 * Browser.WebButton.waitTillEnabled("Reserved_Ok"); Row_Count =
+				 * Browser.WebTable.getRowCount("Number_Selection"); if (Row_Count > 1)
+				 * Browser.WebButton.click("Reserved_Ok"); else Continue.set(false);
+				 */
 			} else if (!ReservationToken.equals("")) {
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
 				if (Row_Count <= 3) {
@@ -2860,7 +2845,7 @@ public class Keyword_CRM extends Driver {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
 				if (LData.equalsIgnoreCase(GetData) || LData.equalsIgnoreCase(New_PlanName)) {
-					Browser.WebTable.Popup("Line_Items", i, Col_bp);
+					CO.Popup_Click("Line_Items", i, Col_bp);
 					CO.waitforload();
 					CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
 					Result.takescreenshot("");
@@ -2986,7 +2971,7 @@ public class Keyword_CRM extends Driver {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
 				if (LData.equalsIgnoreCase(GetData) || LData.equalsIgnoreCase(New_PlanName)) {
-					Browser.WebTable.Popup("Line_Items", i, Col_bp);
+					CO.Popup_Click("Line_Items", i, Col_bp);
 					CO.waitforload();
 					CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
 					Result.takescreenshot("");

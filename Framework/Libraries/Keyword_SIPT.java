@@ -134,17 +134,16 @@ public class Keyword_SIPT extends Driver {
 			CO.waitforload();
 			if (CO.isAlertExist())
 				Continue.set(false);
-			
-			
+
 			if (Continue.get()) {
 				if (ReservationToken.equals("")) {
-					
-					 CO.scroll("Numbers", "WebLink"); 
-					 Browser.WebLink.click("Numbers");
-					 Number_Reservation("SIPT",MSISDN); 
-					 Number_Reservation("SIPT",From);
-					 Number_Reservation("SIPT",To);
-					 
+
+					CO.scroll("Numbers", "WebLink");
+					Browser.WebLink.click("Numbers");
+					Number_Reservation("SIPT", MSISDN);
+					Number_Reservation("SIPT", From);
+					Number_Reservation("SIPT", To);
+
 					CO.Link_Select("Line Items");
 					CO.waitforload();
 
@@ -161,10 +160,10 @@ public class Keyword_SIPT extends Driver {
 							Row_Val = i;
 						}
 					}
-					Browser.WebTable.Popup("Line_Items", Row_Val, Col_S);
+					CO.Popup_Click("Line_Items", Row_Val, Col_S);
 					CO.waitforload();
 					CO.Popup_Selection("Number_Selection", "Number", MSISDN);
-					//Number_Selection(CCODE + MSISDN);
+					// Number_Selection(CCODE + MSISDN);
 					CO.ToWait();
 					CO.waitforload();
 					CO.ToWait();
@@ -179,8 +178,7 @@ public class Keyword_SIPT extends Driver {
 
 					Col_S = CO.Select_Cell("Line_Items", "Service Id");
 					CO.Popup_Selection("Number_Selection", "Number", MSISDN);
-					//Number_Selection(CCODE+MSISDN);
-					
+					// Number_Selection(CCODE+MSISDN);
 
 				} else if (!ReservationToken.equals("")) {
 					Row_Count = Browser.WebTable.getRowCount("Line_Items");
@@ -302,7 +300,7 @@ public class Keyword_SIPT extends Driver {
 	 * Designed By			: Vinodhini Raviprasad
 	 * Last Modified Date 	: 29-October-2017
 	--------------------------------------------------------------------------------------------------------
-
+	
 	public void Number_Selection(String MSISDN) {
 		try {
 			Browser.WebButton.waittillvisible("Reserved_Ok");
@@ -324,5 +322,4 @@ public class Keyword_SIPT extends Driver {
 		}
 	}*/
 
-	
 }

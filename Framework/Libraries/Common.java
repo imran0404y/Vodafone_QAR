@@ -1189,7 +1189,7 @@ public class Common extends Driver {
 	}
 	
 	
-	public void Popup(String objname, int rownum, int columnnum, String Variable, String val) {
+	public void Popup_Data(String objname, int rownum, int columnnum, String Variable, String val) {
 		try {
 			String[] objprop = Utlities.FindObject(objname, "WebTable");
 			String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
@@ -1210,6 +1210,20 @@ public class Common extends Driver {
 
 	}
 
+	public void Popup_Click(String objname, int rownum, int columnnum) {
+
+		String[] objprop = Utlities.FindObject(objname, "WebTable");
+		String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		cDriver.get().findElement(By.xpath(cellXpathX)).click();
+		String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//span";
+		WebElement scr = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr);
+		cDriver.get().findElement(By.xpath(cellXpath)).click();
+
+	}
+	
 	public void Popup_Selection(String objname, String Name, String MSISDN) {
 		try {
 			waitforload();

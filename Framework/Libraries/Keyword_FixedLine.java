@@ -150,7 +150,7 @@ public class Keyword_FixedLine extends Driver {
 				}
 			}
 			CO.waitforload();
-			Browser.WebTable.Popup("Line_Items", Row_Val, Con_No);
+			CO.Popup_Click("Line_Items", Row_Val, Con_No);
 			CO.waitforload();
 			CO.Popup_Selection("Number_Selection", "Number", MSISDN);
 			
