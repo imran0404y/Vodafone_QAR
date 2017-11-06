@@ -631,10 +631,10 @@ public class Method extends Driver {
 	 * Designed By			: AG
 	 * Last Modified Date 	: 25-Apr-2016
 	--------------------------------------------------------------------------------------------------------*/
-	public static void Methodwaittillenabled(String[] identify) throws InterruptedException {
+	public static boolean Methodwaittillenabled(String[] identify) throws InterruptedException {
 		String vis = "false";
 		int countval = 1;
-		while (vis == "false" || countval < 10000) {
+		while (countval < 5) {
 			int i = 0;
 			for (i = 0; i < identify.length;) {
 				try {
@@ -688,6 +688,11 @@ public class Method extends Driver {
 				vis = "true";
 				break;
 			}
+		}
+		if(vis == "false") {
+			return false;
+		}else {
+			return true;
 		}
 	}
 

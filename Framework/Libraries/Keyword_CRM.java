@@ -69,7 +69,6 @@ public class Keyword_CRM extends Driver {
 			}
 		} catch (Exception e) {
 			Test_OutPut += "Exception occurred" + ",";
-			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			Status = "FAIL";
 			e.printStackTrace();
@@ -503,9 +502,18 @@ public class Keyword_CRM extends Driver {
 				CO.waitforload();
 			}
 			if (Continue.get()) {
-				Browser.WebButton.exist("Profile_Tab");
 				CO.scroll("Profile_Tab", "WebButton");
-				Browser.WebButton.click("Profile_Tab");
+				do {
+					Browser.WebButton.click("Profile_Tab");
+					CO.waitforload();
+					/*if (Browser.WebEdit.waitTillEnabled("BP_Valid_Name")) {
+						j = 0;
+						break;
+					}*/
+
+				} while (!Browser.WebEdit.waitTillEnabled("BP_Valid_Name"));
+				Browser.WebEdit.waittillvisible("BP_Valid_Name");
+				
 				CO.waitforload();
 				int Row = 2, Col_Val = 0, Row_Count;
 
@@ -632,9 +640,19 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------Sales Order Event Details------");
 		try {
 
-			Browser.WebButton.click("Orders_Tab");
-			if (CO.isAlertExist())
+			//int j = 1;
+			do {
 				Browser.WebButton.click("Orders_Tab");
+				CO.waitforload();
+				if (CO.isAlertExist())
+					Browser.WebButton.click("Orders_Tab");
+				/*if (Browser.WebEdit.waitTillEnabled("Order_Valid_Name")) {
+					j = 0;
+					break;
+				}*/
+
+			} while (!Browser.WebEdit.waitTillEnabled("Order_Valid_Name"));
+			Browser.WebEdit.waittillvisible("Order_Valid_Name");
 
 			int Row = 2, Col, Col_new;
 			Browser.WebButton.waitTillEnabled("Order_New");
@@ -843,7 +861,7 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
-				if (StarNumber != null) {
+				if (StarNumber == null) {
 					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
 					StarNumber = StarNumber.substring(2, StarNumber.length());
 				}
@@ -1354,8 +1372,17 @@ public class Keyword_CRM extends Driver {
 
 				CO.waitforload();
 				int x = 0;
-				// Browser.WebLink.click("Acc_Contacts");
-				CO.TabNavigator("Contacts");
+				//int j = 1;
+				do {
+					CO.TabNavigator("Contacts");
+					CO.waitforload();
+					/*if (Browser.WebEdit.waitTillEnabled("Contact_Valid_Name")) {
+						j = 0;
+						break;
+					}*/
+				} while (!Browser.WebEdit.waitTillEnabled("Contact_Valid_Name"));
+				Browser.WebEdit.waittillvisible("Contact_Valid_Name");
+				
 				CO.waitforload();
 				x = Browser.WebTable.getRowCount("Acc_Contact");
 				if (x == 1) {
@@ -2645,7 +2672,7 @@ public class Keyword_CRM extends Driver {
 				}
 
 				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
-				if (StarNumber != null) {
+				if (StarNumber == null) {
 					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
 					StarNumber = StarNumber.substring(2, StarNumber.length());
 				}

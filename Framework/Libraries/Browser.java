@@ -78,10 +78,10 @@ public class Browser extends Driver {
 
 		}
 
-		public static void waitTillEnabled(String objname) throws InterruptedException {
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
 			String objtype = "WebEdit";
 			String[] objprop = Utlities.FindObject(objname, objtype);
-			Method.Methodwaittillenabled(objprop);
+			return Method.Methodwaittillenabled(objprop);
 		}
 	}
 
@@ -114,10 +114,10 @@ public class Browser extends Driver {
 			return Method.existobj(objprop);
 		}
 
-		public static void waitTillEnabled(String objname) throws InterruptedException {
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
 			String objtype = "WebButton";
 			String[] objprop = Utlities.FindObject(objname, objtype);
-			Method.Methodwaittillenabled(objprop);
+			return Method.Methodwaittillenabled(objprop);
 		}
 	}
 
@@ -220,10 +220,10 @@ public class Browser extends Driver {
 			return Method.existobj(objprop);
 		}
 
-		public static void waitTillEnabled(String objname) throws InterruptedException {
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
 			String objtype = "ListBox";
 			String[] objprop = Utlities.FindObject(objname, objtype);
-			Method.Methodwaittillenabled(objprop);
+			return Method.Methodwaittillenabled(objprop);
 		}
 
 		public static void waittillvisible(String objname) throws InterruptedException {
@@ -265,10 +265,10 @@ public class Browser extends Driver {
 			return Method.existobj(objprop);
 		}
 
-		public static void waitTillEnabled(String objname) throws InterruptedException {
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
 			String objtype = "WebElement";
 			String[] objprop = Utlities.FindObject(objname, objtype);
-			Method.Methodwaittillenabled(objprop);
+			return Method.Methodwaittillenabled(objprop);
 		}
 
 		public static void select(String objname, String objvalue) throws IOException {

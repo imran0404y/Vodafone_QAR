@@ -1237,9 +1237,10 @@ public class Common extends Driver {
 			if ((Row_Count > 1) & (Browser.WebTable.getRowCount(objname) == 2)) {
 				Browser.WebTable.SetData(objname, 2, Col, Name, MSISDN);
 				Row_Count = Browser.WebTable.getRowCount(objname);
-				if (Row_Count > 1)
+				if (Row_Count > 1) {
+					scroll("Popup_OK", "WebButton");
 					Browser.WebButton.click("Popup_OK");
-				else
+				}else
 					Driver.Continue.set(false);
 			} else
 				Driver.Continue.set(false);

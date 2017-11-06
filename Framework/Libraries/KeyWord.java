@@ -112,6 +112,10 @@ public class KeyWord {
 		return KA.RTB();
 	}
 
+	public String RTB_Check() {
+		return KA.RTB_Check();
+	}
+	
 	// ---------------------Keyword API------------------------//
 
 	// ---------------------Keyword Validation------------------------//

@@ -2,6 +2,7 @@ package Libraries;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,6 +63,7 @@ public class Keyword_API extends Driver {
 				} else {
 					MSISDN = pulldata("MSISDN");
 				}
+				MSISDN = "97478152935";
 				if (!(getdata("SOAP_Action").equals(""))) {
 					SOAP_Action = getdata("SOAP_Action");
 				} else {
@@ -75,7 +77,7 @@ public class Keyword_API extends Driver {
 
 				// Get and Store Request XML File Path
 				String XMLfilepath = XMLfilepth.get();
-				XMLRequest_Path = XMLfilepath + "/RTB_" + MSISDN + "_Request.xml";
+				XMLRequest_Path = XMLfilepath + "/"+currKW.get()+ "_" + MSISDN + "_Request.xml";
 
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -100,7 +102,7 @@ public class Keyword_API extends Driver {
 				SOAPMessage soapResponse = CO.XML_Request(message, URL.get());
 
 				// Process the SOAP Response and store it
-				XMLResponse_Path = XMLfilepath + "/RTB_" + MSISDN + "_Response.xml";
+				XMLResponse_Path = XMLfilepath + "/"+currKW.get()+ "_" + MSISDN + "_Response.xml";
 				File Responsefile = new File(XMLResponse_Path);
 				Responsefile.createNewFile();
 
@@ -122,8 +124,10 @@ public class Keyword_API extends Driver {
 				for (int i = 0; i < list.getLength(); i++) {
 					String Output = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:BucketID", i);
 					String Output1 = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:AccountName", i);
-					Result.fUpdateLog(Output + " : " + Output1);
-					RTBOutputData.put(Output, Output1);
+					if(Output!="") {
+						Result.fUpdateLog(Output + " : " + Output1);
+						RTBOutputData.put(Output, Output1);
+					}
 				}
 
 				if (Continue.get()) {
@@ -137,8 +141,111 @@ public class Keyword_API extends Driver {
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
 		}
-		Result.fUpdateLog("RTB Event Details - Completed");
+		Result.fUpdateLog("------RTB Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
+	public String RTB_Check() {
+
+		String Test_OutPut = "", Status = "";
+		String MSISDN, SOAP_Action, XMLResponse_Path = "", XMLRequest_Path = "";
+		Result.fUpdateLog("------RTB_Check Event Details------");
+
+		try {
+			String RTB = Validatedata("RTB_Validation");
+			if (RTB.equalsIgnoreCase("yes")) {
+				HashMap<String, String> RTBOutputData_Old = new HashMap<String, String>();
+				RTBOutputData_Old.putAll(RTBOutputData);
+				RTBOutputData.clear();
+				
+				if (!(getdata("MSISDN").equals(""))) {
+					MSISDN = getdata("MSISDN");
+				} else {
+					MSISDN = pulldata("MSISDN");
+				}
+				MSISDN = "97478152934";
+				if (!(getdata("SOAP_Action").equals(""))) {
+					SOAP_Action = getdata("SOAP_Action");
+				} else {
+					SOAP_Action = pulldata("SOAP_Action");
+				}
+
+				String Templatefile = Templete_FLD.get() + "/XML/RTBQuery_Temp.xml";
+
+				/* Print the request message */
+				Result.fUpdateLog("Request SOAP Message = ");
+
+				// Get and Store Request XML File Path
+				String XMLfilepath = XMLfilepth.get();
+				XMLRequest_Path = XMLfilepath + "/"+currKW.get()+ "_" + MSISDN + "_Request.xml";
+
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.parse(new File(Templatefile));
+				doc.getDocumentElement().normalize();
+
+				// Get a set of the entries
+				if (MSISDN != null) {
+					String Tagname = "cmu:AccountId";
+					CO.Setvalue(doc, Tagname, MSISDN);
+				}
+
+				// Save Request XMl into XMLRequest_Path
+				Transformer xformer = TransformerFactory.newInstance().newTransformer();
+				xformer.transform(new DOMSource(doc), new StreamResult(new File(XMLRequest_Path)));
+
+				// Read the request XML File
+				SOAPMessage message = CO.readSoapMessage(XMLRequest_Path, SOAP_Action);
+				message.writeTo(System.out);
+
+				// Establish SOAP Connection and send request to End Point URL
+				SOAPMessage soapResponse = CO.XML_Request(message, URL.get());
+
+				// Process the SOAP Response and store it
+				XMLResponse_Path = XMLfilepath + "/"+currKW.get()+ "_" + MSISDN + "_Response.xml";
+				File Responsefile = new File(XMLResponse_Path);
+				Responsefile.createNewFile();
+
+				FileOutputStream fileOutputStream = new FileOutputStream(Responsefile);
+				soapResponse.writeTo(fileOutputStream);
+				fileOutputStream.flush();
+				fileOutputStream.close();
+
+				// Fetch Data from Soap Response
+				DocumentBuilderFactory dbFactory1 = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder1 = dbFactory1.newDocumentBuilder();
+				Document doc1 = dBuilder1.parse(new File(XMLResponse_Path));
+				doc1.getDocumentElement().normalize();
+
+				// Det count of Node : rtbrespabo:CmuBalanceSummaryVbc
+				NodeList list = doc1.getElementsByTagName("rtbrespabo:CmuBalanceSummaryVbc");
+				Result.fUpdateLog("Total of elements : " + list.getLength());
+
+				for (int i = 0; i < list.getLength(); i++) {
+					String Output = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:BucketID", i);
+					String Output1 = CO.getvalue(doc1, "rtbrespabo:CmuBalanceSummaryVbc", "rtbrespabo:AccountName", i);
+					if(Output!="") {
+						if(RTBOutputData_Old.containsKey(Output)) {
+							Continue.set(false);
+						}
+						Result.fUpdateLog(Output + " : " + Output1);
+						RTBOutputData.put(Output, Output1);
+					}
+					
+				}
+				
+				if (Continue.get()) {
+					Status = "PASS";
+				} else
+					Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------RTB_Check Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
 }
