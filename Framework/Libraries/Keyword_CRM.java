@@ -3071,7 +3071,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			Billprofile_No = "1-48E2QGH";
+			//Billprofile_No = "1-48E2QGH";
 			CO.RTBScreen(MSISDN, "Active", Billprofile_No);
 		} catch (Exception e) {
 			Status = "FAIL";
