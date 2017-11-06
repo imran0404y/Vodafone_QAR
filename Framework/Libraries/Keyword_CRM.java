@@ -554,13 +554,13 @@ public class Keyword_CRM extends Driver {
 					Browser.WebButton.click("Bill_Add");
 					do {
 						int Row_C = Browser.WebTable.getRowCount("Bill_Prof");
-						if(Row_C>Row_Ct) {
+						if (Row_C > Row_Ct) {
 							break;
 						}
-					}while(true);
-					
+					} while (true);
+
 					CO.waitforload();
- 
+
 					Browser.WebTable.waittillvisible("Bill_Prof");
 					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
 					if (!(getdata("Bill_PayType").equals(""))) {
@@ -666,17 +666,17 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.waitTillEnabled("Order_New");
 			CO.scroll("Order_New", "WebButton");
 			Browser.WebButton.click("Order_New");
-			
+
 			CO.waitforload();
 			Col_new = CO.Actual_Cell("Order_Table", "Status");
 			boolean flag = true;
 			do {
-			String orderstatus = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
-				if(orderstatus.equalsIgnoreCase("Pending")){
+				String orderstatus = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
+				if (orderstatus.equalsIgnoreCase("Pending")) {
 					flag = false;
 					break;
 				}
-			}while(flag);
+			} while (flag);
 
 			Col = CO.Get_Col("Order_Table", Row, "Sales Order");
 			Browser.WebTable.click("Order_Table", Row, Col);
@@ -1252,7 +1252,7 @@ public class Keyword_CRM extends Driver {
 				if (!(getdata("Account_Name").equals(""))) {
 					Acc = getdata("Account_Name");
 				} else if (!(pulldata("Account_Name").equals(""))) {
-					Acc = pulldata("Account_Name");
+					Acc = pulldata("Account_Name") + R.nextInt(1000);
 				} else {
 					Acc = Utlities.randname() + R.nextInt(1000);
 				}
@@ -1357,8 +1357,7 @@ public class Keyword_CRM extends Driver {
 					CO.waitforload();
 				} while (!Browser.WebButton.waitTillEnabled("Add_Address"));
 				Browser.WebButton.waittillvisible("Add_Address");
-				
-				
+
 				CO.waitforload();
 				if (!(Address.equals(""))) {
 
@@ -1618,7 +1617,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				CO.InstalledAssertChange("Modify");
 			}
-			
+
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
 			// wait
@@ -3079,7 +3078,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			//Billprofile_No = "1-48E2QGH";
+			// Billprofile_No = "1-48E2QGH";
 			CO.RTBScreen(MSISDN, "Active", Billprofile_No);
 		} catch (Exception e) {
 			Status = "FAIL";
