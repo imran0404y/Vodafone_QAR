@@ -63,7 +63,7 @@ public class Keyword_API extends Driver {
 				} else {
 					MSISDN = pulldata("MSISDN");
 				}
-				MSISDN = "97478152935";
+				//MSISDN = "97478152935";
 				if (!(getdata("SOAP_Action").equals(""))) {
 					SOAP_Action = getdata("SOAP_Action");
 				} else {
@@ -163,7 +163,7 @@ public class Keyword_API extends Driver {
 				} else {
 					MSISDN = pulldata("MSISDN");
 				}
-				MSISDN = "97478152934";
+				//MSISDN = "97478152934";
 				if (!(getdata("SOAP_Action").equals(""))) {
 					SOAP_Action = getdata("SOAP_Action");
 				} else {

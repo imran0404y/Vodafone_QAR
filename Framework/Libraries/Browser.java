@@ -356,7 +356,13 @@ public class Browser extends Driver {
 			String[] objprop = Utlities.FindObject(objname, objtype);
 			return Method.existobj(objprop);
 		}
-
+		
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
+			String objtype = "WebTable";
+			String[] objprop = Utlities.FindObject(objname, objtype);
+			return Method.Methodwaittillenabled(objprop);
+		}
+		
 		/*------------------------------------------------------------------------------------------------------
 		* Function Name: getCellData
 		* Use :	returns the value in the given row and column of the web table

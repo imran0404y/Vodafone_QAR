@@ -507,7 +507,7 @@ public class Method extends Driver {
 	public static void waittillobjvisible(String[] identify) throws InterruptedException {
 		String vis = "false";
 		int countval = 1;
-		while (countval < 10) {
+		while (countval < 5) {
 			int i = 0;
 			for (i = 0; i < identify.length;) {
 				try {

@@ -78,14 +78,14 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				From = pulldata("From");
 			}
-			From = From.substring(3, From.length());
+			From = From.replace("974", "");
 
 			if (!(getdata("To").equals(""))) {
 				To = getdata("To");
 			} else {
 				To = pulldata("To");
 			}
-			To = To.substring(3, To.length());
+			To = To.replace("974", "");
 
 			if (!(getdata("ReservationToken").equals(""))) {
 				ReservationToken = getdata("ReservationToken");
@@ -98,8 +98,10 @@ public class Keyword_SIPT extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
-			MSISDN = MSISDN.substring(3, MSISDN.length());
+			MSISDN = MSISDN.replace("974", "");
 			
+			
+
 			if (!(getdata("Default_Plan_Tab").equals(""))) {
 				Default_Plan_Tab = getdata("Default_Plan_Tab");
 			} else {
@@ -180,6 +182,8 @@ public class Keyword_SIPT extends Driver {
 					}
 
 					Col_S = CO.Select_Cell("Line_Items", "Service Id");
+					CO.Popup_Click("Line_Items", Row_Val, Col_S);
+					CO.waitforload();
 					CO.Popup_Selection("Number_Selection", "Number", MSISDN);
 					// Number_Selection(CCODE+MSISDN);
 
@@ -208,6 +212,42 @@ public class Keyword_SIPT extends Driver {
 					Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 					Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", CCODE + MSISDN);
 				}
+				if (Browser.WebTable.exist("Line_Items"))
+					Result.fUpdateLog("Proceeding Order Submission");
+				CO.waitforload();
+				if (UseCaseName.get().toLowerCase().contains("enterprise")
+						|| TestCaseN.get().toLowerCase().contains("vip") || UseCaseName.get().contains("SIPT")) {
+					CO.scroll("Ent_CreditLimit", "WebEdit");
+					Browser.WebEdit.click("Ent_CreditLimit");
+					Browser.WebEdit.Set("Ent_CreditLimit", "100");
+				} else {
+					CO.scroll("Credit_Limit", "WebEdit");
+					CO.waitforload();
+					Browser.WebEdit.click("Credit_Limit");
+				}
+
+				CO.scroll("Service", "WebButton");
+
+				Browser.WebButton.waittillvisible("Validate");
+				Browser.WebButton.click("Validate");
+				if (CO.isAlertExist()) {
+					Continue.set(false);
+				}
+				CO.waitmoreforload();
+				CO.waitforload();
+				if (Continue.get()) {
+					Browser.WebButton.waittillvisible("Submit");
+					CO.scroll("Submit", "WebButton");
+					Browser.WebButton.click("Submit");
+					CO.waitmoreforload();
+					if (CO.isAlertExist()) {
+						Continue.set(false);
+					}
+				}
+
+				CO.waitforload();
+
+				Result.takescreenshot("SIPT Order Submited");
 			}
 			if (Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";

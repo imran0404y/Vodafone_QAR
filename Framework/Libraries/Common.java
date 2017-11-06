@@ -754,13 +754,22 @@ public class Common extends Driver {
 				String BillPro = Browser.WebTable.getCellData("Bill_Prof", i, Col_Val);
 				if (BillPro.equals(BP)) {
 					Browser.WebTable.click("Bill_Prof", i, Col_Val);
+					do {
+						waitforload();
+					} while (!Browser.WebButton.waitTillEnabled("Bill_Valid_Name"));
+					
 					break;
 				}
 			}
-			Text_Select("a", "Unbilled Usage");
-			// waitforload();
-			TabNavigator("Real Time Balance");
-			Tag_Select("div", "Real Time Balance");
+			//Text_Select("a", "Unbilled Usage");
+			waitforload();
+			do {
+				TabNavigator("Real Time Balance");
+				waitforload();
+			} while (!Browser.WebButton.waitTillEnabled("RTB_Valid_Name"));
+			Browser.WebButton.waittillvisible("RTB_Valid_Name");
+			scroll("RTB_Valid_Name", "WebButton");
+			Result.takescreenshot("Real Time Balance");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
