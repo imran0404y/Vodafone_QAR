@@ -550,9 +550,17 @@ public class Keyword_CRM extends Driver {
 				if ((Row_Count < Row) || Bill_NewProfile.equals("Yes") || Row_Count == Row_va) {
 					Browser.WebButton.waittillvisible("Bill_Add");
 					CO.scroll("Bill_Add", "WebButton");
+					int Row_Ct = Browser.WebTable.getRowCount("Bill_Prof");
 					Browser.WebButton.click("Bill_Add");
+					do {
+						int Row_C = Browser.WebTable.getRowCount("Bill_Prof");
+						if(Row_C>Row_Ct) {
+							break;
+						}
+					}while(true);
+					
 					CO.waitforload();
-
+ 
 					Browser.WebTable.waittillvisible("Bill_Prof");
 					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
 					if (!(getdata("Bill_PayType").equals(""))) {
