@@ -156,13 +156,13 @@ public class Utlities extends Driver {
 		for (int readloop = 0; readloop < DataSap.length; readloop++) {
 			String[] Sapdata = DataSap[readloop].split("--");
 			if (Sapdata.length == 2) {
-				if(Sapdata[1].equals("Fetch#IDP")) {
+				if (Sapdata[1].equals("Fetch#IDP")) {
 					String value = FetchStoredValue(UseCaseIDP.get(), TestCaseIDP.get(), Sapdata[0]);
 					dict.put(Sapdata[0], value);
-				}else if(Sapdata[1].equals("Fetch#DP")) {
+				} else if (Sapdata[1].equals("Fetch#DP")) {
 					String value = FetchStoredValue(UseCaseDP.get(), TestCaseDP.get(), Sapdata[0]);
 					dict.put(Sapdata[0], value);
-				}else {
+				} else {
 					dict.put(Sapdata[0], Sapdata[1]);
 				}
 			} else {
@@ -306,7 +306,6 @@ public class Utlities extends Driver {
 			connection.close();
 			return returnValue;
 
-
 		} catch (Exception e) {
 			return null;
 		}
@@ -356,16 +355,19 @@ public class Utlities extends Driver {
 			String BundleID, StoreDBpth = Storage_FLD.get() + "/AutomationProductCatalog.xlsx";
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
+
 			/*
-			 * Planname.set("Postpaid Connect 60 Promotionis"); LineItemData.put("0",
-			 * "Mobile Service Bundle"); LineItemData.put("1", "Connect 60");
-			 * LineItemData.put("2", "Postpaid Connect 60 Promotionis");
-			 * LineItemData.put("3", "SIM Card"); LineItemData.put("4", "Standard Pack");
-			 * LineItemData.put("5", "Unlimited Family Calls"); LineItemData.put("6",
-			 * "Bill Manager"); LineItemData.put("7", "Smart Limit"); LineItemData.put("9",
-			 * "Mobile Voicemail");
+			 * Planname.set("Postpaid Professional Promotion"); LineItemData.put("0",
+			 * "Mobile Service Bundle"); LineItemData.put("1", "Postpaid Professional");
+			 * LineItemData.put("2", "Mobile Voicemail"); LineItemData.put("3", "SIM Card");
 			 */
-			// LineItemData.put("0", "Vodafone Passport");
+			//LineItemData.put("4", "Standard Pack");
+			//LineItemData.put("5", "Unlimited Family Calls");
+			//LineItemData.put("6", "Bill Manager");
+			//LineItemData.put("7", "Smart Limit");
+			
+
+			//LineItemData.put("0", "Vodafone Passport");
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));

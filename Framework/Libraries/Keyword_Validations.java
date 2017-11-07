@@ -79,7 +79,7 @@ public class Keyword_Validations extends Driver {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			String billcycledate, Expiry;
-			// String orderdate = "24-10-2017";
+			// String orderdate = "16-11-2017";
 			String orderdate = OrderDate.get();
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
@@ -89,7 +89,16 @@ public class Keyword_Validations extends Driver {
 			Date startDate = Date_Format.parse(Date_Format.format(cals.getTime()));
 			Date endDate = Date_Format.parse(billcycledate);
 			int difInDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-			int Total_Days = cals.getActualMaximum(Calendar.DATE);
+			int Total_Days;
+			if (billcycledate.contains("15")) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(dateFormat.parse(billcycledate));
+				cal2.set(Calendar.MONTH, -1);
+				Total_Days = cal2.getActualMaximum(Calendar.DATE);
+			} else {
+				Total_Days = cals.getActualMaximum(Calendar.DATE);
+			}
 			String Prorate = "";
 
 			Expiry = orderdate;

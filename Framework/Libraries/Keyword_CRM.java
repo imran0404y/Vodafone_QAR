@@ -274,6 +274,9 @@ public class Keyword_CRM extends Driver {
 
 					CO.scroll("Add_OK", "WebButton");
 					Browser.WebButton.click("Add_OK");
+					do {
+						Result.fUpdateLog("Page Loading.....");
+					} while (Browser.WebButton.waitTillEnabled("Add_OK"));
 
 					CO.waitmoreforload();
 					Browser.WebButton.waittillvisible("Create_A/c");
@@ -690,7 +693,6 @@ public class Keyword_CRM extends Driver {
 			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
 
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
-			CO.waitforload();
 			do {
 				CO.waitforload();
 			} while (!Browser.WebLink.waitTillEnabled("Line_Items"));
@@ -1382,10 +1384,13 @@ public class Keyword_CRM extends Driver {
 					}
 					CO.waitforload();
 					Browser.WebButton.click("Popup_Go");
+					
 					CO.waitforload();
 					CO.scroll("Add_OK", "WebButton");
 					Browser.WebButton.click("Add_OK");
-
+					do {
+						Result.fUpdateLog("Page Loading.....");
+					} while (Browser.WebButton.waitTillEnabled("Add_OK"));
 					CO.waitforload();
 					// Browser.WebButton.waittillvisible("Create_A/c");
 				} else {

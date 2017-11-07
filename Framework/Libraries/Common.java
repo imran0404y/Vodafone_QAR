@@ -757,11 +757,11 @@ public class Common extends Driver {
 					do {
 						waitforload();
 					} while (!Browser.WebButton.waitTillEnabled("Bill_Valid_Name"));
-					
+
 					break;
 				}
 			}
-			//Text_Select("a", "Unbilled Usage");
+			// Text_Select("a", "Unbilled Usage");
 			waitforload();
 			do {
 				TabNavigator("Real Time Balance");
@@ -988,7 +988,7 @@ public class Common extends Driver {
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
 			String Submission_Date = OrderDate.get();
-			// String Submission_Date = "24-10-2017";
+			// String Submission_Date = "16-11-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
@@ -1249,7 +1249,7 @@ public class Common extends Driver {
 				if (Row_Count > 1) {
 					scroll("Popup_OK", "WebButton");
 					Browser.WebButton.click("Popup_OK");
-				}else
+				} else
 					Driver.Continue.set(false);
 			} else
 				Driver.Continue.set(false);
@@ -1414,8 +1414,10 @@ public class Common extends Driver {
 	 * break; } } }
 	 */
 
-	public static void main(String[] args) {
-
-	}
+	/*
+	 * public static void main(String[] args) {
+	 * 
+	 * }
+	 */
 
 }
