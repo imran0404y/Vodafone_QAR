@@ -988,7 +988,7 @@ public class Common extends Driver {
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
 			String Submission_Date = OrderDate.get();
-			// String Submission_Date = "16-11-2017";
+			//String Submission_Date = "07-11-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));

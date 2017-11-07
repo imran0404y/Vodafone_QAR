@@ -356,18 +356,18 @@ public class Utlities extends Driver {
 			Fillo fillo = new Fillo();
 			Connection connection = fillo.getConnection(StoreDBpth);
 
-			/*
-			 * Planname.set("Postpaid Professional Promotion"); LineItemData.put("0",
-			 * "Mobile Service Bundle"); LineItemData.put("1", "Postpaid Professional");
-			 * LineItemData.put("2", "Mobile Voicemail"); LineItemData.put("3", "SIM Card");
-			 */
-			//LineItemData.put("4", "Standard Pack");
-			//LineItemData.put("5", "Unlimited Family Calls");
-			//LineItemData.put("6", "Bill Manager");
-			//LineItemData.put("7", "Smart Limit");
-			
+			/*Planname.set("Postpaid Basic Promotion");
+			LineItemData.put("0", "Mobile Service Bundle");
+			LineItemData.put("1", "Postpaid Basic");
+			LineItemData.put("2", "Mobile Voicemail");
+			LineItemData.put("3", "SIM Card");
+*/
+			// LineItemData.put("4", "Standard Pack");
+			// LineItemData.put("5", "Unlimited Family Calls");
+			// LineItemData.put("6", "Bill Manager");
+			// LineItemData.put("7", "Smart Limit");
 
-			//LineItemData.put("0", "Vodafone Passport");
+			// LineItemData.put("0", "Vodafone Passport");
 			int k = 0;
 			for (int i = 0; i < LineItemData.size(); i++) {
 				String Product = LineItemData.get(Integer.toString(i));
@@ -385,6 +385,8 @@ public class Utlities extends Driver {
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 1; currs <= rs.getCount(); currs++) {
+							/*if ((!rs.getField("Siebel_Description").contains("Dummy"))
+									|| (!rs.getField("Siebel_Description").isEmpty())) {*/
 							if ((!rs.getField("Siebel_Description").isEmpty())) {
 								BundleID = rs.getField("BundleID");
 								if (BundleID.isEmpty())

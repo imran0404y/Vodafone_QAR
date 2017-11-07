@@ -79,7 +79,7 @@ public class Keyword_Validations extends Driver {
 		try {
 			DateFormat Date_Format = new SimpleDateFormat("dd-MMM-yyyy");
 			String billcycledate, Expiry;
-			// String orderdate = "16-11-2017";
+			// String orderdate = "07-11-2017";
 			String orderdate = OrderDate.get();
 			billcycledate = CO.FindBillingCycle();
 			Calendar cals = Calendar.getInstance();
