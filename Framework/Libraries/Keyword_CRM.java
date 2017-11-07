@@ -691,9 +691,13 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
 			CO.waitforload();
+			do {
+				CO.waitforload();
+			} while (!Browser.WebLink.waitTillEnabled("Line_Items"));
+			Browser.WebLink.waittillvisible("Line_Items");
 			Browser.WebLink.click("Line_Items");
 			CO.waitforload();
-			System.out.println(Billprofile_No);
+			Result.fUpdateLog(Billprofile_No);
 			if (Billprofile_No != null) {
 				CO.Webtable_Value("Billing Profile", Billprofile_No);
 			}

@@ -161,6 +161,12 @@ public class Browser extends Driver {
 				Result.fUpdateLog("Failed at : " + objname);
 			}
 		}
+
+		public static boolean waitTillEnabled(String objname) throws InterruptedException {
+			String objtype = "WebLink";
+			String[] objprop = Utlities.FindObject(objname, objtype);
+			return Method.Methodwaittillenabled(objprop);
+		}
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
