@@ -1051,10 +1051,6 @@ public class Keyword_CRM extends Driver {
 				CO.scroll("Ent_CreditLimit", "WebEdit");
 				Browser.WebEdit.click("Ent_CreditLimit");
 				Browser.WebEdit.Set("Ent_CreditLimit", "100");
-			} else {
-				CO.scroll("Credit_Limit", "WebEdit");
-				CO.waitforload();
-				Browser.WebEdit.click("Credit_Limit");
 			}
 
 			// To get fulfillment status coloumn
