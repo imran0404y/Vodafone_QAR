@@ -385,18 +385,19 @@ public class Utlities extends Driver {
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 1; currs <= rs.getCount(); currs++) {
-							/*if ((!rs.getField("Siebel_Description").contains("Dummy"))
-									|| (!rs.getField("Siebel_Description").isEmpty())) {*/
-							if ((!rs.getField("Siebel_Description").isEmpty())) {
-								BundleID = rs.getField("BundleID");
-								if (BundleID.isEmpty())
-									BundleID = " ";
-								String Type = rs.getField("SurePayID") + "||" + rs.getField("Benefit") + "||"
-										+ rs.getField("BucketValue") + "||" + rs.getField("BucketUsageType") + "||"
-										+ rs.getField("ProductValidity") + "||" + BundleID + "||"
-										+ rs.getField("SubscriptionPrice") + "||" + rs.getField("Siebel_Description");
-								PCSAll.add(k, Type);
-								k++;
+							if (!rs.getField("Benefit").equals("DUMMY")) {
+								if (!rs.getField("Siebel_Description").isEmpty()) {
+									BundleID = rs.getField("BundleID");
+									if (BundleID.isEmpty())
+										BundleID = " ";
+									String Type = rs.getField("SurePayID") + "||" + rs.getField("Benefit") + "||"
+											+ rs.getField("BucketValue") + "||" + rs.getField("BucketUsageType") + "||"
+											+ rs.getField("ProductValidity") + "||" + BundleID + "||"
+											+ rs.getField("SubscriptionPrice") + "||"
+											+ rs.getField("Siebel_Description");
+									PCSAll.add(k, Type);
+									k++;
+								}
 							}
 							if (rs.hasNext()) {
 								rs.moveNext();
