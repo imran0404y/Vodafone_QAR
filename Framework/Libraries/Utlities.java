@@ -359,10 +359,8 @@ public class Utlities extends Driver {
 			/*Planname.set("Postpaid Basic Promotion");
 			LineItemData.put("0", "Mobile Service Bundle");
 			LineItemData.put("1", "Postpaid Basic");
-			LineItemData.put("2", "Mobile Voicemail");
-			LineItemData.put("3", "SIM Card");
-*/
-			// LineItemData.put("4", "Standard Pack");
+			LineItemData.put("2", "SIM Card");
+			LineItemData.put("3", "Vodafone Passport");*/
 			// LineItemData.put("5", "Unlimited Family Calls");
 			// LineItemData.put("6", "Bill Manager");
 			// LineItemData.put("7", "Smart Limit");
@@ -385,8 +383,8 @@ public class Utlities extends Driver {
 						Recordset rs = connection.executeQuery(StrQuery);
 						rs.moveNext();
 						for (int currs = 1; currs <= rs.getCount(); currs++) {
-							if (!rs.getField("Benefit").equals("DUMMY")) {
-								if (!rs.getField("Siebel_Description").isEmpty()) {
+							if (!rs.getField("Siebel_Description").isEmpty()){
+								if (!rs.getField("Siebel_Description").contains("Dummy")) {
 									BundleID = rs.getField("BundleID");
 									if (BundleID.isEmpty())
 										BundleID = " ";

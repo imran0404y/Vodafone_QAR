@@ -468,7 +468,7 @@ public class Common extends Driver {
 	public void Assert_Search(String MSISDN, String Status, String Prod) {
 		try {
 			waitforload();
-			int Row = 2, Col, Col_Pro;
+			int Row = 2, Col;
 			Browser.WebLink.waittillvisible("VQ_Assert");
 			Browser.WebLink.click("VQ_Assert");
 			Browser.WebLink.waittillvisible("Assert_Search");
@@ -498,16 +498,15 @@ public class Common extends Driver {
 			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
 			// Browser.WebLink.click("Inst_Assert_ShowMore");
 			waitforload();
-			int Inst_RowCount = Browser.WebTable.getRowCount("Installed_Assert");
-			Col_Pro = Select_Cell("Installed_Assert", "Asset Description");
+			InstalledAssertChange("New Query                   [Alt+Q]");
 			Col = Select_Cell("Installed_Assert", "Service ID");
-			for (int i = 1; i <= Inst_RowCount; i++)
-				if (Browser.WebTable.getCellData("Installed_Assert", i, Col).equals(MSISDN)
-						&& Browser.WebTable.getCellData("Installed_Assert", i, Col_Pro).equals(Prod)) {
-					Text_Select("a", Prod);
-					// Browser.WebTable.Expand("Installed_Assert", i, 1);
-					Result.takescreenshot("");
-				}
+			Browser.WebTable.SetDataE("Installed_Assert", 2, Col, "Serial_Number", MSISDN);
+			Browser.WebButton.click("InstalledAssert_Go");
+			waitforload();
+			Text_Select("a", Prod);
+			// Browser.WebTable.Expand("Installed_Assert", i, 1);
+			Result.takescreenshot("");
+			// }
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -673,7 +672,7 @@ public class Common extends Driver {
 						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
 						k++;
 					} else {
-						Result.fUpdateLog(LData + ":" + Action);
+						Result.fUpdateLog(LData + ": Failed at fetching data from Action " + Action);
 						Continue.set(false);
 					}
 				}
@@ -712,7 +711,7 @@ public class Common extends Driver {
 	 * Designed By			: SravaniReddy
 	 * Last Modified Date 	: 3-Oct-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void RTBScreen(String MSISDN, String Status, String BP) {
+	public void RTBScreen(String MSISDN, String Status) {
 		try {
 			waitforload();
 			int Row = 2, Col;
@@ -745,6 +744,16 @@ public class Common extends Driver {
 			waitforload();
 			Browser.WebLink.click("Acc_Portal");
 			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			InstalledAssertChange("New Query                   [Alt+Q]");
+			Col = Select_Cell("Installed_Assert", "Service ID");
+			Browser.WebTable.SetDataE("Installed_Assert", 2, Col, "Serial_Number", MSISDN);
+			Browser.WebButton.click("InstalledAssert_Go");
+
+			int Col1 = Select_Cell("Installed_Assert", "Billing Profile");
+			String BP = Browser.WebTable.getCellData("Installed_Assert", 2, Col1);
+			waitforload();
+
+			
 			scroll("Profile_Tab", "WebButton");
 			Browser.WebButton.click("Profile_Tab");
 			waitforload();
@@ -988,7 +997,7 @@ public class Common extends Driver {
 			Calendar cals = Calendar.getInstance();
 			int Order_Day, Order_Year, Add_Year;
 			String Submission_Date = OrderDate.get();
-			//String Submission_Date = "07-11-2017";
+			// String Submission_Date = "13-11-2017";
 			cals.set(Calendar.YEAR, Integer.parseInt(Submission_Date.split("-")[2]));
 			cals.set(Calendar.MONTH, Integer.parseInt(Submission_Date.split("-")[1]) - 1);
 			cals.set(Calendar.DATE, Integer.parseInt(Submission_Date.split("-")[0]));
