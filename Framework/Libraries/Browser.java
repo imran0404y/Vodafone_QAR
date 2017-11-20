@@ -8,6 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 
@@ -22,13 +23,18 @@ public class Browser extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public static class WebEdit {
 		public static void Set(String objname, String objvalue) throws IOException {
-			String objtype = "WebEdit";
-			String[] objprop = Utlities.FindObject(objname, objtype);
-			Method.clearTD(objprop);
-			Method.setTD(objprop, objvalue);
+			try {
+				String objtype = "WebEdit";
+				String[] objprop = Utlities.FindObject(objname, objtype);
+				Method.clearTD(objprop);
+				Thread.sleep(200);
+				Method.setTD(objprop, objvalue);
 
-			if (Continue.get() == false) {
-				Result.fUpdateLog("Failed at : " + objname);
+				if (Continue.get() == false) {
+					Result.fUpdateLog("Failed at : " + objname);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -362,13 +368,13 @@ public class Browser extends Driver {
 			String[] objprop = Utlities.FindObject(objname, objtype);
 			return Method.existobj(objprop);
 		}
-		
+
 		public static boolean waitTillEnabled(String objname) throws InterruptedException {
 			String objtype = "WebTable";
 			String[] objprop = Utlities.FindObject(objname, objtype);
 			return Method.Methodwaittillenabled(objprop);
 		}
-		
+
 		/*------------------------------------------------------------------------------------------------------
 		* Function Name: getCellData
 		* Use :	returns the value in the given row and column of the web table
@@ -388,7 +394,7 @@ public class Browser extends Driver {
 				return "";
 			}
 		}
-		
+
 		public static String getCellData_title(String objname, int rownum, int columnnum) {
 			try {
 				String[] objprop = Utlities.FindObject(objname, "WebTable");
@@ -402,8 +408,7 @@ public class Browser extends Driver {
 			}
 		}
 
-		public static String CellData(String objname, int rownum)
-		{
+		public static String CellData(String objname, int rownum) {
 			try {
 				String[] objprop = Utlities.FindObject(objname, "WebTable");
 				String celldata = "";
@@ -471,7 +476,7 @@ public class Browser extends Driver {
 		public static void clickL(String objname, int rownum, int columnnum) {
 			try {
 				String[] objprop = Utlities.FindObject(objname, "WebTable");
-				String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum+1) + "]";
+				String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum + 1) + "]";
 				cDriver.get().findElement(By.xpath(cellXpath)).click();
 				String cellXpath1 = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//a";
 				cDriver.get().findElement(By.xpath(cellXpath1)).click();
@@ -559,7 +564,9 @@ public class Browser extends Driver {
 				cDriver.get().findElement(By.xpath(cellXpath)).click();
 				String cellXpath1 = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//input[@name='" + obj
 						+ "']";
+				Thread.sleep(200);
 				cDriver.get().findElement(By.xpath(cellXpath1)).clear();
+				Thread.sleep(200);
 				String vis = "false";
 				int countval = 1;
 				while (vis == "false" || countval < 10000)
@@ -590,7 +597,9 @@ public class Browser extends Driver {
 				cDriver.get().findElement(By.xpath(cellXpath)).click();
 				String cellXpath1 = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//input[@name='" + obj
 						+ "']";
+				Thread.sleep(200);
 				cDriver.get().findElement(By.xpath(cellXpath1)).clear();
+				Thread.sleep(200);
 				String vis = "false";
 				int countval = 1;
 				while (vis == "false" || countval < 10000)
@@ -729,6 +738,36 @@ public class Browser extends Driver {
 
 	}
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Class Name			: WebList 
+	 * Use 					: Subclass of browser class represents the WebList in the application and 
+	 * 						  contains functions for all the operations performed on Web List   
+	 * Designed By			: Vinodhini Raviprasad
+	 * Last Modified Date 	: 13-Nov-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public static class WebList {
+		public static void clickTab(String objname, String objvalue) throws IOException {
+			String objtype = "WebList";
+			String[] objprop = Utlities.FindObject(objname, objtype);
+			String cellXpath = objprop[0] + "//ul[1]//li";
+			List<org.openqa.selenium.WebElement> List_Count = cDriver.get().findElements(By.xpath(cellXpath));
+			int List = List_Count.size();
+			for (int i = 1; i < List; i++) {
+				cellXpath = objprop[0] + "//ul[1]//li[" + i + "]";
+				org.openqa.selenium.WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+				((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+				String celldata = cDriver.get().findElements(By.xpath(cellXpath)).get(0).getText();
+				if (celldata.toLowerCase().contains(objvalue.toLowerCase())) {
+					cDriver.get().findElement(By.xpath(cellXpath)).click();
+					break;
+				}
+			}
+			if (Continue.get() == false) {
+				Result.fUpdateLog("Failed at Tab Selection: " + objname);
+			}
+		}
+	}
+
 	public static void maximize() {
 		cDriver.get().manage().window().maximize();
 	}
@@ -737,5 +776,5 @@ public class Browser extends Driver {
 		((JavascriptExecutor) cDriver.get()).executeScript("return document.readyState");
 		return true;
 	}
-	
+
 }

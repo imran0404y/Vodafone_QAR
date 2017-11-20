@@ -52,16 +52,44 @@ public class KeyWord {
 		return KC.Modify();
 	}
 
+	public String Plan_UpgradeDowngrade() {
+		return KC.Plan_UpgradeDowngrade();
+	}
+
+	public String SIMSwap() {
+		return KC.SIMSwap();
+	}
+
+	public String Change_MSISDN() {
+		return KC.Change_MSISDN();
+	}
+	
+	public String Consumer_Migration() {
+		return KC.Consumer_Migration();
+	}
+
+	public String Enterprise_Migration() {
+		return KC.Enterprise_Migration();
+	}
+
+	public String RealTimeBalance_Screen() {
+		return KC.RealTimeBalance_Screen();
+	}
+	
+	public String Change_SmartLimit() {
+		return KC.Change_SmartLimit();
+	}
+	
+	public String BillPayment() {
+		return KC.BillPayment();
+	}
+	
 	public String Suspension() {
 		return KC.Suspension();
 	}
 
 	public String Resume() {
 		return KC.Resume();
-	}
-
-	public String Plan_UpgradeDowngrade() {
-		return KC.Plan_UpgradeDowngrade();
 	}
 
 	public String Change_PrimaryNumber() {
@@ -80,26 +108,8 @@ public class KeyWord {
 		return KC.Barring();
 	}
 
-	public String SIMSwap() {
-		return KC.SIMSwap();
-	}
-
-	public String Change_MSISDN() {
-		return KC.Change_MSISDN();
-	}
-
-	public String Consumer_Migration() {
-		return KC.Consumer_Migration();
-	}
-
-	public String Enterprise_Migration() {
-		return KC.Enterprise_Migration();
-	}
-
-	public String RealTimeBalance_Screen() {
-		return KC.RealTimeBalance_Screen();
-	}
-
+	
+	
 	// ------------------Keyword CRM -------------------//
 
 	// ---------------------Keyword API------------------------//
@@ -114,6 +124,10 @@ public class KeyWord {
 
 	public String RTB_Check() {
 		return KA.RTB_Check();
+	}
+	
+	public String RTB_Compare() {
+		return KA.RTB_Compare();
 	}
 	
 	// ---------------------Keyword API------------------------//

@@ -496,6 +496,7 @@ public class Common extends Driver {
 			waitforload();
 			Browser.WebLink.click("Acc_Portal");
 			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			Result.takescreenshot("");
 			// Browser.WebLink.click("Inst_Assert_ShowMore");
 			waitforload();
 			InstalledAssertChange("New Query                   [Alt+Q]");
@@ -1402,6 +1403,16 @@ public class Common extends Driver {
 		}
 
 	}
+	
+	public void Addon_Settings(String Text) {
+		//	String cellXpath = "//" + Tag + "[@title='" + Text + "']";
+			String cellXpath ="//input[@value='" + Text + "']/../..//i[@class='siebui-icon-settings']";
+			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+			waitforload();
+			cDriver.get().findElement(By.xpath(cellXpath)).click();
+		}
+	
 	// Plan_selection using existing plane name
 
 	/*
