@@ -1102,12 +1102,12 @@ public class Keyword_CRM extends Driver {
 			if (Continue.get()) {
 				switch (UseCaseName.get()) {
 				case "ConsumerPostpaid_Provisioning":
-				//case "Plan_UpgradeDowngrade":
+					// case "Plan_UpgradeDowngrade":
 				case "Consumer_Migration":
 					switch (TestCaseN.get()) {
 					case "NewCustomer":
 					case "ExtCustomer":
-					//case "ConsumerPostpaid":
+						// case "ConsumerPostpaid":
 					case "Prepaid_To_Postpaid":
 						try {
 							WebDriverWait wait = new WebDriverWait(cDriver.get(), 80);
@@ -1150,38 +1150,33 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Submit");
 				CO.waitforload();
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
-				Status = Browser.WebTable.getCellData("Line_Items", Row, Col);
-				if (Row_Count <= 3) {
-					Browser.WebButton.waittillvisible("Expand");
-					Browser.WebButton.click("Expand");
-				}
-
-				Browser.WebButton.waittillvisible("Submit");
+				
 				do {
+					Complete_Status = 0;
+					// To refresh Page
+					cDriver.get().navigate().refresh();
+					Browser.WebButton.waittillvisible("Submit");
+					CO.waitforload();
+
 					for (int i = 2; i <= Row_Count; i++) {
 						CO.scroll("Submit", "WebButton");
 						CO.scroll("Ful_Status", "WebButton");
 						OS_Status = Browser.WebTable.getCellData("Line_Items", i, Col);
 						System.out.println("Round" + (i - 1) + " " + OS_Status);
-						if (EStatus.equalsIgnoreCase(OS_Status)) {// To Find the Complete Status
+						// To Find the Complete Status
+						if (EStatus.equalsIgnoreCase(OS_Status)) {
 							Complete_Status = Complete_Status + 1;
-							R_S++;
-							Wait = Wait + 190;
-						} else {
-							if (FStatus.equalsIgnoreCase(OS_Status)) {
-								Continue.set(false);
-								R_S = 2;
-								Wait = 401;
+							if (Complete_Status == (Row_Count - 1)) {
+								Wait = 101;
 							}
-							// To refresh Page
-							cDriver.get().navigate().refresh();
-							Browser.WebButton.waittillvisible("Submit");
-							CO.waitforload();
+						} else if (FStatus.equalsIgnoreCase(OS_Status)) {
+							Continue.set(false);
+							Wait = 101;
 						}
-						Wait = Wait + 5;
 					}
-
-				} while (Wait < 400 || R_S == 2);
+					Wait = Wait + 10;
+					CO.waitmoreforload();
+				} while (Wait < 100);
 				Browser.WebButton.waittillvisible("Submit");
 
 				CO.waitforload();
@@ -1196,8 +1191,8 @@ public class Keyword_CRM extends Driver {
 				Bill_Cycle = Browser.WebTable.getCellData("Line_Items", Row, Bill_Col);
 				billDate.set(Bill_Cycle);
 
-				if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == 2) {
-					Complete_Status = 2;
+				if (OS_Status.equalsIgnoreCase(EStatus) || Complete_Status == (Row_Count - 1)) {
+					Continue.set(true);
 				} else {
 					Continue.set(false);
 				}
@@ -2143,7 +2138,6 @@ public class Keyword_CRM extends Driver {
 			}
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			CO.waitforload();
-			
 
 			Test_OutPut += OrderSubmission().split("@@")[1];
 			// fetching Order_no
@@ -2206,7 +2200,7 @@ public class Keyword_CRM extends Driver {
 				GetData = pulldata("GetData");
 			}
 			CO.Assert_Search(MSISDN, "Active", GetData);
-			CO.waitmoreforload();
+			CO.waitforload();
 			BillingProfileCreation();
 			CO.waitforload();
 			CO.Text_Select("a", "Account Summary");
@@ -2333,7 +2327,7 @@ public class Keyword_CRM extends Driver {
 				GetData = pulldata("GetData");
 			}
 			CO.Assert_Search(MSISDN, "Active", GetData);
-			CO.waitmoreforload();
+			CO.waitforload();
 			BillingProfileCreation();
 			CO.waitforload();
 			CO.Text_Select("a", "Account Summary");
@@ -2454,7 +2448,7 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------RealTimeBalance_Screen Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Change_SmartLimit
 	 * Arguments			: None
@@ -2692,8 +2686,8 @@ public class Keyword_CRM extends Driver {
 				Result.takescreenshot("Getting Outstanding Balance" + BillAmt);
 				CO.Assert_Search(MSISDN, "Active", "Mobile Service Bundle");
 
-				
-				/* Browser.WebList.clickTab("Bill_Tab", "Unbilled Usage"); CO.waitforload();
+				/*
+				 * Browser.WebList.clickTab("Bill_Tab", "Unbilled Usage"); CO.waitforload();
 				 * Col_P=CO.Select_Cell("ServiceCharges", "Description");
 				 * Col=CO.Select_Cell("ServiceCharges", "Net Amount");
 				 * Row_Count=Browser.WebTable.getRowCount("ServiceCharges"); if (Row_Count>1)
@@ -2701,8 +2695,8 @@ public class Keyword_CRM extends Driver {
 				 * if(Browser.WebTable.getCellData("ServiceCharges", Row, Col_P).equals(MSISDN))
 				 * { BillAmt=Browser.WebTable.getCellData("ServiceCharges", Row, Col);
 				 * CO.Assert_Search(MSISDN, "Active", "Mobile Service Bundle"); break;} else
-				 * Continue.set(false);*/
-				 
+				 * Continue.set(false);
+				 */
 
 			} else {
 				if (!(getdata("BillAmt").equals(""))) {
@@ -2722,22 +2716,22 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Pay_Add");
 			String Bill_Status = "";
 			Row = 2;
-			
+
 			do {
-				int Col_S = CO.Select_Cell("AccountPayment", "Status");
+				int Col_S = CO.Actual_Cell("AccountPayment", "Status");
 				Bill_Status = Browser.WebTable.getCellData("AccountPayment", Row, Col_S);
-				if((Bill_Status.equalsIgnoreCase("Open"))) {
+				if ((Bill_Status.equalsIgnoreCase("Open"))) {
 					break;
 				}
-			}while(true);
-			
+			} while (true);
+
 			CO.waitforload();
-			
+
 			Browser.WebTable.SetDataE("AccountPayment", Row, Col_A, "Payment_Amount", BillAmt);
 			Browser.WebTable.SetData("AccountPayment", Row, Col_C, "Payment_Method", Channel);
 			Browser.WebTable.click("AccountPayment", Row, Col_P);
 			Browser.WebTable.SetData("AccountPayment", Row, Col_P, "VFQA_Bill_Prof_Name", BillingProfile);
-			
+
 			CO.isAlertExist();
 			if (Channel.equalsIgnoreCase("cash")) {
 				CO.scroll("Reference_Number", "WebEdit");
@@ -2755,19 +2749,17 @@ public class Keyword_CRM extends Driver {
 			}
 			int Col_S = CO.Select_Cell("AccountPayment", "Channel Transaction #");
 			String Txn = Browser.WebTable.getCellData("AccountPayment", Row, Col_S);
-			
+
 			Browser.WebButton.click("Bill_Submit");
 			CO.waitmoreforload();
 			Result.takescreenshot("Bill Submittion for Payment");
 			Browser.WebButton.click("Payment_Query");
 			Browser.WebTable.SetData("AccountPayment", Row, Col_S, "VFQA_Channel_Transaction__", Txn);
 			CO.waitforload();
-			
-
 
 			Col = CO.Select_Cell("AccountPayment", "Payment #");
 			String Payment_Reference = Browser.WebTable.getCellData("AccountPayment", Row, Col);
-			Test_OutPut += "Payment Reference Number:"+ Payment_Reference + ",";
+			Test_OutPut += "Payment Reference Number:" + Payment_Reference + ",";
 
 			Col_S = CO.Select_Cell("AccountPayment", "Status");
 			Bill_Status = Browser.WebTable.getCellData("AccountPayment", Row, Col_S);
@@ -2786,9 +2778,9 @@ public class Keyword_CRM extends Driver {
 				Bill_Status = Browser.WebTable.getCellData("AccountPayment", Row, Col_S);
 				Result.takescreenshot("Payment Status Verification" + Payment_Reference);
 
-			}else if((Bill_Status.equalsIgnoreCase("Success"))){
+			} else if ((Bill_Status.equalsIgnoreCase("Success"))) {
 				Continue.set(true);
-			}else
+			} else
 				Continue.set(false);
 
 			// To verify whether the Payment is reflected in Billing Profile
@@ -2804,7 +2796,7 @@ public class Keyword_CRM extends Driver {
 			do {
 				CO.waitforload();
 			} while (!Browser.WebButton.waitTillEnabled("Bill_Valid_Name"));
-			
+
 			CO.waitforload();
 			CO.TabNavigator("Payments");
 			CO.waitforload();
@@ -2813,7 +2805,7 @@ public class Keyword_CRM extends Driver {
 			Browser.WebButton.click("Payment_Query");
 			CO.waitforload();
 			Browser.WebTable.SetData("Payments", 2, Col, "Payment_Number", Payment_Reference);
-		//	CO.waitforload();
+			// CO.waitforload();
 			Result.takescreenshot("Payment Verification Bill level");
 			Row_Count = Browser.WebTable.getRowCount("Payments");
 			if (Bill_Status.equalsIgnoreCase("success") & Pay_Type.equalsIgnoreCase("outstanding")) {
@@ -2859,6 +2851,119 @@ public class Keyword_CRM extends Driver {
 			e.printStackTrace();
 		}
 		Result.fUpdateLog("------BillPayment Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Disconnect
+	 * Arguments			: None
+	 * Use 					: Disconnection of Active line
+	 * Designed By			: Sravani Reddy
+	 * Last Modified Date 	: 27-Sep-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String Disconnect() {
+
+		String Test_OutPut = "", Status = "";
+		String MSISDN, Order_no, Order_Reason, GetData;
+		int Col, Col_P;
+		Result.fUpdateLog("------Disconnect Event Details------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("Order_Reason").equals(""))) {
+				Order_Reason = getdata("Order_Reason");
+			} else {
+				Order_Reason = pulldata("Order_Reason");
+			}
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+			CO.Assert_Search(MSISDN, "Active", GetData);
+
+			int Row_Count1 = Browser.WebTable.getRowCount("Installed_Assert");
+			Col = CO.Select_Cell("Acc_Installed_Assert", "Product");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Installed_Assert", i, Col);
+				if (!LData.equalsIgnoreCase(GetData)) {
+					do {
+						Browser.WebButton.click("VFQ_Disconnect");
+						CO.waitforload();
+					} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
+					break;
+				}
+
+			}
+
+			if (Browser.WebEdit.gettext("Due_Date").equals(""))
+				Continue.set(false);
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitmoreforload();
+			Result.takescreenshot("Disconnect Order : ");
+			// CO.InstalledAssertChange("Disconnect");
+			CO.waitforload();
+			CO.Webtable_Value("Order Reason", Order_Reason);
+
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Col_P = CO.Actual_Cell("Line_Items", "Action");
+			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			for (int i = 2; i <= Row_Count1; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
+
+				if (Action.equalsIgnoreCase("Delete")) {
+					Result.fUpdateLog("Action Update   " + LData + ":" + Action);
+				} else {
+					Result.fUpdateLog(LData + ":" + Action);
+					Continue.set(false);
+				}
+
+			}
+
+			Test_OutPut += OrderSubmission().split("@@")[1];
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+
+			CO.waitforload();
+
+			CO.RTBScreen(MSISDN, "Inactive");
+			CO.waitforload();
+			CO.ToWait();
+
+			CO.GetSiebelDate();
+			if (Continue.get()) {
+				Status = "PASS";
+				Utlities.StoreValue("Sales_OrderNO", Order_no);
+				Test_OutPut += "Order_No : " + Order_no + ",";
+
+			} else {
+				Status = "FAIL";
+
+			}
+			Result.takescreenshot("");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Status = "PASS";
+			} else {
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------Disconnect Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
@@ -3174,131 +3279,6 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("-----Change Primary Number Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: Disconnect
-	 * Arguments			: None
-	 * Use 					: Disconnection of Active line
-	 * Designed By			: Sravani Reddy
-	 * Last Modified Date 	: 27-Sep-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public String Disconnect() {
-
-		String Test_OutPut = "", Status = "";
-		String MSISDN, PlanName, Order_no, Order_Reason, GetData;
-		int Col, Col_P;
-		Result.fUpdateLog("------Disconnect Event Details------");
-		try {
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-
-			if (!(getdata("PlanName").equals(""))) {
-				PlanName = getdata("PlanName");
-			} else {
-				PlanName = pulldata("PlanName");
-			}
-			Planname.set(PlanName);
-
-			if (!(getdata("Order_Reason").equals(""))) {
-				Order_Reason = getdata("Order_Reason");
-			} else {
-				Order_Reason = pulldata("Order_Reason");
-			}
-			if (!(getdata("GetData").equals(""))) {
-				GetData = getdata("GetData");
-			} else {
-				GetData = pulldata("GetData");
-			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
-			int Row_Count1 = Browser.WebTable.getRowCount("Installed_Assert");
-			Col = CO.Select_Cell("Installed_Assert", "Product");
-			Col_P = CO.Actual_Cell("Installed_Assert", "Service ID");
-			int Col_SR = CO.Actual_Cell("Acc_Installed_Assert", "Status");
-			for (int i = 2; i <= Row_Count1; i++) {
-				String LData = Browser.WebTable.getCellData("Installed_Assert", i, Col);
-				if (LData.equalsIgnoreCase(PlanName)) {
-					Browser.WebTable.click("Installed_Assert", i, Col_SR);
-					CO.waitforload();
-					break;
-
-				}
-
-			}
-			Browser.WebButton.click("VFQ_Disconnect");
-			CO.waitforload();
-			CO.scroll("Due_Date_chicklet", "WebButton");
-			Browser.WebButton.click("Due_Date_chicklet");
-			if (Browser.WebEdit.gettext("Due_Date").equals(""))
-				Continue.set(false);
-			CO.scroll("Date_Continue", "WebButton");
-			Browser.WebButton.click("Date_Continue");
-			CO.waitmoreforload();
-			Result.takescreenshot("Disconnect Order : ");
-			// CO.InstalledAssertChange("Disconnect");
-			CO.waitforload();
-			CO.Webtable_Value("Order Reason", Order_Reason);
-
-			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
-			Col = CO.Select_Cell("Line_Items", "Product");
-			Col_P = CO.Actual_Cell("Line_Items", "Action");
-			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
-			for (int i = 2; i <= Row_Count1; i++) {
-				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
-
-				if (LData.equalsIgnoreCase(PlanName)) {
-					if (Action.equalsIgnoreCase("Delete")) {
-						Result.fUpdateLog("Action Update   " + LData + ":" + Action);
-					} else {
-						Result.fUpdateLog(LData + ":" + Action);
-						Continue.set(false);
-					}
-				}
-
-			}
-
-			Test_OutPut += OrderSubmission().split("@@")[1];
-			Order_no = CO.Order_ID();
-			Utlities.StoreValue("Order_no", Order_no);
-			Test_OutPut += "Order_no : " + Order_no + ",";
-
-			CO.waitforload();
-
-			CO.RTBScreen(MSISDN, "Inactive");
-			CO.waitforload();
-			CO.ToWait();
-
-			CO.GetSiebelDate();
-			if (Continue.get()) {
-				Status = "PASS";
-				Utlities.StoreValue("Sales_OrderNO", Order_no);
-				Test_OutPut += "Order_No : " + Order_no + ",";
-
-			} else {
-				Status = "FAIL";
-
-			}
-			Result.takescreenshot("");
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Status = "PASS";
-			} else {
-				Status = "FAIL";
-			}
-		} catch (Exception e) {
-			Status = "FAIL";
-			Test_OutPut += "Exception occurred" + ",";
-			Result.takescreenshot("Exception occurred");
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-		}
-		Result.fUpdateLog("------Disconnect Event Details - Completed------");
-		return Status + "@@" + Test_OutPut + "<br/>";
 	}
 
 	/*---------------------------------------------------------------------------------------------------------

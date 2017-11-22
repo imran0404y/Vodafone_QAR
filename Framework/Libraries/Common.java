@@ -505,6 +505,7 @@ public class Common extends Driver {
 			Browser.WebButton.click("InstalledAssert_Go");
 			waitforload();
 			Text_Select("a", Prod);
+			waitforload();
 			// Browser.WebTable.Expand("Installed_Assert", i, 1);
 			Result.takescreenshot("");
 			// }
