@@ -1042,7 +1042,7 @@ public class Keyword_CRM extends Driver {
 		String OS_Status = "";
 		Result.fUpdateLog("------Order Submission Event Details------");
 		try {
-			int Complete_Status = 0, R_S = 0, Wait = 0, Row = 2, Col, Bill_Col, Row_Count;
+			int Complete_Status = 0, Wait = 0, Row = 2, Col, Bill_Col, Row_Count;
 			String EStatus = "Complete", FStatus = "Failed", Bill_Cycle;
 
 			if (Browser.WebTable.exist("Line_Items"))
@@ -2680,23 +2680,10 @@ public class Keyword_CRM extends Driver {
 					Continue.set(false);
 
 				CO.waitforload();
-
 				BillAmt = Browser.WebEdit.gettext("Balance");
-
+				Test_OutPut += "Balance: " + BillAmt + ",";
 				Result.takescreenshot("Getting Outstanding Balance" + BillAmt);
 				CO.Assert_Search(MSISDN, "Active", "Mobile Service Bundle");
-
-				/*
-				 * Browser.WebList.clickTab("Bill_Tab", "Unbilled Usage"); CO.waitforload();
-				 * Col_P=CO.Select_Cell("ServiceCharges", "Description");
-				 * Col=CO.Select_Cell("ServiceCharges", "Net Amount");
-				 * Row_Count=Browser.WebTable.getRowCount("ServiceCharges"); if (Row_Count>1)
-				 * for(Row=2;Row<=Row_Count;Row++)
-				 * if(Browser.WebTable.getCellData("ServiceCharges", Row, Col_P).equals(MSISDN))
-				 * { BillAmt=Browser.WebTable.getCellData("ServiceCharges", Row, Col);
-				 * CO.Assert_Search(MSISDN, "Active", "Mobile Service Bundle"); break;} else
-				 * Continue.set(false);
-				 */
 
 			} else {
 				if (!(getdata("BillAmt").equals(""))) {
@@ -2796,8 +2783,17 @@ public class Keyword_CRM extends Driver {
 			do {
 				CO.waitforload();
 			} while (!Browser.WebButton.waitTillEnabled("Bill_Valid_Name"));
-
 			CO.waitforload();
+			
+			if (Bill_Status.equalsIgnoreCase("success") & Pay_Type.equalsIgnoreCase("outstanding")) {
+				String Outstanding = "";
+				Outstanding = Browser.WebEdit.gettext("Balance");
+				Result.takescreenshot("Outstanding after Payment");
+				if (!(Outstanding.equalsIgnoreCase("qr0.00")))
+					Continue.set(false);
+			}
+			
+			
 			CO.TabNavigator("Payments");
 			CO.waitforload();
 			Col_S = CO.Select_Cell("Payments", "Status");
@@ -2808,27 +2804,6 @@ public class Keyword_CRM extends Driver {
 			// CO.waitforload();
 			Result.takescreenshot("Payment Verification Bill level");
 			Row_Count = Browser.WebTable.getRowCount("Payments");
-			if (Bill_Status.equalsIgnoreCase("success") & Pay_Type.equalsIgnoreCase("outstanding")) {
-				String Outstanding = "";
-				CO.Link_Select("Profiles");
-				CO.waitforload();
-				Browser.WebButton.click("Profile_Query");
-				Col_P = CO.Select_Cell("Bill_Prof", "Name");
-				Col = CO.Select_Cell("Bill_Prof", "Status");
-				Browser.WebTable.SetData("Bill_Prof", Row, Col_P, "Name", BillingProfile);
-				CO.waitforload();
-				if (Browser.WebTable.getRowCount("Bill_Prof") >= 2) {
-					Browser.WebTable.click("Bill_Prof", Row, Col);
-					Browser.WebTable.clickL("Bill_Prof", Row, Col_P);
-				} else
-					Continue.set(false);
-
-				CO.waitforload();
-				Outstanding = Browser.WebEdit.gettext("Balance");
-				Result.takescreenshot("Outstanding after Payment");
-				if (!(Outstanding.equalsIgnoreCase("qr0.00")))
-					Continue.set(false);
-			}
 
 			CO.ToWait();
 			if (Continue.get() & (Row_Count > 1)
