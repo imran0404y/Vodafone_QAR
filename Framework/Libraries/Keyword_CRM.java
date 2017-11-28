@@ -815,6 +815,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				MSISDN = pulldata("MSISDN");
 			}
+			Result.fUpdateLog("MSISDN : "+ MSISDN);
 			Test_OutPut += "MSISDN : " + MSISDN + ",";
 
 			if (!(getdata("SIM").equals(""))) {
@@ -822,6 +823,7 @@ public class Keyword_CRM extends Driver {
 			} else {
 				SIM = pulldata("SIM");
 			}
+			Result.fUpdateLog("SIM_NO : "+ SIM);
 			Test_OutPut += "SIM_NO : " + SIM + ",";
 
 			if (!(getdata("StarNumber").equals(""))) {
@@ -1150,7 +1152,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Submit");
 				CO.waitforload();
 				Row_Count = Browser.WebTable.getRowCount("Line_Items");
-				
+
 				do {
 					Complete_Status = 0;
 					// To refresh Page
@@ -1596,7 +1598,9 @@ public class Keyword_CRM extends Driver {
 			} else {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
 			CO.waitmoreforload();
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -1721,7 +1725,10 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 			CO.Plan_selection(GetData, MSISDN);
 			CO.waitmoreforload();
 			Browser.WebEdit.Set("PopupQuery_Search", New_PlanName);
@@ -1823,8 +1830,10 @@ public class Keyword_CRM extends Driver {
 				GetData = pulldata("GetData");
 			}
 
-			CO.Assert_Search(MSISDN, "Active", GetData);
-
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
 				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
@@ -1942,7 +1951,10 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Title_Select("a", "Home");
 
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -2199,8 +2211,11 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
 			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
+			
 			BillingProfileCreation();
 			CO.waitforload();
 			CO.Text_Select("a", "Account Summary");
@@ -2326,7 +2341,10 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			
 			CO.waitforload();
 			BillingProfileCreation();
 			CO.waitforload();
@@ -2478,7 +2496,9 @@ public class Keyword_CRM extends Driver {
 			} else {
 				SL_LimitAmount = pulldata("SL_LimitAmount");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
 			CO.waitmoreforload();
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -2552,7 +2572,10 @@ public class Keyword_CRM extends Driver {
 				Utlities.StoreValue("Order_no", Order_no);
 				Test_OutPut += "Order_no : " + Order_no + ",";
 
-				CO.Assert_Search(MSISDN, "Active", GetData);
+				CO.Assert_Search(MSISDN, "Active");
+				CO.waitforload();
+				CO.Text_Select("a", GetData);
+				CO.waitforload();
 
 				int Row_Count = Browser.WebTable.getRowCount("Acc_Installed_Assert");
 				Browser.WebButton.waittillvisible("Expand");
@@ -2657,7 +2680,9 @@ public class Keyword_CRM extends Driver {
 				Reference = R.nextInt(100000) + pulldata("Reference") + R.nextInt(100000000);
 			}
 			// Fetching Billing Profile Name from the Provided MSISDN
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
 			CO.waitforload();
 			Col_P = CO.Select_Cell("Acc_Installed_Assert", "Billing Profile");// Browser.WebTable.getRowCount("Acc_Installed_Assert");
 			CO.waitforload();
@@ -2683,7 +2708,10 @@ public class Keyword_CRM extends Driver {
 				BillAmt = Browser.WebEdit.gettext("Balance");
 				Test_OutPut += "Balance: " + BillAmt + ",";
 				Result.takescreenshot("Getting Outstanding Balance" + BillAmt);
-				CO.Assert_Search(MSISDN, "Active", "Mobile Service Bundle");
+				CO.Assert_Search(MSISDN, "Active");
+				CO.waitforload();
+				CO.Text_Select("a", GetData);
+				CO.waitforload();
 
 			} else {
 				if (!(getdata("BillAmt").equals(""))) {
@@ -2784,7 +2812,7 @@ public class Keyword_CRM extends Driver {
 				CO.waitforload();
 			} while (!Browser.WebButton.waitTillEnabled("Bill_Valid_Name"));
 			CO.waitforload();
-			
+
 			if (Bill_Status.equalsIgnoreCase("success") & Pay_Type.equalsIgnoreCase("outstanding")) {
 				String Outstanding = "";
 				Outstanding = Browser.WebEdit.gettext("Balance");
@@ -2792,8 +2820,7 @@ public class Keyword_CRM extends Driver {
 				if (!(Outstanding.equalsIgnoreCase("qr0.00")))
 					Continue.set(false);
 			}
-			
-			
+
 			CO.TabNavigator("Payments");
 			CO.waitforload();
 			Col_S = CO.Select_Cell("Payments", "Status");
@@ -2836,7 +2863,7 @@ public class Keyword_CRM extends Driver {
 	 * Designed By			: Sravani Reddy
 	 * Last Modified Date 	: 27-Sep-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public String Disconnect() {
+	public String Disconnection() {
 
 		String Test_OutPut = "", Status = "";
 		String MSISDN, Order_no, Order_Reason, GetData;
@@ -2859,21 +2886,34 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
-
-			int Row_Count1 = Browser.WebTable.getRowCount("Installed_Assert");
-			Col = CO.Select_Cell("Acc_Installed_Assert", "Product");
-			for (int i = 2; i <= Row_Count1; i++) {
-				String LData = Browser.WebTable.getCellData("Installed_Assert", i, Col);
-				if (!LData.equalsIgnoreCase(GetData)) {
-					do {
-						Browser.WebButton.click("VFQ_Disconnect");
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			int Col_S, Row_Count;
+			String LData;
+			Col = CO.Actual_Cell("Installed_Assert", "Product");
+			Col_S = CO.Actual_Cell("Installed_Assert", "Service ID");
+			Row_Count = Browser.WebTable.getRowCount("Installed_Assert");
+			for (int i = 2; i <= Row_Count; i++) {
+				LData = Browser.WebTable.getCellData("Installed_Assert", i, Col);
+				if (LData.equalsIgnoreCase(GetData)) {
+					if ((i % 2) == 0) {
+						Browser.WebTable.click("Installed_Assert", (i + 1), Col_S);
 						CO.waitforload();
-					} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
-					break;
+						break;
+					} else {
+						Browser.WebTable.click("Installed_Assert", (i - 1), Col_S);
+						CO.waitforload();
+						break;
+					}
 				}
 
 			}
+
+
+			do {
+				Browser.WebButton.click("VFQ_Disconnect");
+				CO.waitforload();
+			} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
 
 			if (Browser.WebEdit.gettext("Due_Date").equals(""))
 				Continue.set(false);
@@ -2885,12 +2925,12 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Webtable_Value("Order Reason", Order_Reason);
 
-			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			int Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
 			Col = CO.Select_Cell("Line_Items", "Product");
 			Col_P = CO.Actual_Cell("Line_Items", "Action");
 			Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
 			for (int i = 2; i <= Row_Count1; i++) {
-				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				LData = Browser.WebTable.getCellData("Line_Items", i, Col);
 				String Action = Browser.WebTable.getCellData("Line_Items", i, Col_P);
 
 				if (Action.equalsIgnoreCase("Delete")) {
@@ -2909,22 +2949,9 @@ public class Keyword_CRM extends Driver {
 
 			CO.waitforload();
 
-			CO.RTBScreen(MSISDN, "Inactive");
+			CO.AssertSearch(MSISDN, "Inactive");
 			CO.waitforload();
-			CO.ToWait();
-
-			CO.GetSiebelDate();
-			if (Continue.get()) {
-				Status = "PASS";
-				Utlities.StoreValue("Sales_OrderNO", Order_no);
-				Test_OutPut += "Order_No : " + Order_no + ",";
-
-			} else {
-				Status = "FAIL";
-
-			}
 			Result.takescreenshot("");
-
 			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
@@ -2967,7 +2994,10 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 
 			if (Browser.WebButton.exist("Suspend")) {
 				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
@@ -3078,7 +3108,10 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Suspended", GetData);
+			CO.Assert_Search(MSISDN, "Suspended");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 			if (Browser.WebButton.exist("Resume")) {
 				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
 				int Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
@@ -3135,12 +3168,7 @@ public class Keyword_CRM extends Driver {
 			Utlities.StoreValue("Order_no", Order_no);
 			Test_OutPut += "Order_no : " + Order_no + ",";
 
-			Result.takescreenshot("");
-			if (!(getdata("MSISDN").equals(""))) {
-				CO.Assert_Search(getdata("MSISDN"), "Active", "Resume");
-			} else {
-				CO.Assert_Search(pulldata("MSISDN"), "Active", "Resume");
-			}
+			Result.takescreenshot("");			
 
 			CO.ToWait();
 			CO.GetSiebelDate();
@@ -3186,7 +3214,10 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 			CO.Tag_Select("span", "Primary MSISDN");
 			if (Browser.WebButton.exist("Assert_Modify")) {
 				int Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
@@ -3287,7 +3318,10 @@ public class Keyword_CRM extends Driver {
 				BarringOption = pulldata("Barring Options");
 			}
 
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -3349,7 +3383,7 @@ public class Keyword_CRM extends Driver {
 			e.printStackTrace();
 		}
 		Result.fUpdateLog("------Barring Services Details - Completed------");
-		return Status + "@@" + Test_OutPut;
+		return Status + "@@" +Test_OutPut + "<br/>";
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -3383,7 +3417,10 @@ public class Keyword_CRM extends Driver {
 				BarringOption = pulldata("Barring Options");
 			}
 
-			CO.Assert_Search(MSISDN, "Active", GetData);
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -3447,7 +3484,138 @@ public class Keyword_CRM extends Driver {
 			e.printStackTrace();
 		}
 		Result.fUpdateLog("------UnBarring Services Details - Completed------");
-		return Status + "@@" + Test_OutPut;
+		return Status + "@@" +Test_OutPut + "<br/>";
 	}
 
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: TroubleTicket
+	 * Arguments			: None
+	 * Use 					: To raise TroubleTicket
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 26-Nov-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String TroubleTicket() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN,TT_No;
+
+		Result.fUpdateLog("------TroubleTicket services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+			
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.TabNavigator("Trouble Tickets");
+			
+			int Row = 2, Col;
+			Browser.WebButton.waitTillEnabled("TT_New");
+			CO.scroll("TT_New", "WebButton");
+			Browser.WebButton.click("TT_New");
+			CO.waitforload();
+			
+			Col = CO.Actual_Cell("TroubleTicket", "Ticket Id");
+			TT_No = Browser.WebTable.getCellData("TroubleTicket", Row, Col);
+			Result.takescreenshot("Trouble ticket raised : " + TT_No);
+			Utlities.StoreValue("TroubleTicket_No", TT_No);
+			Test_OutPut += "Trouble Ticket No: " + TT_No + ",";
+			Browser.WebTable.clickL("TroubleTicket", Row, Col);
+			CO.waitforload();
+			
+			Browser.ListBox.waitTillEnabled("TT_Source");
+			if (!(getdata("TT_Source").equals(""))) {
+				Browser.ListBox.select("TT_Source", getdata("TT_Source"));
+			} else {
+				Browser.ListBox.select("TT_Source", pulldata("TT_Source"));
+			}
+
+			if (!(getdata("TT_TicketType").equals(""))) {
+				Browser.ListBox.select("TT_TicketType", getdata("TT_TicketType"));
+			} else {
+				Browser.ListBox.select("TT_TicketType", pulldata("TT_TicketType"));
+			}
+
+			if (!(getdata("TT_Area").equals(""))) {
+				Browser.ListBox.select("TT_Area", getdata("TT_Area"));
+			} else {
+				Browser.ListBox.select("TT_Area", pulldata("TT_Area"));
+			}
+
+			if (!(getdata("TT_Sub_Area").equals(""))) {
+				Browser.ListBox.select("TT_SubArea", getdata("TT_Sub_Area"));
+			} else {
+				Browser.ListBox.select("TT_SubArea", pulldata("TT_Sub_Area"));
+			}
+			
+			Browser.WebButton.waitTillEnabled("TT_MSISDN");
+			Browser.WebButton.click("TT_MSISDN");
+
+			
+			CO.waitforobj("Popup_Go", "WebButton");
+			CO.scroll("Popup_Go", "WebButton");
+
+			Browser.ListBox.select("PopupQuery_List", "Serial #");
+			Browser.WebEdit.Set("PopupQuery_Search", MSISDN);
+			
+			CO.waitforload();
+			Browser.WebButton.click("Popup_Go");
+			Result.takescreenshot("");
+			//Browser.WebEdit.Set("TT_Description", "");
+			CO.Webtable_Value("Contact Role", "");
+			
+			
+			CO.Title_Select("a", "Trouble Tickets");
+			Browser.WebEdit.waitTillEnabled("TT_NumberSearch");
+			CO.scroll("TT_NumberSearch", "WebEdit");
+			Browser.WebEdit.Set("TT_NumberSearch", TT_No);
+			CO.scroll("TT_SearchGo", "WebButton");
+			Browser.WebButton.click("TT_SearchGo");
+			
+			do {
+				CO.waitforload();
+			}while (!Browser.WebTable.waitTillEnabled("TT_Table"));
+			Col = CO.Actual_Cell("TT_Table", "Ticket Id");
+			Browser.WebTable.click("TT_Table", Row, Col);
+
+			Browser.WebEdit.waitTillEnabled("TT_Description");
+			if (!(getdata("TT_Description").equals(""))) {
+				Browser.WebEdit.Set("TT_Description", getdata("TT_Description"));
+			} else {
+				Browser.WebEdit.Set("TT_Description", pulldata("TT_Description"));
+			}
+
+			if (!(getdata("TT_Status").equals(""))) {
+				Browser.ListBox.select("TT_Status", getdata("TT_Status"));
+			} else {
+				Browser.ListBox.select("TT_Status", pulldata("TT_Status"));
+			}
+			
+			Result.takescreenshot("Resolved");
+			CO.Webtable_Value("Contact Role", "");
+			
+			
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "TroubleTicket is done Successfully " + ",";
+				Result.fUpdateLog("TroubleTicket is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "TroubleTicket Failed" + ",";
+				Result.takescreenshot("TroubleTicket Failed");
+				Result.fUpdateLog("TroubleTicket Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------TroubleTicket Services Details - Completed------");
+		return Status + "@@" +Test_OutPut + "<br/>";
+	}
+	
 }

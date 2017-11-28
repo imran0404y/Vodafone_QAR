@@ -412,9 +412,11 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void ParentAssertSearch(String Reference, String Status, String Prod) {
 		try {
-			if (Reference.substring(0, 3).equals("974"))
-				Assert_Search(Reference, Status, Prod);
-			else
+			if (Reference.substring(0, 3).equals("974")) {
+				Assert_Search(Reference, Status);
+				waitforload();
+				Text_Select("a", Prod);
+			}else
 				Account_Search(Reference);
 
 		} catch (Exception e) {
@@ -465,8 +467,9 @@ public class Common extends Driver {
 	 * Designed By			: Vinodhini
 	 * Last Modified Date 	: 7-March-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public void Assert_Search(String MSISDN, String Status, String Prod) {
+	public void Assert_Search(String MSISDN, String Status) {
 		try {
+			Result.fUpdateLog("MSISDN : "+ MSISDN);
 			waitforload();
 			int Row = 2, Col;
 			Browser.WebLink.waittillvisible("VQ_Assert");
@@ -502,9 +505,7 @@ public class Common extends Driver {
 			InstalledAssertChange("New Query                   [Alt+Q]");
 			Col = Select_Cell("Installed_Assert", "Service ID");
 			Browser.WebTable.SetDataE("Installed_Assert", 2, Col, "Serial_Number", MSISDN);
-			Browser.WebButton.click("InstalledAssert_Go");
-			waitforload();
-			Text_Select("a", Prod);
+			Browser.WebButton.click("InstalledAssert_Go");			
 			waitforload();
 			// Browser.WebTable.Expand("Installed_Assert", i, 1);
 			Result.takescreenshot("");
@@ -786,6 +787,42 @@ public class Common extends Driver {
 		}
 	}
 
+	public void AssertSearch(String MSISDN, String Status) {
+		try {
+			waitforload();
+			int Row = 2, Col;
+			Title_Select("a", "Home");
+			waitforload();
+			Browser.WebLink.waittillvisible("VQ_Assert");
+			Browser.WebLink.click("VQ_Assert");
+			scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			waitforload();
+			Col = Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", Status);
+			Col = Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			waitforload();
+			Result.takescreenshot("Account Status : " + Status);
+			Col = Select_Cell("Assert", "Account");
+			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Continue.set(false);
+			Browser.WebLink.waittillvisible("Acc_Portal");
+			waitforload();
+			Browser.WebLink.click("Acc_Portal");
+			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Webtable_Value
 	 * Use 					: To fetch the value from a table having SPAN and Input tag

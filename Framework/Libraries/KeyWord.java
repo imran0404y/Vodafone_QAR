@@ -96,8 +96,8 @@ public class KeyWord {
 		return KC.Change_PrimaryNumber();
 	}
 
-	public String Disconnect() {
-		return KC.Disconnect();
+	public String Disconnection() {
+		return KC.Disconnection();
 	}
 
 	public String UnBarring() {
@@ -108,7 +108,9 @@ public class KeyWord {
 		return KC.Barring();
 	}
 
-	
+	public String TroubleTicket() {
+		return KC.TroubleTicket();
+	}
 	
 	// ------------------Keyword CRM -------------------//
 
