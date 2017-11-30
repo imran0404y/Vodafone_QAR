@@ -112,6 +112,10 @@ public class KeyWord {
 		return KC.TroubleTicket();
 	}
 	
+	public String Discounts() {
+		return KC.Discounts();
+	}
+	
 	// ------------------Keyword CRM -------------------//
 
 	// ---------------------Keyword API------------------------//

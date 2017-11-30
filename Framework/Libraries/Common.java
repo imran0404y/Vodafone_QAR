@@ -243,6 +243,7 @@ public class Common extends Driver {
 		String cellXpath = "//" + Tag + "[text()='" + Text + "']";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		waitforload();
 		cDriver.get().findElement(By.xpath(cellXpath)).click();
 	}// div option button span
 
@@ -416,7 +417,7 @@ public class Common extends Driver {
 				Assert_Search(Reference, Status);
 				waitforload();
 				Text_Select("a", Prod);
-			}else
+			} else
 				Account_Search(Reference);
 
 		} catch (Exception e) {
@@ -469,7 +470,7 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void Assert_Search(String MSISDN, String Status) {
 		try {
-			Result.fUpdateLog("MSISDN : "+ MSISDN);
+			Result.fUpdateLog("MSISDN : " + MSISDN);
 			waitforload();
 			int Row = 2, Col;
 			Browser.WebLink.waittillvisible("VQ_Assert");
@@ -505,7 +506,7 @@ public class Common extends Driver {
 			InstalledAssertChange("New Query                   [Alt+Q]");
 			Col = Select_Cell("Installed_Assert", "Service ID");
 			Browser.WebTable.SetDataE("Installed_Assert", 2, Col, "Serial_Number", MSISDN);
-			Browser.WebButton.click("InstalledAssert_Go");			
+			Browser.WebButton.click("InstalledAssert_Go");
 			waitforload();
 			// Browser.WebTable.Expand("Installed_Assert", i, 1);
 			Result.takescreenshot("");
@@ -756,7 +757,6 @@ public class Common extends Driver {
 			String BP = Browser.WebTable.getCellData("Installed_Assert", 2, Col1);
 			waitforload();
 
-			
 			scroll("Profile_Tab", "WebButton");
 			Browser.WebButton.click("Profile_Tab");
 			waitforload();
@@ -817,12 +817,12 @@ public class Common extends Driver {
 			waitforload();
 			Browser.WebLink.click("Acc_Portal");
 			Browser.WebLink.waittillvisible("Inst_Assert_ShowMore");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Webtable_Value
 	 * Use 					: To fetch the value from a table having SPAN and Input tag
@@ -1273,6 +1273,10 @@ public class Common extends Driver {
 	public void Popup_Click(String objname, int rownum, int columnnum) {
 
 		String[] objprop = Utlities.FindObject(objname, "WebTable");
+		String cellXpath1X = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum+1) + "]";
+		WebElement scr2 = cDriver.get().findElement(By.xpath(cellXpath1X));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr2);
+		
 		String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
@@ -1441,16 +1445,66 @@ public class Common extends Driver {
 		}
 
 	}
-	
+
 	public void Addon_Settings(String Text) {
-		//	String cellXpath = "//" + Tag + "[@title='" + Text + "']";
-			String cellXpath ="//input[@value='" + Text + "']/../..//i[@class='siebui-icon-settings']";
-			WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
-			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
-			waitforload();
-			cDriver.get().findElement(By.xpath(cellXpath)).click();
+		// String cellXpath = "//" + Tag + "[@title='" + Text + "']";
+		String cellXpath = "//input[@value='" + Text + "']/../..//i[@class='siebui-icon-settings']";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		waitforload();
+		cDriver.get().findElement(By.xpath(cellXpath)).click();
+	}
+
+	public void Discounts(String Disc_Addon, String Discount) {
+
+		List<WebElement> elements = cDriver.get().findElements(
+				By.xpath("//div[@class='siebui-ecfg-products']//div[1]//div[@class='siebui-ecfg-feature-group']"));
+		int Size = elements.size();
+		System.out.println(Size);
+		boolean flag = false;
+		waitforload();
+		for (int i = 1; i <= Size; i++) {
+			List<WebElement> Addon = cDriver.get()
+					.findElements(By.xpath("//div[@class='siebui-ecfg-products']//div[1]//div[" + i
+							+ "]//div[1]//table//div[1]//div[1]//input"));
+
+			for (int t = 1; t < Addon.size(); t++) {
+				if (Addon.get(t).getAttribute("value").equals(Disc_Addon)) {
+					if (Addon.get(t).getAttribute("type").equals("radio")) {
+						// Radio Button
+						Result.takescreenshot("Addon or Plan Selection");
+						((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)",
+								Addon.get(t));
+						Addon.get(t).click();
+						waitmoreforload();
+						cDriver.get()
+								.findElement(By.xpath("//div[@class='siebui-ecfg-products']//div[1]//div[" + i
+										+ "]//div[1]//table//div[1]//div[1]//i[@class='siebui-icon-settings']"))
+								.click();
+
+						String cellXpath = "//input[@value='" + Discount + "']";
+
+						if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed()) {
+							WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+							((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+							cDriver.get().findElement(By.xpath(cellXpath)).click();
+
+						} else
+							Continue.set(false);
+
+						flag = true;
+						break;
+					}
+				}
+			}
+
+			if (flag) {
+				break;
+			}
+
 		}
-	
+	}
+
 	// Plan_selection using existing plane name
 
 	/*

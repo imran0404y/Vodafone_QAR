@@ -94,7 +94,7 @@ public class Keyword_Validations extends Driver {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 				Calendar cal2 = Calendar.getInstance();
 				cal2.setTime(dateFormat.parse(billcycledate));
-				cal2.set(Calendar.MONTH, -1);
+				cal2.add(Calendar.MONTH, -1);
 				Total_Days = cal2.getActualMaximum(Calendar.DATE);
 			} else {
 				Total_Days = cals.getActualMaximum(Calendar.DATE);
