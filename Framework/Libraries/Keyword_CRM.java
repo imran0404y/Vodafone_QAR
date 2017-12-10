@@ -39,11 +39,7 @@ public class Keyword_CRM extends Driver {
 				browser.set("Chrome");
 			}
 
-			if (!(getdata("URL").equals(""))) {
-				URL.set(getdata("URL"));
-			} else {
-				URL.set("Chrome");
-			}
+			URL.set(getdata("URL/HOST"));
 
 			Browser.OpenBrowser(browser.get(), URL.get());
 
@@ -1301,7 +1297,11 @@ public class Keyword_CRM extends Driver {
 				}
 
 				CO.Link_Select(Acc);
-				CO.waitforload();
+				do {
+					CO.waitforload();
+					Result.fUpdateLog("Loading...");
+				} while (!Browser.WebLink.waitTillEnabled("Acc_Portal"));
+
 				Browser.WebLink.click("Acc_Portal");
 
 				Browser.WebLink.waittillvisible("Acc_Summary");
@@ -1418,29 +1418,29 @@ public class Keyword_CRM extends Driver {
 				}
 				int Row = 2, Col;
 				Col = CO.Select_Cell("Acc_Contact", "First Name");
-				if (!(getdata("Cont_FirstName").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", getdata("Cont_FirstName"));
-				} else if (!(pulldata("Cont_FirstName").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", pulldata("Cont_FirstName"));
+				if (!(getdata("FirstName").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", getdata("FirstName"));
+				} else if (!(pulldata("FirstName").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", pulldata("FirstName"));
 				} else {
 					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "First_Name", Utlities.randname());
 				}
 
 				Col = CO.Select_Cell("Acc_Contact", "Last Name");
-				if (!(getdata("Cont_LastName").equals(""))) {
-					Last_Name = getdata("Cont_LastName");
-				} else if (!(pulldata("Cont_LastName").equals(""))) {
-					Last_Name = pulldata("Cont_LastName") + R.nextInt(1000);
+				if (!(getdata("LastName").equals(""))) {
+					Last_Name = getdata("LastName");
+				} else if (!(pulldata("LastName").equals(""))) {
+					Last_Name = pulldata("LastName") + R.nextInt(1000);
 				} else {
 					Last_Name = Utlities.randname();
 				}
 				Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Last_Name", Last_Name);
 
 				Col = CO.Select_Cell("Acc_Contact", "Mr/Ms");
-				if (!(getdata("Cont_Mr/Ms").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", getdata("Cont_Mr/Ms"));
+				if (!(getdata("Mr/Ms").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", getdata("Mr/Ms"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", pulldata("Cont_Mr/Ms"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "M_M", pulldata("Mr/Ms"));
 				}
 
 				// Browser.WebTable.SetData("Acc_Contact", 2, Col, "Job_Title",getdata(""));
@@ -1454,34 +1454,34 @@ public class Keyword_CRM extends Driver {
 				 */
 
 				Col = CO.Select_Cell("Acc_Contact", "Email");
-				if (!(getdata("Cont_Email").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", getdata("Cont_Email"));
+				if (!(getdata("Email").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", getdata("Email"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", pulldata("Cont_Email"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Email_Address", pulldata("Email"));
 				}
 
 				Col = CO.Select_Cell("Acc_Contact", "Date of Birth");
-				if (!(getdata("Cont_DOB").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", getdata("Cont_DOB"));
+				if (!(getdata("DOB").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", getdata("DOB"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", pulldata("Cont_DOB"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_DOB", pulldata("DOB"));
 				}
 
 				Col = CO.Select_Cell("Acc_Contact", "ID Expiration Date");
-				if (!(getdata("Cont_IDExpiryDate").equals(""))) {
+				if (!(getdata("IDExpiryDate").equals(""))) {
 					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date",
-							getdata("Cont_IDExpiryDate"));
+							getdata("IDExpiryDate"));
 				} else {
 					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Expiration_Date",
-							pulldata("Cont_IDExpiryDate"));
+							pulldata("IDExpiryDate"));
 				}
 
 				Col = CO.Select_Cell("Acc_Contact", "ID Number");
-				if (!(getdata("Cont_IDNumber").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", getdata("Cont_IDNumber"));
+				if (!(getdata("IDNumber").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number", getdata("IDNumber"));
 				} else {
 					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Number",
-							pulldata("Cont_IDNumber") + R.nextInt(100000));
+							pulldata("IDNumber") + R.nextInt(100000));
 
 				}
 
@@ -1489,44 +1489,41 @@ public class Keyword_CRM extends Driver {
 
 				// Col = CO.Select_Cell("Acc_Contact", "ID Type");
 				Col++;
-				if (!(getdata("Cont_IDType").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", getdata("Cont_IDType"));
+				if (!(getdata("IDType").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", getdata("IDType"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", pulldata("Cont_IDType"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_ID_Type", pulldata("IDType"));
 				}
 
 				Col++;
 				// Col = CO.Select_Cell("Acc_Contact", "Mobile Phone #");
-				if (!(getdata("Cont_MobilePhone").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__", getdata("Cont_MobilePhone"));
+				if (!(getdata("MobilePhone").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__", getdata("MobilePhone"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__",
-							pulldata("Cont_MobilePhone"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "Cellular_Phone__", pulldata("MobilePhone"));
 				}
 
 				Col++;
 				// Col = CO.Select_Cell("Acc_Contact", "Nationality");
-				if (!(getdata("Cont_Nationality").equals(""))) {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", getdata("Cont_Nationality"));
+				if (!(getdata("Nationality").equals(""))) {
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", getdata("Nationality"));
 				} else {
-					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", pulldata("Cont_Nationality"));
+					Browser.WebTable.SetDataE("Acc_Contact", Row, Col, "VFQ_Nationality", pulldata("Nationality"));
 				}
 
 				Col = Col + 4;
 				// Col = CO.Select_Cell("Acc_Contact", "Gender");
-				if (!(getdata("Cont_Gender").equals(""))) {
-					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", getdata("Cont_Gender"));
+				if (!(getdata("Gender").equals(""))) {
+					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", getdata("Gender"));
 				} else {
-					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", pulldata("Cont_Gender"));
+					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQA_M_F", pulldata("Gender"));
 				}
 
 				Col = CO.Select_Cell("Acc_Contact", "Preferred Language");
-				if (!(getdata("Cont_PrefLang").equals(""))) {
-					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language",
-							getdata("Cont_PrefLang"));
+				if (!(getdata("PrefLang").equals(""))) {
+					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language", getdata("PrefLang"));
 				} else {
-					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language",
-							pulldata("Cont_PrefLang"));
+					Browser.WebTable.SetData("Acc_Contact", Row, Col, "VFQ_Preferred_Language", pulldata("PrefLang"));
 				}
 
 				CO.waitforload();
@@ -1664,7 +1661,7 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
-			Add_Addon = "Paid Addons,Vodafone Passport";
+			// Add_Addon = "Paid Addons,Vodafone Passport";
 			LineItemData.clear();
 			CO.Status(Add_Addon);
 			CO.waitforload();
@@ -3004,6 +3001,1330 @@ public class Keyword_CRM extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: TroubleTicket
+	 * Arguments			: None
+	 * Use 					: To raise TroubleTicket
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 26-Nov-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String TroubleTicket() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, TT_No;
+
+		Result.fUpdateLog("------TroubleTicket services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.TabNavigator("Trouble Tickets");
+
+			int Row = 2, Col;
+			Browser.WebButton.waitTillEnabled("TT_New");
+			CO.scroll("TT_New", "WebButton");
+			Browser.WebButton.click("TT_New");
+			CO.waitforload();
+
+			Col = CO.Actual_Cell("TroubleTicket", "Ticket Id");
+			TT_No = Browser.WebTable.getCellData("TroubleTicket", Row, Col);
+			Result.takescreenshot("Trouble ticket raised : " + TT_No);
+			Utlities.StoreValue("TroubleTicket_No", TT_No);
+			Test_OutPut += "Trouble Ticket No: " + TT_No + ",";
+			Browser.WebTable.clickL("TroubleTicket", Row, Col);
+			CO.waitforload();
+
+			Browser.ListBox.waitTillEnabled("TT_Source");
+			if (!(getdata("TT_Source").equals(""))) {
+				Browser.ListBox.select("TT_Source", getdata("TT_Source"));
+			} else {
+				Browser.ListBox.select("TT_Source", pulldata("TT_Source"));
+			}
+
+			if (!(getdata("TT_TicketType").equals(""))) {
+				Browser.ListBox.select("TT_TicketType", getdata("TT_TicketType"));
+			} else {
+				Browser.ListBox.select("TT_TicketType", pulldata("TT_TicketType"));
+			}
+
+			if (!(getdata("TT_Area").equals(""))) {
+				Browser.ListBox.select("TT_Area", getdata("TT_Area"));
+			} else {
+				Browser.ListBox.select("TT_Area", pulldata("TT_Area"));
+			}
+
+			if (!(getdata("TT_Sub_Area").equals(""))) {
+				Browser.ListBox.select("TT_SubArea", getdata("TT_Sub_Area"));
+			} else {
+				Browser.ListBox.select("TT_SubArea", pulldata("TT_Sub_Area"));
+			}
+
+			Browser.WebButton.waitTillEnabled("TT_MSISDN");
+			Browser.WebButton.click("TT_MSISDN");
+
+			CO.waitforobj("Popup_Go", "WebButton");
+			CO.scroll("Popup_Go", "WebButton");
+
+			Browser.ListBox.select("PopupQuery_List", "Serial #");
+			Browser.WebEdit.Set("PopupQuery_Search", MSISDN);
+
+			CO.waitforload();
+			Browser.WebButton.click("Popup_Go");
+			CO.waitforload();
+			Result.takescreenshot("");
+			// Browser.WebEdit.Set("TT_Description", "");
+			CO.Webtable_Value("Contact Role", "");
+
+			CO.Title_Select("a", "Trouble Tickets");
+			Browser.WebEdit.waitTillEnabled("TT_NumberSearch");
+			CO.scroll("TT_NumberSearch", "WebEdit");
+			Browser.WebEdit.Set("TT_NumberSearch", TT_No);
+			CO.scroll("TT_SearchGo", "WebButton");
+			Browser.WebButton.click("TT_SearchGo");
+
+			do {
+				CO.waitforload();
+			} while (!Browser.WebTable.waitTillEnabled("TT_Table"));
+			Col = CO.Actual_Cell("TT_Table", "Ticket Id");
+			Browser.WebTable.click("TT_Table", Row, Col);
+
+			Browser.WebEdit.waitTillEnabled("TT_Description");
+			if (!(getdata("TT_Description").equals(""))) {
+				Browser.WebEdit.Set("TT_Description", getdata("TT_Description"));
+			} else {
+				Browser.WebEdit.Set("TT_Description", pulldata("TT_Description"));
+			}
+
+			if (!(getdata("TT_Status").equals(""))) {
+				Browser.ListBox.select("TT_Status", getdata("TT_Status"));
+			} else {
+				Browser.ListBox.select("TT_Status", pulldata("TT_Status"));
+			}
+			CO.waitforload();
+			Result.takescreenshot("Resolved");
+			CO.Webtable_Value("Contact Role", "");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "TroubleTicket is done Successfully " + ",";
+				Result.fUpdateLog("TroubleTicket is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "TroubleTicket Failed" + ",";
+				Result.takescreenshot("TroubleTicket Failed");
+				Result.fUpdateLog("TroubleTicket Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------TroubleTicket Services Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name             : Discounts
+	 * Arguments               : None
+	 * Use                     : Plan level Discounts
+	 * Designed By             : Vinodhini Raviprasad
+	 * Last Modified Date      : 12-Nov-2017
+	 --------------------------------------------------------------------------------------------------------*/
+	public String Discounts() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, Discount, GetData, Order_no;
+		int Inst_RowCount, Col_P, Col_SID;
+
+		Result.fUpdateLog("------Discounts ------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("Discount").equals(""))) {
+				Discount = getdata("Discount");
+			} else {
+				Discount = pulldata("Discount");
+			}
+
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitmoreforload();
+			if (Browser.WebButton.exist("Assert_Modify")) {
+
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				int Col_SR = CO.Actual_Cell("Acc_Installed_Assert", "Status");
+				// To Find the Record with Mobile Service Bundle and MSISDN
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
+						CO.waitforload();
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_SR);
+						break;
+					}
+				do {
+					Browser.WebButton.click("Assert_Modify");
+					String x = Browser.WebEdit.gettext("Due_Date");
+					if (!x.contains("/")) {
+						Browser.WebButton.click("Date_Cancel");
+						Browser.WebButton.click("Assert_Modify");
+					}
+					CO.waitforload();
+				} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
+
+			} else {
+				CO.InstalledAssertChange("Modify");
+			}
+
+			CO.waitforload();
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitmoreforload();
+
+			/*
+			 * int Row_Count = Browser.WebTable.getRowCount("Line_Items"); Col =
+			 * CO.Select_Cell("Line_Items", "Product"); Col_V = Col + 2;
+			 * 
+			 * for (int i = 2; i <= Row_Count; i++) { String LData =
+			 * Browser.WebTable.getCellData("Line_Items", i, Col); if
+			 * (GetData.equals(LData)) { Row_Val = i; break; } }
+			 * Browser.WebTable.click("Line_Items", Row_Val, Col_V);
+			 * Result.fUpdateLog("------Customising to Add Discount ------");
+			 * CO.Text_Select("span", "Customize");
+			 */
+			CO.waitforload();
+			if (TestCaseN.get().equalsIgnoreCase("PlanDiscount")) {
+				Result.fUpdateLog("------Customising to Add Plan Discount ------");
+				String PlanName;
+				if (!(getdata("PlanBundle").equals(""))) {
+					PlanName = getdata("PlanBundle");
+				} else {
+					PlanName = pulldata("PlanBundle");
+				}
+				CO.Radio_Select(PlanName);
+				CO.waitforload();
+				Result.takescreenshot("Customising to Select Discounts");
+				WebElement Custom = cDriver.get().findElement(By.xpath("//i[@class='siebui-icon-settings']"));
+				((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", Custom);
+				cDriver.get().findElement(By.xpath("//i[@class='siebui-icon-settings']")).click();
+				CO.waitforload();
+				CO.Radio_Select(Discount);
+				CO.waitforload();
+				Result.fUpdateLog("------Discount Selected ------");
+			} else {
+				Result.fUpdateLog("------Customising to Add Addon Discount ------");
+				Result.takescreenshot("Addon Level Discount");
+				String Addon, AddonTab;
+				if (!(getdata("Addon").equals(""))) {
+					Addon = getdata("Addon");
+				} else {
+					Addon = pulldata("Addon");
+				}
+				if (!(getdata("AddonTab").equals(""))) {
+					AddonTab = getdata("AddonTab");
+				} else {
+					AddonTab = "Paid Addons";
+				}
+
+				CO.Link_Select(AddonTab);
+				CO.Discounts(Addon, Discount);
+				CO.waitforload();
+				Result.fUpdateLog("------Discount Selected ------");
+			}
+
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			Result.takescreenshot("Discounts Done");
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			CO.waitforload();
+			if (CO.isAlertExist())
+				Continue.set(false);
+
+			Browser.WebButton.waittillvisible("Validate");
+			Test_OutPut += OrderSubmission().split("@@")[1];
+
+			// fetching Order_no
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "Discounts is done Successfully " + ",";
+				Result.fUpdateLog("Discounts is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "Discounts Failed" + ",";
+				Result.takescreenshot("Discounts Failed");
+				Result.fUpdateLog("Discounts Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------Discounts Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name             : SIMSwap_Guided_Journey
+	 * Arguments               : None
+	 * Use                     : GJ Flow for SIM Swap
+	 * Designed By             : Vinodhini Raviprasad
+	 * Last Modified Date      : 05-Dec-2017
+	 --------------------------------------------------------------------------------------------------------*/
+	public String SIMSwap_Guided_Journey()
+
+	{
+		String MSISDN, New_SIM, Comments;
+		int Row = 2, Col;
+		String Test_OutPut = "", Status = "";
+		Result.fUpdateLog("------SIM swap Guided journey------");
+		try {
+
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("New_SIM").equals(""))) {
+				New_SIM = getdata("New_SIM");
+			} else {
+				New_SIM = pulldata("New_SIM");
+			}
+
+			if (!(getdata("Comments").equals(""))) {
+				Comments = getdata("Comments");
+			} else {
+				Comments = pulldata("Comments");
+			}
+			Random R = new Random();
+			CO.waitforload();
+			CO.scroll("VQ_Assert", "WebLink");
+			Browser.WebLink.click("VQ_Assert");
+			CO.waitforload();
+
+			CO.scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			CO.waitforload();
+
+			Result.takescreenshot("Assert Search");
+			Result.fUpdateLog("Assert Search Initiation");
+			// Installed_Assert
+			Col = CO.Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = CO.Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", "Active");
+			Col = CO.Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			CO.waitforload();
+			Col = CO.Select_Cell("Assert", "Account");
+			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Continue.set(false);
+			Result.takescreenshot("SIM Swap Initiation in Account Summary View");
+			Result.fUpdateLog("SIM Swap Initiation in Account Summary View");
+			CO.waitforload();
+			Browser.WebButton.waitTillEnabled("Asset_SIMSwap");
+			Browser.WebButton.click("Asset_SIMSwap");
+
+			CO.scroll("Cancel_gs", "WebButton");
+			CO.waitforload();
+			CO.waitforload();
+			Browser.WebButton.waittillvisible("S_Continue");
+			String IDNum, IDType, FirstName;
+			CO.waitforload();
+
+			Result.takescreenshot("Contact Verification for SIM Swap Guided Journey");
+			Result.fUpdateLog("Contact Verification for SIM Swap Guided Journey");
+			IDNum = Browser.WebEdit.gettext("Contact_IDNumber");
+			IDType = Browser.WebEdit.gettext("Contact_IDType");
+			FirstName = Browser.WebEdit.gettext("FirstName");
+			Browser.WebButton.click("S_Continue");
+
+			CO.waitmoreforload();
+			Browser.WebEdit.Set("New_SIM_SNO", New_SIM);
+
+			Result.takescreenshot("Providing New SIM");
+			Result.fUpdateLog("Providing New SIM");
+			CO.waitforload();
+
+			Browser.WebButton.waittillvisible("Submit_SimSwap");
+			Browser.WebButton.click("Submit_SimSwap");
+
+			CO.waitforload();
+
+			CO.scroll("Save_Finish", "WebLink");
+
+			Browser.WebEdit.Set("Comments", Comments + R.nextInt(1000));
+
+			Browser.WebLink.waittillvisible("Save_Finish");
+			Result.fUpdateLog("Finishing SIM Swap Guided Procees");
+			Result.takescreenshot("Finishing SIM Swap Guided Procees");
+			Browser.WebLink.click("Save_Finish");
+
+			CO.waitforload();
+			Result.takescreenshot("Finish Process");
+			Browser.WebLink.click("Finish_Process");
+
+			CO.waitforload();
+			if (Browser.WebButton.exist("VFQ_LeftScroll"))
+				Browser.WebButton.click("VFQ_LeftScroll");
+			Browser.WebLink.click("VQ_Assert");
+
+			CO.waitforload();
+			CO.scroll("Assert_Search", "WebLink");
+			Browser.WebLink.click("Assert_Search");
+			CO.waitforload();
+
+			Result.fUpdateLog("Initiating Assert Search for Contact Verification");
+			Result.takescreenshot("Initiating Assert Search for Contact Verification");
+			// Installed_Assert
+			Col = CO.Select_Cell("Assert", "Service ID");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
+			Col = CO.Select_Cell("Assert", "Status");
+			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", "Active");
+			Col = CO.Select_Cell("Assert", "Product");
+			Browser.WebButton.waitTillEnabled("Assert_Go");
+			Browser.WebButton.click("Assert_Go");
+			CO.waitforload();
+			Col = CO.Select_Cell("Assert", "Account");
+			Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
+
+			if (Assert_Row_Count > 1)
+				Browser.WebTable.clickL("Assert", Row, Col);
+			else
+				Continue.set(false);
+
+			CO.waitforload();
+			Browser.WebButton.waitTillEnabled("Asset_SIMSwap");
+			Browser.WebButton.click("Asset_SIMSwap");
+			CO.waitforload();
+
+			if (IDNum.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDNumber"))
+					& IDType.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDType"))
+					& FirstName.equalsIgnoreCase(Browser.WebEdit.gettext("FirstName"))) {
+				Result.takescreenshot("Contact Verification is Successfull");
+				Result.fUpdateLog("Contact Verification is Successfull");
+			} else {
+				Result.takescreenshot("Contact Verification Failure");
+				Continue.set(false);
+			}
+			if (Continue.get()) {
+				Test_OutPut += "";
+				Result.takescreenshot("SIM Swap Guided_Journey is Successfull");
+				Result.fUpdateLog("SIM Swap Guided_Journey is Successfull");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "SIM Swap Guided_Journey Failed" + ",";
+				Result.takescreenshot("SIM Swap Guided_Journey Failed");
+				Result.fUpdateLog("SIM Swap Guided_Journey Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		Result.fUpdateLog("-----SIM swap Guided journey - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	* Method Name             : ConsumerPostpaid_GuidedJourney
+	* Arguments               : None
+	* Use                     : GJ Flow for Postpaid Consumer Provisioning
+	* Designed By             : Vinodhini Raviprasad
+	* Last Modified Date      : 05-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String ConsumerPostpaid_GuidedJourney() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, SIM, SP_Plan, ID_Type, ID_Expiry, Nationality, Gender, Language, First, Last, DOB, Job, Email,
+				Mobile, File_Upload, IDNumber;
+		try {
+
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+			if (!(getdata("SIM").equals(""))) {
+				SIM = getdata("SIM");
+			} else {
+				SIM = pulldata("SIM");
+			}
+
+			if (!(getdata("ID_Number").equals(""))) {
+				IDNumber = getdata("ID_Number");
+			} else {
+				IDNumber = "8912" + R.nextInt(100000);
+			}
+
+			if (!(getdata("PlanName").equals(""))) {
+				SP_Plan = getdata("PlanName");
+			} else {
+				SP_Plan = pulldata("PlanName");
+			}
+			if (!(getdata("ID_Type").equals(""))) {
+				ID_Type = getdata("ID_Type");
+			} else {
+				ID_Type = pulldata("ID_Type");
+			}
+
+			if (!(getdata("ID_Expiry").equals(""))) {
+				ID_Expiry = getdata("ID_Expiry");
+			} else {
+				ID_Expiry = pulldata("ID_Expiry");
+			}
+			if (!(getdata("Nationality").equals(""))) {
+				Nationality = getdata("Nationality");
+			} else {
+				Nationality = pulldata("Nationality");
+			}
+			if (!(getdata("Language").equals(""))) {
+				Language = getdata("Language");
+			} else {
+				Language = pulldata("Language");
+			}
+			if (!(getdata("Gender").equals(""))) {
+				Gender = getdata("Gender");
+			} else {
+				Gender = pulldata("Gender");
+			}
+
+			if (!(getdata("FirstName").equals(""))) {
+				First = getdata("FirstName");
+			} else if (!(pulldata("FirstName").equals(""))) {
+				First = pulldata("FirstName") + R.nextInt(100000);
+			} else {
+				First = Utlities.randname();
+			}
+
+			if (!(getdata("LastName").equals(""))) {
+				Last = getdata("LastName");
+			} else if (!(pulldata("LastName").equals(""))) {
+				Last = pulldata("LastName") + R.nextInt(100000);
+			} else {
+				Last = Utlities.randname();
+			}
+
+			if (!(getdata("DOB").equals(""))) {
+				DOB = getdata("DOB");
+			} else {
+				DOB = pulldata("DOB");
+			}
+
+			if (!(getdata("Job").equals(""))) {
+				Job = getdata("Job");
+			} else {
+				Job = pulldata("Job");
+			}
+
+			if (!(getdata("Email").equals(""))) {
+				Email = getdata("Email");
+			} else {
+				Email = pulldata("Email");
+			}
+
+			if (!(getdata("Mobile").equals(""))) {
+				Mobile = getdata("Mobile");
+			} else {
+				Mobile = pulldata("Mobile");
+			}
+
+			if (!(getdata("File_Upload").equals(""))) {
+				File_Upload = getdata("File_Upload");
+			} else {
+				File_Upload = pulldata("File_Upload");
+			}
+
+			CO.waitforobj("VQ_Contact", "WebLink");
+			CO.waitforload();
+			Browser.WebLink.click("VQ_Contact");
+			CO.waitforload();
+			CO.waitforobj("All_contacts", "WebLink");
+			Browser.WebLink.click("All_contacts");
+			CO.waitforload();
+			CO.waitforobj("Acc_Add_Contact", "WebButton");
+			Browser.WebButton.click("Acc_Add_Contact");
+			CO.waitforobj("Consumer_Postpaid", "WebLink");
+			Browser.WebLink.click("Consumer_Postpaid");
+			CO.waitforload();
+			Result.takescreenshot("Navigated to Consumer Postpaid");
+			CO.waitforload();
+
+			Browser.WebEdit.waittillvisible("C_ID_Number");
+			Browser.WebEdit.waitTillEnabled("C_ID_Number");
+
+			CO.scroll("C_ID_Number", "WebEdit");
+			Browser.WebEdit.Set("C_ID_Number", IDNumber);
+
+			CO.waitforload();
+			CO.waitforobj("ID_Ctype", "ListBox");
+			Browser.ListBox.select("ID_Ctype", ID_Type);
+			CO.waitforobj("C_go", "WebButton");
+			Browser.WebButton.click("C_go");
+			CO.waitforload();
+
+			Browser.WebEdit.waittillvisible("C_ID_Expiry");
+			Browser.WebEdit.waitTillEnabled("C_ID_Expiry");
+
+			Result.takescreenshot("");
+
+			CO.waitforobj("C_ID_Expiry", "WebEdit");
+
+			CO.scroll("C_ID_Expiry", "WebEdit");
+			if (!(ID_Type.equalsIgnoreCase("Qatari ID"))) {
+				Browser.WebEdit.Set("C_ID_Expiry", ID_Expiry);
+
+				Browser.WebEdit.Set("C_Nationality", Nationality);
+
+				Browser.WebEdit.Set("C_Gender", Gender);
+
+				Browser.WebEdit.Set("C_First", First);
+
+				Browser.WebEdit.Set("C_Last", Last);
+
+				Browser.WebEdit.Set("C_DOB", DOB);
+
+				Browser.WebEdit.Set("C_Job", Job);
+
+			} else {
+				if (Browser.WebEdit.CheckDisabled("C_First") == false & Browser.WebEdit.CheckDisabled("C_Last") == false
+						& Browser.WebEdit.CheckDisabled("C_Nationality") == false)
+					Continue.set(false);
+			}
+
+			Result.takescreenshot("");
+			Browser.WebEdit.Set("C_Email", Email);
+			Browser.WebEdit.Set("Contact_IDType", Language);
+			Browser.WebEdit.Set("C_Mobile", Mobile);
+			CO.Upload("File_Upload", File_Upload);
+			CO.waitforload();
+			Browser.WebButton.waittillvisible("c_Continue");
+			Browser.WebButton.click("c_Continue");
+			Result.fUpdateLog("Guided :  contact Completed");
+
+			// Search for Specific Address
+
+			String Address;
+			if (!(getdata("Address").equals(""))) {
+				Address = getdata("Address");
+			} else if (!(getdata("Kahramaa_ID").equals(""))) {
+				Address = "Kar#" + getdata("Kahramaa_ID");
+			} else if (!(pulldata("Kahramaa_ID").equals(""))) {
+				Address = "Kar#" + pulldata("Kahramaa_ID");
+			} else {
+				Address = pulldata("Address");
+			}
+
+			CO.waitforload();
+
+			Browser.WebButton.waittillvisible("C_Add_Address");
+
+			CO.waitforload();
+
+			CO.waitforobj("C_Add_Address", "WebButton");
+
+			Browser.WebButton.click("C_Add_Address");
+
+			// Address
+
+			CO.waitforobj("c_Popup_Go", "WebButton");
+			CO.scroll("c_Popup_Go", "WebButton");
+
+			if (Address.contains("Kar#")) {
+				Browser.ListBox.select("PopupQuery_List", "Kahramaa ID");
+				Browser.WebEdit.Set("PopupQuery_Search", Address.split("#")[1]);
+			} else {
+				Browser.ListBox.select("PopupQuery_List", "Address Line 1");
+				Browser.WebEdit.Set("PopupQuery_Search", Address);
+			}
+			CO.waitforload();
+			Browser.WebButton.click("c_Popup_Go");
+
+			CO.waitforload();
+			CO.scroll("Add_OK", "WebButton");
+			Browser.WebButton.click("Add_OK");
+
+			CO.waitforload();
+
+			Result.takescreenshot("Address Selected : " + Address);
+			Result.fUpdateLog("Address Selected : " + Address);
+
+			CO.waitforload();
+
+			CO.scroll("c_Continue", "WebButton");
+			Browser.WebButton.waittillvisible("c_Continue");
+			Browser.WebButton.click("c_Continue");
+			Result.fUpdateLog("Guided :  Address Completed");
+
+			CO.waitforload();
+
+			// Account
+
+			CO.scroll("C_segment", "ListBox");
+
+			CO.waitforload();
+
+			CO.scroll("c_Continue", "WebButton");
+			Browser.WebButton.waittillvisible("c_Continue");
+			Browser.WebButton.click("c_Continue");
+			Result.fUpdateLog("Guided :  Account  Completed");
+
+			// Billing
+
+			CO.waitforload();
+
+			CO.scroll("C_Media_type", "ListBox");
+			CO.waitforobj("cb_Continue", "WebButton");
+			Browser.WebButton.waittillvisible("cb_Continue");
+			Browser.WebButton.click("cb_Continue");
+
+			Result.fUpdateLog("Guided :  Billing profile Completed");
+			// Reserved no
+
+			CO.waitforobj("c_Reserve_Num", "WebButton");
+			String Number = MSISDN, Temp;
+			// String Number = Driver.msisdn_exe.get(), Temp;
+			int Len = Number.length(), Col_Count = Browser.WebTable.getColCount("Unreserverd"), Col_Res = 0, Row = 2;
+			String Reserve = Number.substring(3, Len);
+			for (int i = 2; i < Col_Count; i++) {
+				Temp = CO.Col_Data(i);
+				Col_Res = i;
+				if (Temp.toLowerCase().trim().equals("service type"))
+					break;
+			}
+
+			/*
+			 * if (Browser.WebButton.exist("Query_Unreserv_Num")) {
+			 * CO.scroll("Query_Unreserv_Num", "WebButton");
+			 * Browser.WebButton.click("Query_Unreserv_Num");}
+			 */
+
+			CO.scroll("Unreserverd", "WebTable");
+			Browser.WebTable.SetDataE("Unreserverd", Row, Col_Res, "Service_Type", "Mobile");
+			CO.scroll("Unreserverd", "WebTable");
+			Browser.WebTable.SetData("Unreserverd", Row, Col_Res + 3, "Service_Id", Reserve);
+
+			Browser.WebButton.waitTillEnabled("c_Reserve_Num");
+			Browser.WebButton.waittillvisible("c_Reserve_Num");
+
+			CO.waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Unreserverd");
+			Result.fUpdateLog(Row_Count + " Unreserved Row Count");
+			// To check whether number available
+			Result.takescreenshot("Number Reservation");
+			if (Row_Count > 1) {
+				CO.scroll("c_Reserve_Num", "WebButton");
+				CO.Text_Select("span", "Reserve");
+				CO.waitforload();
+				CO.isAlertExist();
+			} else {
+				Driver.Continue.set(false);
+				System.out.println("Guided : Check the MSISDN");
+				System.exit(0);
+			}
+			// Reserved
+			CO.scroll("Reserved", "WebTable");
+			Browser.WebTable.SetDataE("Reserved", Row, Col_Res, "Service_Type", "Mobile");
+			Browser.WebTable.SetData("Reserved", Row, Col_Res + 1, "Category", "");
+
+			// To check whether the Number has been Reserved
+			// CO.waitforload();
+			CO.waitforobj("SP_Resrv_Continue", "WebButton");
+			Row_Count = Browser.WebTable.getRowCount("Reserved");
+			System.out.println("Guided : Unreserved" + Row_Count);
+			if (Row_Count > 1)
+				Result.takescreenshot("MSISDN Reserved " + Number);
+			else {
+				Driver.Continue.set(false);
+				Result.fUpdateLog("Guided : Check the MSISDN");
+				System.exit(0);
+			}
+			CO.scroll("SP_Resrv_Continue", "WebButton");
+			CO.Text_Select("span", "Continue");
+			Result.fUpdateLog("Guided :  Number Reserved");
+
+			CO.waitforload();
+
+			// To Provide SIM Number
+			CO.waitforobj("SP_Continue", "WebButton");
+			Browser.WebEdit.waittillvisible("SP_SIM");
+			Browser.WebEdit.waitTillEnabled("SP_SIM");
+			System.out.println("SIM");
+
+			// CO.waitmoreforload();
+			CO.waitforload();
+			Driver.Continue.set(true);
+			CO.scroll("SP_SIM", "WebEdit");
+			Browser.WebEdit.click("SP_SIM");
+			Browser.WebEdit.Set("SP_SIM", SIM);
+
+			Result.takescreenshot("");
+			Browser.WebButton.waittillvisible("SP_Continue");
+			CO.scroll("SP_Continue", "WebButton");
+			Browser.WebButton.click("SP_Continue");
+			Result.fUpdateLog("Guided :  SIM Provided");
+
+			// Plan
+
+			CO.waitforload();
+			if (TestCaseN.get().toLowerCase().contains("consumerpostpaid")) {
+				CO.Category_Select("Postpaid Plans", "Postpaid Consumer Plans");
+			}
+
+			CO.waitforload();
+			CO.Link_Select(SP_Plan);
+			CO.Plan_Select("Plan_Search", SP_Plan);
+			CO.waitmoreforload();
+			CO.waitmoreforload();
+			CO.waitforobj("SP_Plan_Customise", "WebButton");
+			Browser.WebButton.waittillvisible("SP_Plan_Customise");
+			Browser.WebButton.waitTillEnabled("SP_Plan_Customise");
+			Browser.WebButton.waittillvisible("CAF_Payment");
+			Browser.WebButton.waitTillEnabled("CAF_Payment");
+			Result.takescreenshot("");
+			CO.waitmoreforload();
+			CO.scroll("CAF_Payment", "WebButton");
+			Browser.WebButton.click("CAF_Payment");
+			System.out.println("Guided : Plan Selected");
+			Result.fUpdateLog("Guided : Plan Selected ");
+
+			// Payment
+
+			CO.waitforload();
+			CO.waitmoreforload();
+			CO.waitforload();
+			CO.scroll("Generate_CAF", "WebButton");
+			Browser.WebButton.click("Generate_CAF");
+
+			CO.waitforload();
+
+			// CAF
+			CO.waitforload();
+			CO.waitmoreforload();
+			CO.waitforload();
+			CO.scroll("New_File", "WebButton");
+
+			Result.takescreenshot("");
+
+			CO.Upload("New_File", File_Upload);
+			CO.waitforload();
+			Result.takescreenshot("");
+			Result.takescreenshot("CAF Attachment done");
+			Browser.WebButton.waittillvisible("SP_Attach_Continue");
+			Browser.WebButton.waitTillEnabled("SP_Attach_Continue");
+			CO.waitforobj("SP_Attach_Continue", "WebButton");
+			CO.scroll("SP_Attach_Continue", "WebButton");
+			Browser.WebButton.waittillvisible("SP_Attach_Continue");
+			Result.takescreenshot("");
+			Browser.WebButton.click("SP_Attach_Continue");
+			CO.waitforload();
+			Result.fUpdateLog("Guided : CAF Created");
+			// Completion
+
+			Result.takescreenshot(" Completion Process");
+			String status = Browser.WebEdit.gettext("Resolution_Code");
+			CO.scroll("Comments", "WebEdit");
+			Browser.WebEdit.Set("Comments", status + "with Status");
+			Result.takescreenshot("Order Submited and " + status);
+			Result.takescreenshot("");
+			CO.scroll("Save&Continue", "WebButton");
+			Browser.WebButton.click("Save&Continue");
+			CO.waitforload();
+			Result.takescreenshot("");
+			CO.Text_Select("span", "Finish Process");
+			Result.fUpdateLog("Guided : Process Done");
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "";
+				Result.takescreenshot("Postpaid_Guided_Journey is Successfull");
+				Result.fUpdateLog("Postpaid_Guided_Journey is Successfull");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "Postpaid_Guided_Journey Failed" + ",";
+				Result.takescreenshot("Postpaid_Guided_Journey Failed");
+				Result.fUpdateLog("Postpaid_Guided_Journey Failed");
+				Status = "FAIL";
+			}
+
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("Post-paid guided flow- Completed");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	* Method Name             : SIMSwap_Global_Search
+	* Arguments               : None
+	* Use                     : GJ Flow for SIM Swap via Global Search
+	* Designed By             : Vinodhini Raviprasad
+	* Last Modified Date      : 05-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String SIMSwap_Global_Search()
+
+	{
+		String MSISDN, New_SIM, Comments, IDNum, IDType, FirstName;
+		String Test_OutPut = "", Status = "";
+		Result.fUpdateLog("------SIM swap Global Search------");
+		try {
+
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("New_SIM").equals(""))) {
+				New_SIM = getdata("New_SIM");
+			} else {
+				New_SIM = pulldata("New_SIM");
+			}
+
+			if (!(getdata("Comments").equals(""))) {
+				Comments = getdata("Comments");
+			} else {
+				Comments = pulldata("Comments");
+			}
+
+			CO.waitforload();
+			Browser.WebLink.waittillvisible("Global_Search");
+			Browser.WebLink.click("Global_Search");
+			CO.waitforload();
+
+			Browser.WebEdit.Set("GS_Phone", MSISDN);
+			Result.fUpdateLog("Global Search Initiation");
+			Result.takescreenshot("Global Search Initiation");
+			Browser.WebLink.click("GS_G0");
+			CO.waitforload();
+			Thread.sleep(1000);
+
+			Browser.WebButton.waittillvisible("GS_Simswap");
+			Result.fUpdateLog("Global Search MSISDN Retrived");
+			Result.takescreenshot("Global Search MSISDN Retrived");
+			Browser.WebButton.click("GS_Simswap");
+			CO.scroll("Cancel_gs", "WebButton");
+
+			CO.waitforload();
+
+			Browser.WebButton.waittillvisible("S_Continue");
+			Result.fUpdateLog("Proceeding SIM Swap Procees");
+			Result.takescreenshot("Proceeding SIM Swap Procees");
+
+			Result.takescreenshot("Contact Verification for SIM Swap Guided Journey");
+			Result.fUpdateLog("Contact Verification for SIM Swap Guided Journey");
+			IDNum = Browser.WebEdit.gettext("Contact_IDNumber");
+			IDType = Browser.WebEdit.gettext("Contact_IDType");
+			FirstName = Browser.WebEdit.gettext("FirstName");
+			Browser.WebButton.click("S_Continue");
+			CO.waitforload();
+
+			Browser.WebEdit.clear("New_SIM_SNO");
+			Thread.sleep(2000);
+			Browser.WebEdit.Set("New_SIM_SNO", New_SIM);
+
+			CO.waitforload();
+
+			Result.fUpdateLog("Providing New SIM");
+			Result.takescreenshot("Providing New SIM");
+			Browser.WebButton.waittillvisible("Submit_SimSwap");
+			Browser.WebButton.click("Submit_SimSwap");
+
+			CO.scroll("Save_Finish", "WebLink");
+
+			CO.waitforload();
+
+			Browser.WebEdit.Set("Comments", Comments + R.nextInt(100));
+			Result.fUpdateLog("Providing Comments");
+			Result.takescreenshot("Comments Provided");
+			Browser.WebLink.click("Save_Finish");
+
+			CO.waitforload();
+
+			Result.fUpdateLog("Proceeding Finish Process");
+			Result.takescreenshot("Proceeding Finish_Process");
+			Browser.WebLink.click("Finish_Process");
+
+			CO.waitforload();
+			CO.waitforobj("GS_Simswap", "WebButton");
+			Browser.WebButton.click("GS_Simswap");
+			CO.waitforload();
+			CO.scroll("Cancel_gs", "WebButton");
+			CO.waitforload();
+
+			if (IDNum.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDNumber"))
+					& IDType.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDType"))
+					& FirstName.equalsIgnoreCase(Browser.WebEdit.gettext("FirstName"))) {
+				Result.takescreenshot("Contact Verification is Successfull");
+				Result.fUpdateLog("Contact Verification is Successfull");
+			} else {
+				Result.takescreenshot("Contact Verification Failure");
+				Continue.set(false);
+			}
+
+			if (Continue.get()) {
+				Test_OutPut += "";
+				Result.takescreenshot("SIM swap Global Search is Successfull");
+				Result.fUpdateLog("SIM swap Global Search is Successfull");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "SIM swap Global Search Failed" + ",";
+				Result.takescreenshot("SIM swap Global Search Failed");
+				Result.fUpdateLog("SIM swap Global Search Failed");
+				Status = "FAIL";
+			}
+
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		Result.fUpdateLog("-----SIM swap Global Search - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: TOS
+	 * Arguments			: None
+	 * Use 					: Transfer of active services
+	 * Designed By			: Lavannya Mahalingam
+	 * Last Modified Date 	: 03-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String TransferOfService() {
+		String Test_OutPut = "", Status = "";
+		String MSISDN, Account_No = "", GetData, Bil_Profile = "", Pymt_Type = "", New_billNo = "";
+		int Inst_RowCount, Col_P, Col_SID, Row = 2, Col_Type = 0, Col_Nam = 0;
+		Result.fUpdateLog("------Transfer of active services------");
+		try {
+			if (!(getdata("MSISDN").equals(""))) {
+				MSISDN = getdata("MSISDN");
+			} else {
+				MSISDN = pulldata("MSISDN");
+			}
+
+			if (!(getdata("GetData").equals(""))) {
+				GetData = getdata("GetData");
+			} else {
+				GetData = pulldata("GetData");
+			}
+
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+
+			Col_Nam = CO.Select_Cell("Acc_Installed_Assert", "Billing Profile");
+			Bil_Profile = Browser.WebTable.getCellData("Acc_Installed_Assert", Row, Col_Nam);
+
+			CO.TabNavigator("Profiles");
+
+			// CO.Text_Select("a", GetData);
+			// CO.waitforload();
+
+			Inst_RowCount = Browser.WebTable.getRowCount("Bill_Prof");
+			Col_Nam = CO.Select_Cell("Bill_Prof", "Name");
+			Col_Type = CO.Select_Cell("Bill_Prof", "Payment Type");
+
+			for (int i = 2; i <= Inst_RowCount; i++) {
+				if (Browser.WebTable.getCellData("Bill_Prof", i, Col_Nam).equalsIgnoreCase(Bil_Profile)) {
+					Pymt_Type = Browser.WebTable.getCellData("Bill_Prof", i, Col_Type);
+					break;
+				}
+			}
+
+			CO.TabNavigator("Account Summary");
+			CO.waitforload();
+			// Create new contact and account
+			if ((getdata("TestCase").equals("NewAccount"))) {
+				ContactCreation();
+				AccountCreation();
+				Account_No = Utlities.FetchStoredValue("TransferOfService", "NewAccount", "Account_No");
+
+				TOS_BillingProfileCreation(Account_No, Pymt_Type);
+				New_billNo = Utlities.FetchStoredValue("TransferOfService", "NewAccount", "Billing_NO");
+			} else if ((getdata("TestCase").equals("ExistingAccount"))) {
+
+				if (!(getdata("Ext_AccountNo").equals(""))) {
+					Account_No = getdata("Ext_AccountNo");
+				} else {
+					Account_No = pulldata("Ext_AccountNo");
+				}
+				TOS_BillingProfileCreation(Account_No, Pymt_Type);
+				New_billNo = Utlities.FetchStoredValue("TransferOfService", "ExistingAccount", "Billing_NO");
+			} else {
+				System.out.println();
+			}
+
+			// Click on Modify Assert
+			if (Browser.WebButton.exist("Assert_Modify")) {
+
+				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
+				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
+				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
+				int Col_SR = CO.Actual_Cell("Acc_Installed_Assert", "Status");
+				// To Find the Record with Mobile Service Bundle and MSISDN
+				for (int i = 2; i <= Inst_RowCount; i++)
+					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
+							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
+									.equalsIgnoreCase(MSISDN)) {
+						Browser.WebTable.click("Acc_Installed_Assert", i, Col_SR);
+						break;
+					}
+				Browser.WebButton.click("Assert_Modify");
+
+			} else
+				CO.InstalledAssertChange("Modify");
+			CO.waitforload();
+
+			CO.scroll("Date_Continue", "WebButton");
+			Browser.WebButton.click("Date_Continue");
+			CO.waitforload();
+
+			CO.waitforload();
+			CO.Text_Select("button", "Verify");
+			CO.isAlertExist();
+			CO.waitforload();
+			CO.Text_Select("button", "Done");
+			CO.waitforload();
+			if (CO.isAlertExist())
+				Continue.set(false);
+
+			// Update Account Number and Billing Profile Number
+			CO.waitforload();
+			Browser.WebButton.click("Service_Account");
+
+			CO.Popup_Selection("Acoount_PickTable", "Account Number", Account_No);
+			CO.waitforload();
+
+			Browser.WebButton.click("Billing_Profile");
+			CO.Popup_Selection("Billing Profile", "Name", New_billNo);
+			CO.waitforload();
+
+			Browser.WebButton.waittillvisible("Validate");
+			Test_OutPut += OrderSubmission().split("@@")[1];
+
+			// Transfer of Service Validation
+
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+
+			if (Browser.WebEdit.gettext("Account_No").equalsIgnoreCase(Account_No)) {
+
+			} else
+				Continue.set(false);
+
+			CO.ToWait();
+			if (Continue.get()) {
+				Test_OutPut += "Transfer of Service is done Successfully " + ",";
+				Result.fUpdateLog("Transfer of Service is done Successfully ");
+				Status = "PASS";
+			} else {
+				Test_OutPut += "Transfer of Service Failed" + ",";
+				Result.takescreenshot("Transfer of Service Failed");
+				Result.fUpdateLog("Transfer of Service Failed");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Test_OutPut += "Exception occurred" + ",";
+			Result.takescreenshot("Exception occurred");
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+		}
+		Result.fUpdateLog("------Transfer of Services Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: TOS_BillingProfileCreation
+	 * Arguments			: None
+	 * Use 					: Creates a Billing Profile in the existing Account for Vanilla Journey
+	 * Designed By			: Lavannya M
+	 * Last Modified Date 	: 05-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public String TOS_BillingProfileCreation(String Account_No, String Payment_Type) {
+		String Test_OutPut = "", Status = "";
+		String Bill_No = null;
+		int Col_Nam, Row_va = 0;
+		Result.fUpdateLog("------Billing Profile Creation Event Details------");
+		try {
+			String Exi = Account_No;
+			if (!Exi.equals("")) {
+				CO.Account_Search(Exi);
+				Utlities.StoreValue("Account_No", Exi);
+				Test_OutPut += "Account_No : " + Exi + ",";
+				CO.waitforload();
+			}
+			if (Continue.get()) {
+				CO.scroll("Profile_Tab", "WebButton");
+				do {
+					Browser.WebButton.click("Profile_Tab");
+					CO.waitforload();
+					/*
+					 * if (Browser.WebEdit.waitTillEnabled("BP_Valid_Name")) { j = 0; break; }
+					 */
+
+				} while (!Browser.WebEdit.waitTillEnabled("BP_Valid_Name"));
+				Browser.WebEdit.waittillvisible("BP_Valid_Name");
+
+				CO.waitforload();
+				int Row = 2, Col_Val = 0, Row_Count;
+
+				String Bill_NewProfile = "No";
+				if (!(getdata("Bill_NewProfile").equals(""))) {
+					Bill_NewProfile = getdata("Bill_NewProfile");
+				} else if (!(pulldata("Bill_NewProfile").equals(""))) {
+					Bill_NewProfile = pulldata("Bill_NewProfile");
+				}
+
+				CO.waitforobj("Bill_Add", "WebButton");
+				Row_Count = Browser.WebTable.getRowCount("Bill_Prof");
+				if (Row_Count >= Row) {
+					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+					Col_Nam = CO.Select_Cell("Bill_Prof", "Name");
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData_title("Bill_Prof", i, Col_Val);
+						if (Payment_Type.equalsIgnoreCase(LData)) {
+							Bill_No = Browser.WebTable.getCellData_title("Bill_Prof", i, Col_Nam);
+							break;
+						}
+						Row_va = i;
+					}
+				}
+
+				if ((Row_Count < Row) || Bill_NewProfile.equals("Yes") || Row_Count == Row_va) {
+					Browser.WebButton.waittillvisible("Bill_Add");
+					CO.scroll("Bill_Add", "WebButton");
+					int Row_Ct = Browser.WebTable.getRowCount("Bill_Prof");
+					Browser.WebButton.click("Bill_Add");
+					do {
+						int Row_C = Browser.WebTable.getRowCount("Bill_Prof");
+						if (Row_C > Row_Ct) {
+							break;
+						}
+					} while (true);
+
+					CO.waitforload();
+
+					Browser.WebTable.waittillvisible("Bill_Prof");
+					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
+					if (!(getdata("Bill_PayType").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", getdata("Bill_PayType"));
+					} else if (!(pulldata("Bill_PayType").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", pulldata("Bill_PayType"));
+					}
+
+					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
+					if (!(getdata("Bill_PayMethod").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method",
+								getdata("Bill_PayMethod"));
+					} else if (!(pulldata("Bill_PayMethod").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method",
+								pulldata("Bill_PayMethod"));
+					}
+					CO.isAlertExist();
+
+					if (Payment_Type.equalsIgnoreCase("Postpaid")) {
+						Col_Val = CO.Select_Cell("Bill_Prof", "Bill Media");
+						if (!(getdata("Bill_Media").equals(""))) {
+							Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", getdata("Bill_Media"));
+						} else if (!(pulldata("Bill_Media").equals(""))) {
+							Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Media_Type", pulldata("Bill_Media"));
+						}
+
+						Col_Val = CO.Select_Cell("Bill_Prof", "Bill Type");
+						if (!(getdata("Bill_Type").equals(""))) {
+							Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", getdata("Bill_Type"));
+						} else if (!(pulldata("Bill_Type").equals(""))) {
+							Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bill_Type", pulldata("Bill_Type"));
+						}
+
+					}
+
+					Col_Val = CO.Select_Cell("Bill_Prof", "Language");
+					if (!(getdata("Bill_Lang").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code", getdata("Bill_Lang"));
+					} else if (!(pulldata("Bill_Lang").equals(""))) {
+						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Bank_Language_Code",
+								pulldata("Bill_Lang"));
+					}
+
+					int Col_v;
+					Col_v = CO.Actual_Cell("Bill_Prof", "Name");
+					Bill_No = Browser.WebTable.getCellData("Bill_Prof", Row, Col_v);
+				}
+
+				Billprofile_No = Bill_No;
+				Utlities.StoreValue("Billing_NO", Bill_No);
+				Test_OutPut += "Billing_NO : " + Bill_No + ",";
+
+				Browser.WebButton.waittillvisible("Orders_Tab");
+			}
+			CO.ToWait();
+			if (Continue.get()) {
+				Status = "PASS";
+				Result.takescreenshot("Billing Profile Created Billing_NO : " + Bill_No);
+			} else {
+				Result.takescreenshot("Orders Tab not exist");
+				Test_OutPut += "Orders Tab not exist" + ",";
+				Result.fUpdateLog("Orders Tab not exist");
+				Status = "FAIL";
+			}
+		} catch (Exception e) {
+			Status = "FAIL";
+			Result.takescreenshot("Exception occurred");
+			Test_OutPut += "Exception occurred" + ",";
+			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		Result.fUpdateLog("------Billing Profile Event Details - Completed------");
+		return Status + "@@" + Test_OutPut + "<br/>";
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
 	 * Method Name			: Suspend
 	 * Arguments			: None
 	 * Use 					: Suspend a Active Plan
@@ -3520,294 +4841,4 @@ public class Keyword_CRM extends Driver {
 		Result.fUpdateLog("------UnBarring Services Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: TroubleTicket
-	 * Arguments			: None
-	 * Use 					: To raise TroubleTicket
-	 * Designed By			: Imran Baig
-	 * Last Modified Date 	: 26-Nov-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public String TroubleTicket() {
-		String Test_OutPut = "", Status = "";
-		String MSISDN, TT_No;
-
-		Result.fUpdateLog("------TroubleTicket services------");
-		try {
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-
-			CO.Assert_Search(MSISDN, "Active");
-			CO.waitforload();
-			CO.TabNavigator("Trouble Tickets");
-
-			int Row = 2, Col;
-			Browser.WebButton.waitTillEnabled("TT_New");
-			CO.scroll("TT_New", "WebButton");
-			Browser.WebButton.click("TT_New");
-			CO.waitforload();
-
-			Col = CO.Actual_Cell("TroubleTicket", "Ticket Id");
-			TT_No = Browser.WebTable.getCellData("TroubleTicket", Row, Col);
-			Result.takescreenshot("Trouble ticket raised : " + TT_No);
-			Utlities.StoreValue("TroubleTicket_No", TT_No);
-			Test_OutPut += "Trouble Ticket No: " + TT_No + ",";
-			Browser.WebTable.clickL("TroubleTicket", Row, Col);
-			CO.waitforload();
-
-			Browser.ListBox.waitTillEnabled("TT_Source");
-			if (!(getdata("TT_Source").equals(""))) {
-				Browser.ListBox.select("TT_Source", getdata("TT_Source"));
-			} else {
-				Browser.ListBox.select("TT_Source", pulldata("TT_Source"));
-			}
-
-			if (!(getdata("TT_TicketType").equals(""))) {
-				Browser.ListBox.select("TT_TicketType", getdata("TT_TicketType"));
-			} else {
-				Browser.ListBox.select("TT_TicketType", pulldata("TT_TicketType"));
-			}
-
-			if (!(getdata("TT_Area").equals(""))) {
-				Browser.ListBox.select("TT_Area", getdata("TT_Area"));
-			} else {
-				Browser.ListBox.select("TT_Area", pulldata("TT_Area"));
-			}
-
-			if (!(getdata("TT_Sub_Area").equals(""))) {
-				Browser.ListBox.select("TT_SubArea", getdata("TT_Sub_Area"));
-			} else {
-				Browser.ListBox.select("TT_SubArea", pulldata("TT_Sub_Area"));
-			}
-
-			Browser.WebButton.waitTillEnabled("TT_MSISDN");
-			Browser.WebButton.click("TT_MSISDN");
-
-			CO.waitforobj("Popup_Go", "WebButton");
-			CO.scroll("Popup_Go", "WebButton");
-
-			Browser.ListBox.select("PopupQuery_List", "Serial #");
-			Browser.WebEdit.Set("PopupQuery_Search", MSISDN);
-
-			CO.waitforload();
-			Browser.WebButton.click("Popup_Go");
-			Result.takescreenshot("");
-			// Browser.WebEdit.Set("TT_Description", "");
-			CO.Webtable_Value("Contact Role", "");
-
-			CO.Title_Select("a", "Trouble Tickets");
-			Browser.WebEdit.waitTillEnabled("TT_NumberSearch");
-			CO.scroll("TT_NumberSearch", "WebEdit");
-			Browser.WebEdit.Set("TT_NumberSearch", TT_No);
-			CO.scroll("TT_SearchGo", "WebButton");
-			Browser.WebButton.click("TT_SearchGo");
-
-			do {
-				CO.waitforload();
-			} while (!Browser.WebTable.waitTillEnabled("TT_Table"));
-			Col = CO.Actual_Cell("TT_Table", "Ticket Id");
-			Browser.WebTable.click("TT_Table", Row, Col);
-
-			Browser.WebEdit.waitTillEnabled("TT_Description");
-			if (!(getdata("TT_Description").equals(""))) {
-				Browser.WebEdit.Set("TT_Description", getdata("TT_Description"));
-			} else {
-				Browser.WebEdit.Set("TT_Description", pulldata("TT_Description"));
-			}
-
-			if (!(getdata("TT_Status").equals(""))) {
-				Browser.ListBox.select("TT_Status", getdata("TT_Status"));
-			} else {
-				Browser.ListBox.select("TT_Status", pulldata("TT_Status"));
-			}
-
-			Result.takescreenshot("Resolved");
-			CO.Webtable_Value("Contact Role", "");
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Test_OutPut += "TroubleTicket is done Successfully " + ",";
-				Result.fUpdateLog("TroubleTicket is done Successfully ");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "TroubleTicket Failed" + ",";
-				Result.takescreenshot("TroubleTicket Failed");
-				Result.fUpdateLog("TroubleTicket Failed");
-				Status = "FAIL";
-			}
-		} catch (Exception e) {
-			Status = "FAIL";
-			Test_OutPut += "Exception occurred" + ",";
-			Result.takescreenshot("Exception occurred");
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-		}
-		Result.fUpdateLog("------TroubleTicket Services Details - Completed------");
-		return Status + "@@" + Test_OutPut + "<br/>";
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name             : Discounts
-	 * Arguments               : None
-	 * Use                     : Plan level Discounts
-	 * Designed By             : Vinodhini Raviprasad
-	 * Last Modified Date      : 12-Nov-2017
-	 --------------------------------------------------------------------------------------------------------*/
-	public String Discounts() {
-		String Test_OutPut = "", Status = "";
-		String MSISDN, Discount, GetData, Order_no;
-		int Inst_RowCount, Col_P, Col_SID;
-
-		Result.fUpdateLog("------Discounts ------");
-		try {
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-
-			if (!(getdata("Discount").equals(""))) {
-				Discount = getdata("Discount");
-			} else {
-				Discount = pulldata("Discount");
-			}
-
-			if (!(getdata("GetData").equals(""))) {
-				GetData = getdata("GetData");
-			} else {
-				GetData = pulldata("GetData");
-			}
-
-			CO.Assert_Search(MSISDN, "Active");
-			CO.waitforload();
-			CO.Text_Select("a", GetData);
-			CO.waitmoreforload();
-			if (Browser.WebButton.exist("Assert_Modify")) {
-
-				Inst_RowCount = Browser.WebTable.getRowCount("Acc_Installed_Assert");
-				Col_P = CO.Select_Cell("Acc_Installed_Assert", "Product");
-				Col_SID = CO.Select_Cell("Acc_Installed_Assert", "Service ID");
-				int Col_SR = CO.Actual_Cell("Acc_Installed_Assert", "Status");
-				// To Find the Record with Mobile Service Bundle and MSISDN
-				for (int i = 2; i <= Inst_RowCount; i++)
-					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
-							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
-									.equalsIgnoreCase(MSISDN)) {
-						CO.waitforload();
-						Browser.WebTable.click("Acc_Installed_Assert", i, Col_SR);
-						break;
-					}
-				do {
-					Browser.WebButton.click("Assert_Modify");
-					String x = Browser.WebEdit.gettext("Due_Date");
-					if (!x.contains("/")) {
-						Browser.WebButton.click("Date_Cancel");
-						Browser.WebButton.click("Assert_Modify");
-					}
-					CO.waitforload();
-				} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
-
-			} else {
-				CO.InstalledAssertChange("Modify");
-			}
-
-			CO.waitforload();
-			CO.scroll("Date_Continue", "WebButton");
-			Browser.WebButton.click("Date_Continue");
-			CO.waitmoreforload();
-
-			/*
-			 * int Row_Count = Browser.WebTable.getRowCount("Line_Items"); Col =
-			 * CO.Select_Cell("Line_Items", "Product"); Col_V = Col + 2;
-			 * 
-			 * for (int i = 2; i <= Row_Count; i++) { String LData =
-			 * Browser.WebTable.getCellData("Line_Items", i, Col); if
-			 * (GetData.equals(LData)) { Row_Val = i; break; } }
-			 * Browser.WebTable.click("Line_Items", Row_Val, Col_V);
-			 * Result.fUpdateLog("------Customising to Add Discount ------");
-			 * CO.Text_Select("span", "Customize");
-			 */
-			CO.waitforload();
-			if (TestCaseN.get().equalsIgnoreCase("PlanDiscount")) {
-				Result.fUpdateLog("------Customising to Add Plan Discount ------");
-				String PlanName;
-				if (!(getdata("PlanBundle").equals(""))) {
-					PlanName = getdata("PlanBundle");
-				} else {
-					PlanName = pulldata("PlanBundle");
-				}
-				CO.Radio_Select(PlanName);
-				CO.waitforload();
-				Result.takescreenshot("Customising to Select Discounts");
-				WebElement Custom = cDriver.get().findElement(By.xpath("//i[@class='siebui-icon-settings']"));
-				((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", Custom);
-				cDriver.get().findElement(By.xpath("//i[@class='siebui-icon-settings']")).click();
-				CO.waitforload();
-				CO.Radio_Select(Discount);
-				CO.waitforload();
-				Result.fUpdateLog("------Discount Selected ------");
-			} else {
-				Result.fUpdateLog("------Customising to Add Addon Discount ------");
-				Result.takescreenshot("Addon Level Discount");
-				String Addon, AddonTab;
-				if (!(getdata("Addon").equals(""))) {
-					Addon = getdata("Addon");
-				} else {
-					Addon = pulldata("Addon");
-				}
-				if (!(getdata("AddonTab").equals(""))) {
-					AddonTab = getdata("AddonTab");
-				} else {
-					AddonTab = "Paid Addons";
-				}
-
-				CO.Link_Select(AddonTab);
-				CO.Discounts(Addon, Discount);
-				CO.waitforload();
-				Result.fUpdateLog("------Discount Selected ------");
-			}
-
-			CO.waitforload();
-			CO.Text_Select("button", "Verify");
-			CO.isAlertExist();
-			Result.takescreenshot("Discounts Done");
-			CO.waitforload();
-			CO.Text_Select("button", "Done");
-			CO.waitforload();
-			if (CO.isAlertExist())
-				Continue.set(false);
-
-			Browser.WebButton.waittillvisible("Validate");
-			Test_OutPut += OrderSubmission().split("@@")[1];
-
-			// fetching Order_no
-			Order_no = CO.Order_ID();
-			Utlities.StoreValue("Order_no", Order_no);
-			Test_OutPut += "Order_no : " + Order_no + ",";
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Test_OutPut += "Discounts is done Successfully " + ",";
-				Result.fUpdateLog("Discounts is done Successfully ");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "Discounts Failed" + ",";
-				Result.takescreenshot("Discounts Failed");
-				Result.fUpdateLog("Discounts Failed");
-				Status = "FAIL";
-			}
-		} catch (Exception e) {
-			Status = "FAIL";
-			Test_OutPut += "Exception occurred" + ",";
-			Result.takescreenshot("Exception occurred");
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-		}
-		Result.fUpdateLog("------Discounts Completed------");
-		return Status + "@@" + Test_OutPut + "<br/>";
-	}
-
 }

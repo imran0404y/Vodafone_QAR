@@ -89,6 +89,20 @@ public class Browser extends Driver {
 			String[] objprop = Utlities.FindObject(objname, objtype);
 			return Method.Methodwaittillenabled(objprop);
 		}
+		
+		public static Boolean CheckDisabled(String objname) {
+			String objtype = "WebEdit";
+			String[] objprop = Utlities.FindObject(objname, objtype);
+			String cellXpath =objprop[0];
+			org.openqa.selenium.WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+			if (cDriver.get().findElement(By.xpath(cellXpath)).isDisplayed() & ((cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("readonly")).equals("readonly"))) 
+			{
+				return true;
+			}	
+			else
+				return false;
+		}
 	}
 
 	/*---------------------------------------------------------------------------------------------------------

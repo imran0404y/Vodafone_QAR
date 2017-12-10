@@ -21,7 +21,7 @@ public class Keyword_OSM extends Driver{
 				browser.set("Chrome");
 			}
 
-			Browser.OpenBrowser(browser.get(), getdata("URL"));
+			Browser.OpenBrowser(browser.get(), getdata("URL/HOST"));
 
 			Result.fUpdateLog("Browser Opened Successfully");
 			Result.takescreenshot("Opening Browser and navigating to the URL");

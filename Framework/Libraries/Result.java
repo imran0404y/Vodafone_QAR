@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.Document;
@@ -19,6 +21,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class Result extends Driver {
 
@@ -26,7 +29,7 @@ public class Result extends Driver {
 	public static ThreadLocal<String> masterrephtml = new ThreadLocal<String>();
 	public static ThreadLocal<String> UCscreenfilepth = new ThreadLocal<String>();
 	public static ThreadLocal<String> UC = new ThreadLocal<String>();
-	public static ThreadLocal<String> TCscreenfile = new ThreadLocal<String>();
+	
 	public static String updatelogmsg = "";
 
 	/*----------------------------------------------------------------------------------------------------
@@ -240,7 +243,13 @@ public class Result extends Driver {
 		System.out.println(url);
 		try {
 			// killexeTask();
-			WebDriver driver = new ChromeDriver();
+			Map<String, Object> prefs = new HashMap<String, Object>();
+			prefs.put("profile.default_content_setting_values.notifications", 2);
+			ChromeOptions options = new ChromeOptions();
+			options.setExperimentalOption("useAutomationExtension", false);
+			options.addArguments("--disable-extensions");
+			options.setExperimentalOption("prefs", prefs);
+			WebDriver driver = new ChromeDriver(options);
 			driver.get(url);
 
 		} catch (Exception e) {

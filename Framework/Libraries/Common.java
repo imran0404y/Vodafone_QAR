@@ -20,6 +20,7 @@ import javax.xml.soap.SOAPPart;
 import javax.xml.transform.stream.StreamSource;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -349,12 +350,12 @@ public class Common extends Driver {
 						Result.fUpdateLog("------Modify Remove Addon Event Details------");
 						for (int j = 1; j < Prod_array.length; j++)
 							Radio_None(Prod_array[j]);
-						Result.takescreenshot("Addition of Addon");
+						Result.takescreenshot("Deletion of Addon");
 					} else {
 						Result.fUpdateLog("------Modify Add Addon Event Details------");
 						for (int j = 1; j < Prod_array.length; j++)
 							Radio_Select(Prod_array[j]);
-						Result.takescreenshot("Deletion of Addon");
+						Result.takescreenshot("Addition of Addon");
 					}
 
 				}
@@ -602,6 +603,39 @@ public class Common extends Driver {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void Category_Select(String text, String text1) {
+		try {
+			String cellXpath, cellXpath1, cellXpathD, TxtVal, Txt = "";
+			String[] objprop = Utlities.FindObject("Category_Plan", "WebTable");
+			Thread.sleep(4000);
+			for (int li_N = 1; li_N <= 6; li_N++) {
+				cellXpath = objprop[0] + "[" + li_N + "]//a";// text;+"']";
+				TxtVal = cDriver.get().findElement(By.xpath(cellXpath)).getAttribute("text");
+				if (TxtVal.contains(text)) {
+					cellXpath1 = objprop[0] + "[" + li_N + "]//i[1]";// text;+"']";
+					Utlities.cDriver.get().findElement(By.xpath(cellXpath1)).click();
+					cellXpathD = objprop[0] + "[" + li_N + "]//ul//li[2]//a";// text;+"']";
+					Txt = cDriver.get().findElement(By.xpath(cellXpathD)).getAttribute("text");
+					if (Txt.contains(text1))
+						cDriver.get().findElement(By.xpath(cellXpathD)).click();
+					break;
+				}
+
+			}
+		}
+
+		catch (Exception e) {
+		}
+	}
+
+	public void Plan_Select(String obj, String Val) {
+
+		String[] objprop = Utlities.FindObject(obj, "WebEdit");
+		cDriver.get().findElement(By.xpath(objprop[0])).sendKeys(Val);
+		cDriver.get().findElement(By.xpath(objprop[0])).sendKeys(Keys.ENTER);
+
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
@@ -872,7 +906,7 @@ public class Common extends Driver {
 									k = k + 1;
 								} else if (Action.equals("Delete")) {
 									Result.fUpdateLog("Status  updated sucuessfully");
-									Result.fUpdateLog("Delition Event is Successfull");
+									Result.fUpdateLog("Deletion Event is Successfull");
 								} else {
 									Continue.set(false);
 									Result.fUpdateLog("Event is UnSuccessfull");
@@ -1273,10 +1307,10 @@ public class Common extends Driver {
 	public void Popup_Click(String objname, int rownum, int columnnum) {
 
 		String[] objprop = Utlities.FindObject(objname, "WebTable");
-		String cellXpath1X = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum+1) + "]";
+		String cellXpath1X = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum + 1) + "]";
 		WebElement scr2 = cDriver.get().findElement(By.xpath(cellXpath1X));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr2);
-		
+
 		String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]";
 		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
 		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
@@ -1503,6 +1537,28 @@ public class Common extends Driver {
 			}
 
 		}
+	}
+
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Upload
+	 * Use 					: To Upload a specific File
+	 * args					: Text, File 
+	 * Designed By			: Imran Baig
+	 * Last Modified Date 	: 11-October-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void Upload(String Text, String File) {
+		try {
+			String path = Templete_FLD.get()+"/Guided_Journey/"+File;
+			String[] objprop = Utlities.FindObject(Text, "WebButton");
+			cDriver.get().findElement(By.xpath(objprop[0])).sendKeys(path);
+			waitmoreforload();
+			// Result.takescreenshot("File Uploaded");
+
+		} catch (Exception e) {
+			Driver.Continue.set(false);
+			System.out.println("Failed to Upload");
+		}
+
 	}
 
 	// Plan_selection using existing plane name

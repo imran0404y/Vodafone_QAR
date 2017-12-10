@@ -6,6 +6,7 @@ public class KeyWord {
 	Keyword_API KA = new Keyword_API();
 	Keyword_SIPT KS = new Keyword_SIPT();
 	Keyword_Validations KV = new Keyword_Validations();
+	Keyword_Putty KP = new Keyword_Putty();
 
 	// ------------------Keyword CRM -------------------//
 	public String Siebel_Login() {
@@ -83,29 +84,9 @@ public class KeyWord {
 	public String BillPayment() {
 		return KC.BillPayment();
 	}
-	
-	public String Suspension() {
-		return KC.Suspension();
-	}
-
-	public String Resume() {
-		return KC.Resume();
-	}
-
-	public String Change_PrimaryNumber() {
-		return KC.Change_PrimaryNumber();
-	}
 
 	public String Disconnection() {
 		return KC.Disconnection();
-	}
-
-	public String UnBarring() {
-		return KC.UnBarring();
-	}
-
-	public String Barring() {
-		return KC.Barring();
 	}
 
 	public String TroubleTicket() {
@@ -114,6 +95,14 @@ public class KeyWord {
 	
 	public String Discounts() {
 		return KC.Discounts();
+	}
+	
+	public String SIMSwap_Guided_Journey() {
+		return KC.SIMSwap_Guided_Journey();
+	}
+	
+	public String ConsumerPostpaid_GuidedJourney() {
+		return KC.ConsumerPostpaid_GuidedJourney();
 	}
 	
 	// ------------------Keyword CRM -------------------//
@@ -154,4 +143,18 @@ public class KeyWord {
 
 	// ---------------------Keyword SIPT------------------------//
 
+	// ---------------------Keyword Putty------------------------//
+
+		public String LoginSSH() {
+			return KP.LoginSSH();
+		}
+
+		public String LogoutSSH() {
+			return KP.LogoutSSH();
+		}
+		
+		public String BillGeneration_AccountLevel() {
+			return KP.BillGeneration_AccountLevel();
+		}
+	// ---------------------Keyword Putty------------------------//
 }

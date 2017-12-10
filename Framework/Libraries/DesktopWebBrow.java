@@ -11,6 +11,7 @@ import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 
 public class DesktopWebBrow extends Driver implements NewDriver {
@@ -36,6 +37,7 @@ public class DesktopWebBrow extends Driver implements NewDriver {
             // Set the notification setting it will override the default setting
 			prefs.put("profile.default_content_setting_values.notifications", 2);
 			ChromeOptions options = new ChromeOptions();
+			options.setExperimentalOption("useAutomationExtension", false);
 			options.addArguments("--disable-extensions");
 			options.setExperimentalOption("prefs", prefs);
 			remoteDriver = new ChromeDriver(options);
@@ -55,6 +57,11 @@ public class DesktopWebBrow extends Driver implements NewDriver {
 			break;
 		case "ie":
 			System.setProperty("webdriver.ie.driver", WorkingDir.get() + "/Drivers/IEDriverServer.exe");
+			DesiredCapabilities caps = DesiredCapabilities.internetExplorer();
+			caps.setCapability("ignoreZoomSetting", true);
+			caps.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+			caps.setCapability("requireWindowFocus", true);
+			caps.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 			remoteDriver = new InternetExplorerDriver();
 			break;
 		}

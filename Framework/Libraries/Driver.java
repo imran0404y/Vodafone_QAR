@@ -1,6 +1,7 @@
 package Libraries;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,10 @@ import java.util.HashMap;
 import java.lang.reflect.Method;
 
 import org.openqa.selenium.WebDriver;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.Session;
 
 @SuppressWarnings("rawtypes")
 public class Driver {
@@ -58,6 +63,11 @@ public class Driver {
 	public static ThreadLocal<String> OrderDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> billDate = new ThreadLocal<String>();
 	public static ThreadLocal<String> Def_Smart_limit = new ThreadLocal<String>();
+	public static ThreadLocal<ChannelShell> nchannel  = new ThreadLocal<ChannelShell>();
+	public static ThreadLocal<Channel> channel  = new ThreadLocal<Channel>();
+	public static ThreadLocal<Session> nsession  = new ThreadLocal<Session>();
+	public static ThreadLocal<FileOutputStream> tergetFile  = new ThreadLocal<FileOutputStream>();
+	public static ThreadLocal<String> TCscreenfile = new ThreadLocal<String>();
 	// public static ThreadLocal<String> Billprofile_No = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();

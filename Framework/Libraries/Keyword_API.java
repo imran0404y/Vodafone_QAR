@@ -25,11 +25,8 @@ public class Keyword_API extends Driver {
 		try {
 			String RTB = Validatedata("RTB_Validation");
 			if (RTB.equalsIgnoreCase("yes")) {
-				if (!(getdata("URL").equals(""))) {
-					URL.set(getdata("URL"));
-				} else {
-					URL.set(pulldata("URL"));
-				}
+				URL.set(getdata("URL/HOST"));
+				
 
 				if (!URL.get().equals("")) {
 					Result.fUpdateLog("Successfully set the End Point URL: " + URL.get());
