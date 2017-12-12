@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -1322,6 +1323,28 @@ public class Common extends Driver {
 
 	}
 
+	public void Popup_Click1(String objname, int rownum, int columnnum) {
+
+		String[] objprop = Utlities.FindObject(objname, "WebTable");
+		String cellXpath1X = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum + 1) + "]";
+		WebElement scr2 = cDriver.get().findElement(By.xpath(cellXpath1X));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr2);
+
+		String cellXpathX = objprop[0] + "//tr[" + rownum + "]//td[" + (columnnum - 1) + "]";
+		WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpathX));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);
+		cDriver.get().findElement(By.xpath(cellXpathX)).click();
+
+		Actions action = new Actions(cDriver.get());
+		action.sendKeys(scr1, Keys.TAB).build().perform();
+
+		String cellXpath = objprop[0] + "//tr[" + rownum + "]//td[" + columnnum + "]//span";
+		WebElement scr = cDriver.get().findElement(By.xpath(cellXpath));
+		((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr);
+		cDriver.get().findElement(By.xpath(cellXpath)).click();
+
+	}
+
 	public void Popup_Selection(String objname, String Name, String MSISDN) {
 		try {
 			waitforload();
@@ -1548,7 +1571,7 @@ public class Common extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public void Upload(String Text, String File) {
 		try {
-			String path = Templete_FLD.get()+"/Guided_Journey/"+File;
+			String path = Templete_FLD.get() + "/Guided_Journey/" + File;
 			String[] objprop = Utlities.FindObject(Text, "WebButton");
 			cDriver.get().findElement(By.xpath(objprop[0])).sendKeys(path);
 			waitmoreforload();

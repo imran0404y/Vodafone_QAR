@@ -3291,743 +3291,7 @@ public class Keyword_CRM extends Driver {
 	}
 
 	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name             : SIMSwap_Guided_Journey
-	 * Arguments               : None
-	 * Use                     : GJ Flow for SIM Swap
-	 * Designed By             : Vinodhini Raviprasad
-	 * Last Modified Date      : 05-Dec-2017
-	 --------------------------------------------------------------------------------------------------------*/
-	public String SIMSwap_Guided_Journey()
-
-	{
-		String MSISDN, New_SIM, Comments;
-		int Row = 2, Col;
-		String Test_OutPut = "", Status = "";
-		Result.fUpdateLog("------SIM swap Guided journey------");
-		try {
-
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-
-			if (!(getdata("New_SIM").equals(""))) {
-				New_SIM = getdata("New_SIM");
-			} else {
-				New_SIM = pulldata("New_SIM");
-			}
-
-			if (!(getdata("Comments").equals(""))) {
-				Comments = getdata("Comments");
-			} else {
-				Comments = pulldata("Comments");
-			}
-			Random R = new Random();
-			CO.waitforload();
-			CO.scroll("VQ_Assert", "WebLink");
-			Browser.WebLink.click("VQ_Assert");
-			CO.waitforload();
-
-			CO.scroll("Assert_Search", "WebLink");
-			Browser.WebLink.click("Assert_Search");
-			CO.waitforload();
-
-			Result.takescreenshot("Assert Search");
-			Result.fUpdateLog("Assert Search Initiation");
-			// Installed_Assert
-			Col = CO.Select_Cell("Assert", "Service ID");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
-			Col = CO.Select_Cell("Assert", "Status");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", "Active");
-			Col = CO.Select_Cell("Assert", "Product");
-			Browser.WebButton.waitTillEnabled("Assert_Go");
-			Browser.WebButton.click("Assert_Go");
-			CO.waitforload();
-			Col = CO.Select_Cell("Assert", "Account");
-			int Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
-			if (Assert_Row_Count > 1)
-				Browser.WebTable.clickL("Assert", Row, Col);
-			else
-				Continue.set(false);
-			Result.takescreenshot("SIM Swap Initiation in Account Summary View");
-			Result.fUpdateLog("SIM Swap Initiation in Account Summary View");
-			CO.waitforload();
-			Browser.WebButton.waitTillEnabled("Asset_SIMSwap");
-			Browser.WebButton.click("Asset_SIMSwap");
-
-			CO.scroll("Cancel_gs", "WebButton");
-			CO.waitforload();
-			CO.waitforload();
-			Browser.WebButton.waittillvisible("S_Continue");
-			String IDNum, IDType, FirstName;
-			CO.waitforload();
-
-			Result.takescreenshot("Contact Verification for SIM Swap Guided Journey");
-			Result.fUpdateLog("Contact Verification for SIM Swap Guided Journey");
-			IDNum = Browser.WebEdit.gettext("Contact_IDNumber");
-			IDType = Browser.WebEdit.gettext("Contact_IDType");
-			FirstName = Browser.WebEdit.gettext("FirstName");
-			Browser.WebButton.click("S_Continue");
-
-			CO.waitmoreforload();
-			Browser.WebEdit.Set("New_SIM_SNO", New_SIM);
-
-			Result.takescreenshot("Providing New SIM");
-			Result.fUpdateLog("Providing New SIM");
-			CO.waitforload();
-
-			Browser.WebButton.waittillvisible("Submit_SimSwap");
-			Browser.WebButton.click("Submit_SimSwap");
-
-			CO.waitforload();
-
-			CO.scroll("Save_Finish", "WebLink");
-
-			Browser.WebEdit.Set("Comments", Comments + R.nextInt(1000));
-
-			Browser.WebLink.waittillvisible("Save_Finish");
-			Result.fUpdateLog("Finishing SIM Swap Guided Procees");
-			Result.takescreenshot("Finishing SIM Swap Guided Procees");
-			Browser.WebLink.click("Save_Finish");
-
-			CO.waitforload();
-			Result.takescreenshot("Finish Process");
-			Browser.WebLink.click("Finish_Process");
-
-			CO.waitforload();
-			if (Browser.WebButton.exist("VFQ_LeftScroll"))
-				Browser.WebButton.click("VFQ_LeftScroll");
-			Browser.WebLink.click("VQ_Assert");
-
-			CO.waitforload();
-			CO.scroll("Assert_Search", "WebLink");
-			Browser.WebLink.click("Assert_Search");
-			CO.waitforload();
-
-			Result.fUpdateLog("Initiating Assert Search for Contact Verification");
-			Result.takescreenshot("Initiating Assert Search for Contact Verification");
-			// Installed_Assert
-			Col = CO.Select_Cell("Assert", "Service ID");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Serial_Number", MSISDN);
-			Col = CO.Select_Cell("Assert", "Status");
-			Browser.WebTable.SetDataE("Assert", Row, Col, "Status", "Active");
-			Col = CO.Select_Cell("Assert", "Product");
-			Browser.WebButton.waitTillEnabled("Assert_Go");
-			Browser.WebButton.click("Assert_Go");
-			CO.waitforload();
-			Col = CO.Select_Cell("Assert", "Account");
-			Assert_Row_Count = Browser.WebTable.getRowCount("Assert");
-
-			if (Assert_Row_Count > 1)
-				Browser.WebTable.clickL("Assert", Row, Col);
-			else
-				Continue.set(false);
-
-			CO.waitforload();
-			Browser.WebButton.waitTillEnabled("Asset_SIMSwap");
-			Browser.WebButton.click("Asset_SIMSwap");
-			CO.waitforload();
-
-			if (IDNum.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDNumber"))
-					& IDType.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDType"))
-					& FirstName.equalsIgnoreCase(Browser.WebEdit.gettext("FirstName"))) {
-				Result.takescreenshot("Contact Verification is Successfull");
-				Result.fUpdateLog("Contact Verification is Successfull");
-			} else {
-				Result.takescreenshot("Contact Verification Failure");
-				Continue.set(false);
-			}
-			if (Continue.get()) {
-				Test_OutPut += "";
-				Result.takescreenshot("SIM Swap Guided_Journey is Successfull");
-				Result.fUpdateLog("SIM Swap Guided_Journey is Successfull");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "SIM Swap Guided_Journey Failed" + ",";
-				Result.takescreenshot("SIM Swap Guided_Journey Failed");
-				Result.fUpdateLog("SIM Swap Guided_Journey Failed");
-				Status = "FAIL";
-			}
-		} catch (Exception e) {
-			Status = "FAIL";
-			Result.takescreenshot("Exception occurred");
-			Test_OutPut += "Exception occurred" + ",";
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-
-		}
-		Result.fUpdateLog("-----SIM swap Guided journey - Completed------");
-		return Status + "@@" + Test_OutPut + "<br/>";
-
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	* Method Name             : ConsumerPostpaid_GuidedJourney
-	* Arguments               : None
-	* Use                     : GJ Flow for Postpaid Consumer Provisioning
-	* Designed By             : Vinodhini Raviprasad
-	* Last Modified Date      : 05-Dec-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public String ConsumerPostpaid_GuidedJourney() {
-		String Test_OutPut = "", Status = "";
-		String MSISDN, SIM, SP_Plan, ID_Type, ID_Expiry, Nationality, Gender, Language, First, Last, DOB, Job, Email,
-				Mobile, File_Upload, IDNumber;
-		try {
-
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-			if (!(getdata("SIM").equals(""))) {
-				SIM = getdata("SIM");
-			} else {
-				SIM = pulldata("SIM");
-			}
-
-			if (!(getdata("ID_Number").equals(""))) {
-				IDNumber = getdata("ID_Number");
-			} else {
-				IDNumber = "8912" + R.nextInt(100000);
-			}
-
-			if (!(getdata("PlanName").equals(""))) {
-				SP_Plan = getdata("PlanName");
-			} else {
-				SP_Plan = pulldata("PlanName");
-			}
-			if (!(getdata("ID_Type").equals(""))) {
-				ID_Type = getdata("ID_Type");
-			} else {
-				ID_Type = pulldata("ID_Type");
-			}
-
-			if (!(getdata("ID_Expiry").equals(""))) {
-				ID_Expiry = getdata("ID_Expiry");
-			} else {
-				ID_Expiry = pulldata("ID_Expiry");
-			}
-			if (!(getdata("Nationality").equals(""))) {
-				Nationality = getdata("Nationality");
-			} else {
-				Nationality = pulldata("Nationality");
-			}
-			if (!(getdata("Language").equals(""))) {
-				Language = getdata("Language");
-			} else {
-				Language = pulldata("Language");
-			}
-			if (!(getdata("Gender").equals(""))) {
-				Gender = getdata("Gender");
-			} else {
-				Gender = pulldata("Gender");
-			}
-
-			if (!(getdata("FirstName").equals(""))) {
-				First = getdata("FirstName");
-			} else if (!(pulldata("FirstName").equals(""))) {
-				First = pulldata("FirstName") + R.nextInt(100000);
-			} else {
-				First = Utlities.randname();
-			}
-
-			if (!(getdata("LastName").equals(""))) {
-				Last = getdata("LastName");
-			} else if (!(pulldata("LastName").equals(""))) {
-				Last = pulldata("LastName") + R.nextInt(100000);
-			} else {
-				Last = Utlities.randname();
-			}
-
-			if (!(getdata("DOB").equals(""))) {
-				DOB = getdata("DOB");
-			} else {
-				DOB = pulldata("DOB");
-			}
-
-			if (!(getdata("Job").equals(""))) {
-				Job = getdata("Job");
-			} else {
-				Job = pulldata("Job");
-			}
-
-			if (!(getdata("Email").equals(""))) {
-				Email = getdata("Email");
-			} else {
-				Email = pulldata("Email");
-			}
-
-			if (!(getdata("Mobile").equals(""))) {
-				Mobile = getdata("Mobile");
-			} else {
-				Mobile = pulldata("Mobile");
-			}
-
-			if (!(getdata("File_Upload").equals(""))) {
-				File_Upload = getdata("File_Upload");
-			} else {
-				File_Upload = pulldata("File_Upload");
-			}
-
-			CO.waitforobj("VQ_Contact", "WebLink");
-			CO.waitforload();
-			Browser.WebLink.click("VQ_Contact");
-			CO.waitforload();
-			CO.waitforobj("All_contacts", "WebLink");
-			Browser.WebLink.click("All_contacts");
-			CO.waitforload();
-			CO.waitforobj("Acc_Add_Contact", "WebButton");
-			Browser.WebButton.click("Acc_Add_Contact");
-			CO.waitforobj("Consumer_Postpaid", "WebLink");
-			Browser.WebLink.click("Consumer_Postpaid");
-			CO.waitforload();
-			Result.takescreenshot("Navigated to Consumer Postpaid");
-			CO.waitforload();
-
-			Browser.WebEdit.waittillvisible("C_ID_Number");
-			Browser.WebEdit.waitTillEnabled("C_ID_Number");
-
-			CO.scroll("C_ID_Number", "WebEdit");
-			Browser.WebEdit.Set("C_ID_Number", IDNumber);
-
-			CO.waitforload();
-			CO.waitforobj("ID_Ctype", "ListBox");
-			Browser.ListBox.select("ID_Ctype", ID_Type);
-			CO.waitforobj("C_go", "WebButton");
-			Browser.WebButton.click("C_go");
-			CO.waitforload();
-
-			Browser.WebEdit.waittillvisible("C_ID_Expiry");
-			Browser.WebEdit.waitTillEnabled("C_ID_Expiry");
-
-			Result.takescreenshot("");
-
-			CO.waitforobj("C_ID_Expiry", "WebEdit");
-
-			CO.scroll("C_ID_Expiry", "WebEdit");
-			if (!(ID_Type.equalsIgnoreCase("Qatari ID"))) {
-				Browser.WebEdit.Set("C_ID_Expiry", ID_Expiry);
-
-				Browser.WebEdit.Set("C_Nationality", Nationality);
-
-				Browser.WebEdit.Set("C_Gender", Gender);
-
-				Browser.WebEdit.Set("C_First", First);
-
-				Browser.WebEdit.Set("C_Last", Last);
-
-				Browser.WebEdit.Set("C_DOB", DOB);
-
-				Browser.WebEdit.Set("C_Job", Job);
-
-			} else {
-				if (Browser.WebEdit.CheckDisabled("C_First") == false & Browser.WebEdit.CheckDisabled("C_Last") == false
-						& Browser.WebEdit.CheckDisabled("C_Nationality") == false)
-					Continue.set(false);
-			}
-
-			Result.takescreenshot("");
-			Browser.WebEdit.Set("C_Email", Email);
-			Browser.WebEdit.Set("Contact_IDType", Language);
-			Browser.WebEdit.Set("C_Mobile", Mobile);
-			CO.Upload("File_Upload", File_Upload);
-			CO.waitforload();
-			Browser.WebButton.waittillvisible("c_Continue");
-			Browser.WebButton.click("c_Continue");
-			Result.fUpdateLog("Guided :  contact Completed");
-
-			// Search for Specific Address
-
-			String Address;
-			if (!(getdata("Address").equals(""))) {
-				Address = getdata("Address");
-			} else if (!(getdata("Kahramaa_ID").equals(""))) {
-				Address = "Kar#" + getdata("Kahramaa_ID");
-			} else if (!(pulldata("Kahramaa_ID").equals(""))) {
-				Address = "Kar#" + pulldata("Kahramaa_ID");
-			} else {
-				Address = pulldata("Address");
-			}
-
-			CO.waitforload();
-
-			Browser.WebButton.waittillvisible("C_Add_Address");
-
-			CO.waitforload();
-
-			CO.waitforobj("C_Add_Address", "WebButton");
-
-			Browser.WebButton.click("C_Add_Address");
-
-			// Address
-
-			CO.waitforobj("c_Popup_Go", "WebButton");
-			CO.scroll("c_Popup_Go", "WebButton");
-
-			if (Address.contains("Kar#")) {
-				Browser.ListBox.select("PopupQuery_List", "Kahramaa ID");
-				Browser.WebEdit.Set("PopupQuery_Search", Address.split("#")[1]);
-			} else {
-				Browser.ListBox.select("PopupQuery_List", "Address Line 1");
-				Browser.WebEdit.Set("PopupQuery_Search", Address);
-			}
-			CO.waitforload();
-			Browser.WebButton.click("c_Popup_Go");
-
-			CO.waitforload();
-			CO.scroll("Add_OK", "WebButton");
-			Browser.WebButton.click("Add_OK");
-
-			CO.waitforload();
-
-			Result.takescreenshot("Address Selected : " + Address);
-			Result.fUpdateLog("Address Selected : " + Address);
-
-			CO.waitforload();
-
-			CO.scroll("c_Continue", "WebButton");
-			Browser.WebButton.waittillvisible("c_Continue");
-			Browser.WebButton.click("c_Continue");
-			Result.fUpdateLog("Guided :  Address Completed");
-
-			CO.waitforload();
-
-			// Account
-
-			CO.scroll("C_segment", "ListBox");
-
-			CO.waitforload();
-
-			CO.scroll("c_Continue", "WebButton");
-			Browser.WebButton.waittillvisible("c_Continue");
-			Browser.WebButton.click("c_Continue");
-			Result.fUpdateLog("Guided :  Account  Completed");
-
-			// Billing
-
-			CO.waitforload();
-
-			CO.scroll("C_Media_type", "ListBox");
-			CO.waitforobj("cb_Continue", "WebButton");
-			Browser.WebButton.waittillvisible("cb_Continue");
-			Browser.WebButton.click("cb_Continue");
-
-			Result.fUpdateLog("Guided :  Billing profile Completed");
-			// Reserved no
-
-			CO.waitforobj("c_Reserve_Num", "WebButton");
-			String Number = MSISDN, Temp;
-			// String Number = Driver.msisdn_exe.get(), Temp;
-			int Len = Number.length(), Col_Count = Browser.WebTable.getColCount("Unreserverd"), Col_Res = 0, Row = 2;
-			String Reserve = Number.substring(3, Len);
-			for (int i = 2; i < Col_Count; i++) {
-				Temp = CO.Col_Data(i);
-				Col_Res = i;
-				if (Temp.toLowerCase().trim().equals("service type"))
-					break;
-			}
-
-			/*
-			 * if (Browser.WebButton.exist("Query_Unreserv_Num")) {
-			 * CO.scroll("Query_Unreserv_Num", "WebButton");
-			 * Browser.WebButton.click("Query_Unreserv_Num");}
-			 */
-
-			CO.scroll("Unreserverd", "WebTable");
-			Browser.WebTable.SetDataE("Unreserverd", Row, Col_Res, "Service_Type", "Mobile");
-			CO.scroll("Unreserverd", "WebTable");
-			Browser.WebTable.SetData("Unreserverd", Row, Col_Res + 3, "Service_Id", Reserve);
-
-			Browser.WebButton.waitTillEnabled("c_Reserve_Num");
-			Browser.WebButton.waittillvisible("c_Reserve_Num");
-
-			CO.waitforload();
-			int Row_Count = Browser.WebTable.getRowCount("Unreserverd");
-			Result.fUpdateLog(Row_Count + " Unreserved Row Count");
-			// To check whether number available
-			Result.takescreenshot("Number Reservation");
-			if (Row_Count > 1) {
-				CO.scroll("c_Reserve_Num", "WebButton");
-				CO.Text_Select("span", "Reserve");
-				CO.waitforload();
-				CO.isAlertExist();
-			} else {
-				Driver.Continue.set(false);
-				System.out.println("Guided : Check the MSISDN");
-				System.exit(0);
-			}
-			// Reserved
-			CO.scroll("Reserved", "WebTable");
-			Browser.WebTable.SetDataE("Reserved", Row, Col_Res, "Service_Type", "Mobile");
-			Browser.WebTable.SetData("Reserved", Row, Col_Res + 1, "Category", "");
-
-			// To check whether the Number has been Reserved
-			// CO.waitforload();
-			CO.waitforobj("SP_Resrv_Continue", "WebButton");
-			Row_Count = Browser.WebTable.getRowCount("Reserved");
-			System.out.println("Guided : Unreserved" + Row_Count);
-			if (Row_Count > 1)
-				Result.takescreenshot("MSISDN Reserved " + Number);
-			else {
-				Driver.Continue.set(false);
-				Result.fUpdateLog("Guided : Check the MSISDN");
-				System.exit(0);
-			}
-			CO.scroll("SP_Resrv_Continue", "WebButton");
-			CO.Text_Select("span", "Continue");
-			Result.fUpdateLog("Guided :  Number Reserved");
-
-			CO.waitforload();
-
-			// To Provide SIM Number
-			CO.waitforobj("SP_Continue", "WebButton");
-			Browser.WebEdit.waittillvisible("SP_SIM");
-			Browser.WebEdit.waitTillEnabled("SP_SIM");
-			System.out.println("SIM");
-
-			// CO.waitmoreforload();
-			CO.waitforload();
-			Driver.Continue.set(true);
-			CO.scroll("SP_SIM", "WebEdit");
-			Browser.WebEdit.click("SP_SIM");
-			Browser.WebEdit.Set("SP_SIM", SIM);
-
-			Result.takescreenshot("");
-			Browser.WebButton.waittillvisible("SP_Continue");
-			CO.scroll("SP_Continue", "WebButton");
-			Browser.WebButton.click("SP_Continue");
-			Result.fUpdateLog("Guided :  SIM Provided");
-
-			// Plan
-
-			CO.waitforload();
-			if (TestCaseN.get().toLowerCase().contains("consumerpostpaid")) {
-				CO.Category_Select("Postpaid Plans", "Postpaid Consumer Plans");
-			}
-
-			CO.waitforload();
-			CO.Link_Select(SP_Plan);
-			CO.Plan_Select("Plan_Search", SP_Plan);
-			CO.waitmoreforload();
-			CO.waitmoreforload();
-			CO.waitforobj("SP_Plan_Customise", "WebButton");
-			Browser.WebButton.waittillvisible("SP_Plan_Customise");
-			Browser.WebButton.waitTillEnabled("SP_Plan_Customise");
-			Browser.WebButton.waittillvisible("CAF_Payment");
-			Browser.WebButton.waitTillEnabled("CAF_Payment");
-			Result.takescreenshot("");
-			CO.waitmoreforload();
-			CO.scroll("CAF_Payment", "WebButton");
-			Browser.WebButton.click("CAF_Payment");
-			System.out.println("Guided : Plan Selected");
-			Result.fUpdateLog("Guided : Plan Selected ");
-
-			// Payment
-
-			CO.waitforload();
-			CO.waitmoreforload();
-			CO.waitforload();
-			CO.scroll("Generate_CAF", "WebButton");
-			Browser.WebButton.click("Generate_CAF");
-
-			CO.waitforload();
-
-			// CAF
-			CO.waitforload();
-			CO.waitmoreforload();
-			CO.waitforload();
-			CO.scroll("New_File", "WebButton");
-
-			Result.takescreenshot("");
-
-			CO.Upload("New_File", File_Upload);
-			CO.waitforload();
-			Result.takescreenshot("");
-			Result.takescreenshot("CAF Attachment done");
-			Browser.WebButton.waittillvisible("SP_Attach_Continue");
-			Browser.WebButton.waitTillEnabled("SP_Attach_Continue");
-			CO.waitforobj("SP_Attach_Continue", "WebButton");
-			CO.scroll("SP_Attach_Continue", "WebButton");
-			Browser.WebButton.waittillvisible("SP_Attach_Continue");
-			Result.takescreenshot("");
-			Browser.WebButton.click("SP_Attach_Continue");
-			CO.waitforload();
-			Result.fUpdateLog("Guided : CAF Created");
-			// Completion
-
-			Result.takescreenshot(" Completion Process");
-			String status = Browser.WebEdit.gettext("Resolution_Code");
-			CO.scroll("Comments", "WebEdit");
-			Browser.WebEdit.Set("Comments", status + "with Status");
-			Result.takescreenshot("Order Submited and " + status);
-			Result.takescreenshot("");
-			CO.scroll("Save&Continue", "WebButton");
-			Browser.WebButton.click("Save&Continue");
-			CO.waitforload();
-			Result.takescreenshot("");
-			CO.Text_Select("span", "Finish Process");
-			Result.fUpdateLog("Guided : Process Done");
-
-			CO.ToWait();
-			if (Continue.get()) {
-				Test_OutPut += "";
-				Result.takescreenshot("Postpaid_Guided_Journey is Successfull");
-				Result.fUpdateLog("Postpaid_Guided_Journey is Successfull");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "Postpaid_Guided_Journey Failed" + ",";
-				Result.takescreenshot("Postpaid_Guided_Journey Failed");
-				Result.fUpdateLog("Postpaid_Guided_Journey Failed");
-				Status = "FAIL";
-			}
-
-		} catch (Exception e) {
-			Status = "FAIL";
-			Test_OutPut += "Exception occurred" + ",";
-			Result.takescreenshot("Exception occurred");
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-		}
-		Result.fUpdateLog("Post-paid guided flow- Completed");
-		return Status + "@@" + Test_OutPut + "<br/>";
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	* Method Name             : SIMSwap_Global_Search
-	* Arguments               : None
-	* Use                     : GJ Flow for SIM Swap via Global Search
-	* Designed By             : Vinodhini Raviprasad
-	* Last Modified Date      : 05-Dec-2017
-	--------------------------------------------------------------------------------------------------------*/
-	public String SIMSwap_Global_Search()
-
-	{
-		String MSISDN, New_SIM, Comments, IDNum, IDType, FirstName;
-		String Test_OutPut = "", Status = "";
-		Result.fUpdateLog("------SIM swap Global Search------");
-		try {
-
-			if (!(getdata("MSISDN").equals(""))) {
-				MSISDN = getdata("MSISDN");
-			} else {
-				MSISDN = pulldata("MSISDN");
-			}
-
-			if (!(getdata("New_SIM").equals(""))) {
-				New_SIM = getdata("New_SIM");
-			} else {
-				New_SIM = pulldata("New_SIM");
-			}
-
-			if (!(getdata("Comments").equals(""))) {
-				Comments = getdata("Comments");
-			} else {
-				Comments = pulldata("Comments");
-			}
-
-			CO.waitforload();
-			Browser.WebLink.waittillvisible("Global_Search");
-			Browser.WebLink.click("Global_Search");
-			CO.waitforload();
-
-			Browser.WebEdit.Set("GS_Phone", MSISDN);
-			Result.fUpdateLog("Global Search Initiation");
-			Result.takescreenshot("Global Search Initiation");
-			Browser.WebLink.click("GS_G0");
-			CO.waitforload();
-			Thread.sleep(1000);
-
-			Browser.WebButton.waittillvisible("GS_Simswap");
-			Result.fUpdateLog("Global Search MSISDN Retrived");
-			Result.takescreenshot("Global Search MSISDN Retrived");
-			Browser.WebButton.click("GS_Simswap");
-			CO.scroll("Cancel_gs", "WebButton");
-
-			CO.waitforload();
-
-			Browser.WebButton.waittillvisible("S_Continue");
-			Result.fUpdateLog("Proceeding SIM Swap Procees");
-			Result.takescreenshot("Proceeding SIM Swap Procees");
-
-			Result.takescreenshot("Contact Verification for SIM Swap Guided Journey");
-			Result.fUpdateLog("Contact Verification for SIM Swap Guided Journey");
-			IDNum = Browser.WebEdit.gettext("Contact_IDNumber");
-			IDType = Browser.WebEdit.gettext("Contact_IDType");
-			FirstName = Browser.WebEdit.gettext("FirstName");
-			Browser.WebButton.click("S_Continue");
-			CO.waitforload();
-
-			Browser.WebEdit.clear("New_SIM_SNO");
-			Thread.sleep(2000);
-			Browser.WebEdit.Set("New_SIM_SNO", New_SIM);
-
-			CO.waitforload();
-
-			Result.fUpdateLog("Providing New SIM");
-			Result.takescreenshot("Providing New SIM");
-			Browser.WebButton.waittillvisible("Submit_SimSwap");
-			Browser.WebButton.click("Submit_SimSwap");
-
-			CO.scroll("Save_Finish", "WebLink");
-
-			CO.waitforload();
-
-			Browser.WebEdit.Set("Comments", Comments + R.nextInt(100));
-			Result.fUpdateLog("Providing Comments");
-			Result.takescreenshot("Comments Provided");
-			Browser.WebLink.click("Save_Finish");
-
-			CO.waitforload();
-
-			Result.fUpdateLog("Proceeding Finish Process");
-			Result.takescreenshot("Proceeding Finish_Process");
-			Browser.WebLink.click("Finish_Process");
-
-			CO.waitforload();
-			CO.waitforobj("GS_Simswap", "WebButton");
-			Browser.WebButton.click("GS_Simswap");
-			CO.waitforload();
-			CO.scroll("Cancel_gs", "WebButton");
-			CO.waitforload();
-
-			if (IDNum.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDNumber"))
-					& IDType.equalsIgnoreCase(Browser.WebEdit.gettext("Contact_IDType"))
-					& FirstName.equalsIgnoreCase(Browser.WebEdit.gettext("FirstName"))) {
-				Result.takescreenshot("Contact Verification is Successfull");
-				Result.fUpdateLog("Contact Verification is Successfull");
-			} else {
-				Result.takescreenshot("Contact Verification Failure");
-				Continue.set(false);
-			}
-
-			if (Continue.get()) {
-				Test_OutPut += "";
-				Result.takescreenshot("SIM swap Global Search is Successfull");
-				Result.fUpdateLog("SIM swap Global Search is Successfull");
-				Status = "PASS";
-			} else {
-				Test_OutPut += "SIM swap Global Search Failed" + ",";
-				Result.takescreenshot("SIM swap Global Search Failed");
-				Result.fUpdateLog("SIM swap Global Search Failed");
-				Status = "FAIL";
-			}
-
-		} catch (Exception e) {
-			Status = "FAIL";
-			Result.takescreenshot("Exception occurred");
-			Test_OutPut += "Exception occurred" + ",";
-			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
-			e.printStackTrace();
-
-		}
-		Result.fUpdateLog("-----SIM swap Global Search - Completed------");
-		return Status + "@@" + Test_OutPut + "<br/>";
-
-	}
-
-	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: TOS
+	 * Method Name			: TransferOfService
 	 * Arguments			: None
 	 * Use 					: Transfer of active services
 	 * Designed By			: Lavannya Mahalingam
@@ -4035,8 +3299,8 @@ public class Keyword_CRM extends Driver {
 	--------------------------------------------------------------------------------------------------------*/
 	public String TransferOfService() {
 		String Test_OutPut = "", Status = "";
-		String MSISDN, Account_No = "", GetData, Bil_Profile = "", Pymt_Type = "", New_billNo = "";
-		int Inst_RowCount, Col_P, Col_SID, Row = 2, Col_Type = 0, Col_Nam = 0;
+		String Order_no, MSISDN, Account_No = "", GetData, Bil_Profile = "", Payment_Method = "", Pymt_Type = "";
+		int Inst_RowCount, Col_P, Col_Type1, Col_SID, Row = 2, Col_Type = 0, Col_Nam = 0;
 		Result.fUpdateLog("------Transfer of active services------");
 		try {
 			if (!(getdata("MSISDN").equals(""))) {
@@ -4050,7 +3314,8 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-
+			//Continue.set(true);
+			//Bil_Profile ="1-4FX8U44";
 			CO.Assert_Search(MSISDN, "Active");
 			CO.waitforload();
 			CO.Text_Select("a", GetData);
@@ -4059,44 +3324,51 @@ public class Keyword_CRM extends Driver {
 			Bil_Profile = Browser.WebTable.getCellData("Acc_Installed_Assert", Row, Col_Nam);
 
 			CO.TabNavigator("Profiles");
+			
+			CO.waitforload();
 
-			// CO.Text_Select("a", GetData);
-			// CO.waitforload();
-
-			Inst_RowCount = Browser.WebTable.getRowCount("Bill_Prof");
+			
 			Col_Nam = CO.Select_Cell("Bill_Prof", "Name");
 			Col_Type = CO.Select_Cell("Bill_Prof", "Payment Type");
-
-			for (int i = 2; i <= Inst_RowCount; i++) {
-				if (Browser.WebTable.getCellData("Bill_Prof", i, Col_Nam).equalsIgnoreCase(Bil_Profile)) {
-					Pymt_Type = Browser.WebTable.getCellData("Bill_Prof", i, Col_Type);
-					break;
-				}
+			Col_Type1 = CO.Select_Cell("Bill_Prof", "Payment Method");
+			Browser.WebButton.click("Profile_Query");
+			CO.waitforload();
+			Browser.WebTable.SetDataE("Bill_Prof", Row, Col_Nam, "Name", Bil_Profile);
+			CO.waitforload();
+			Browser.WebButton.click("BillingProfile_Go");
+			Inst_RowCount = Browser.WebTable.getRowCount("Bill_Prof");
+			if (Inst_RowCount == 2) {
+				Pymt_Type = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Type);
+				Payment_Method = Browser.WebTable.getCellData("Bill_Prof", Row, Col_Type1);
+			} else {
+				Continue.set(false);
 			}
 
-			CO.TabNavigator("Account Summary");
+			CO.waitforload();
+			CO.Title_Select("a", "Home");
 			CO.waitforload();
 			// Create new contact and account
-			if ((getdata("TestCase").equals("NewAccount"))) {
+			if (TestCaseN.get().equals("NewAccount")) {
 				ContactCreation();
 				AccountCreation();
 				Account_No = Utlities.FetchStoredValue("TransferOfService", "NewAccount", "Account_No");
 
-				TOS_BillingProfileCreation(Account_No, Pymt_Type);
-				New_billNo = Utlities.FetchStoredValue("TransferOfService", "NewAccount", "Billing_NO");
-			} else if ((getdata("TestCase").equals("ExistingAccount"))) {
+				TOS_BillingProfileCreation(Account_No, Pymt_Type, Payment_Method);
+			} else if (TestCaseN.get().equals("ExistingAccount")) {
 
 				if (!(getdata("Ext_AccountNo").equals(""))) {
 					Account_No = getdata("Ext_AccountNo");
 				} else {
 					Account_No = pulldata("Ext_AccountNo");
 				}
-				TOS_BillingProfileCreation(Account_No, Pymt_Type);
-				New_billNo = Utlities.FetchStoredValue("TransferOfService", "ExistingAccount", "Billing_NO");
-			} else {
-				System.out.println();
+				TOS_BillingProfileCreation(Account_No, Pymt_Type, Payment_Method);
 			}
-
+			Test_OutPut += "Account_No : " + Account_No + ",";
+			
+			CO.Assert_Search(MSISDN, "Active");
+			CO.waitforload();
+			CO.Text_Select("a", GetData);
+			CO.waitforload();
 			// Click on Modify Assert
 			if (Browser.WebButton.exist("Assert_Modify")) {
 
@@ -4109,14 +3381,23 @@ public class Keyword_CRM extends Driver {
 					if (Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_P).equalsIgnoreCase(GetData)
 							& Browser.WebTable.getCellData("Acc_Installed_Assert", i, Col_SID)
 									.equalsIgnoreCase(MSISDN)) {
+						CO.waitforload();
 						Browser.WebTable.click("Acc_Installed_Assert", i, Col_SR);
 						break;
 					}
-				Browser.WebButton.click("Assert_Modify");
+				do {
+					Browser.WebButton.click("Assert_Modify");
+					String x = Browser.WebEdit.gettext("Due_Date");
+					if (!x.contains("/")) {
+						Browser.WebButton.click("Date_Cancel");
+						Browser.WebButton.click("Assert_Modify");
+					}
+					CO.waitforload();
+				} while (!Browser.WebButton.waitTillEnabled("Date_Continue"));
 
-			} else
+			} else {
 				CO.InstalledAssertChange("Modify");
-			CO.waitforload();
+			}
 
 			CO.scroll("Date_Continue", "WebButton");
 			Browser.WebButton.click("Date_Continue");
@@ -4125,37 +3406,69 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			CO.Text_Select("button", "Verify");
 			CO.isAlertExist();
-			CO.waitforload();
 			CO.Text_Select("button", "Done");
 			CO.waitforload();
 			if (CO.isAlertExist())
 				Continue.set(false);
-
-			// Update Account Number and Billing Profile Number
+			
+			int Col_SA = CO.Actual_Cell("Line_Items", "Service Account");
+			int Col_BA = CO.Actual_Cell("Line_Items", "Billing Account");
+			int Col_BP = CO.Actual_Cell("Line_Items", "Billing Profile");
+			int Col_OA = CO.Actual_Cell("Line_Items", "Owner Account");
+			
 			CO.waitforload();
-			Browser.WebButton.click("Service_Account");
-
-			CO.Popup_Selection("Acoount_PickTable", "Account Number", Account_No);
+			Browser.WebButton.click("Order_Account");
+			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
 			CO.waitforload();
 
 			Browser.WebButton.click("Billing_Profile");
-			CO.Popup_Selection("Billing Profile", "Name", New_billNo);
+			CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
+			//CO.Webtable_Value("Billing Profile", Billprofile_No);
 			CO.waitforload();
-
+			
+			
+			CO.Popup_Click1("Line_Items", Row, Col_SA);
+			CO.waitforload();
+			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
+			
+			CO.waitforload();
+			CO.Popup_Click1("Line_Items", Row, Col_BA);
+			CO.waitforload();
+			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
+			
+			CO.waitforload();
+			CO.Popup_Click1("Line_Items", Row, Col_OA);
+			CO.waitforload();
+			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
+			
+			CO.waitforload();
+			CO.Popup_Click("Line_Items", Row, Col_BP);
+			CO.waitforload();
+			CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
+			Test_OutPut += "Billprofile_No : " + Billprofile_No + ",";
+			
 			Browser.WebButton.waittillvisible("Validate");
 			Test_OutPut += OrderSubmission().split("@@")[1];
-
+			Order_no = CO.Order_ID();
+			Utlities.StoreValue("Order_no", Order_no);
+			Test_OutPut += "Order_no : " + Order_no + ",";
+			int Row_Count1 = Browser.WebTable.getRowCount("Line_Items");
+			if (Row_Count1 <= 4) {
+				Browser.WebButton.waittillvisible("Expand");
+				Browser.WebButton.click("Expand");
+			}
+			CO.Action_Update("Update",MSISDN);
+			
 			// Transfer of Service Validation
 
 			CO.Assert_Search(MSISDN, "Active");
 			CO.waitforload();
 
-			if (Browser.WebEdit.gettext("Account_No").equalsIgnoreCase(Account_No)) {
-
-			} else
+			if (!Browser.WebEdit.gettext("Account_No").equalsIgnoreCase(Account_No))
 				Continue.set(false);
 
 			CO.ToWait();
+			CO.GetSiebelDate();
 			if (Continue.get()) {
 				Test_OutPut += "Transfer of Service is done Successfully " + ",";
 				Result.fUpdateLog("Transfer of Service is done Successfully ");
@@ -4184,7 +3497,7 @@ public class Keyword_CRM extends Driver {
 	 * Designed By			: Lavannya M
 	 * Last Modified Date 	: 05-Dec-2017
 	--------------------------------------------------------------------------------------------------------*/
-	public String TOS_BillingProfileCreation(String Account_No, String Payment_Type) {
+	public String TOS_BillingProfileCreation(String Account_No, String Payment_Type, String Payment_Method) {
 		String Test_OutPut = "", Status = "";
 		String Bill_No = null;
 		int Col_Nam, Row_va = 0;
@@ -4250,20 +3563,11 @@ public class Keyword_CRM extends Driver {
 
 					Browser.WebTable.waittillvisible("Bill_Prof");
 					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Type");
-					if (!(getdata("Bill_PayType").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", getdata("Bill_PayType"));
-					} else if (!(pulldata("Bill_PayType").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", pulldata("Bill_PayType"));
-					}
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Type", Payment_Type);
 
 					Col_Val = CO.Select_Cell("Bill_Prof", "Payment Method");
-					if (!(getdata("Bill_PayMethod").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method",
-								getdata("Bill_PayMethod"));
-					} else if (!(pulldata("Bill_PayMethod").equals(""))) {
-						Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method",
-								pulldata("Bill_PayMethod"));
-					}
+					Browser.WebTable.SetData("Bill_Prof", Row, Col_Val, "Payment_Method", Payment_Method);
+
 					CO.isAlertExist();
 
 					if (Payment_Type.equalsIgnoreCase("Postpaid")) {

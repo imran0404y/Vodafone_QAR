@@ -7,6 +7,7 @@ public class KeyWord {
 	Keyword_SIPT KS = new Keyword_SIPT();
 	Keyword_Validations KV = new Keyword_Validations();
 	Keyword_Putty KP = new Keyword_Putty();
+	Keyword_Guided KG = new Keyword_Guided();
 
 	// ------------------Keyword CRM -------------------//
 	public String Siebel_Login() {
@@ -97,15 +98,26 @@ public class KeyWord {
 		return KC.Discounts();
 	}
 	
-	public String SIMSwap_Guided_Journey() {
-		return KC.SIMSwap_Guided_Journey();
-	}
-	
-	public String ConsumerPostpaid_GuidedJourney() {
-		return KC.ConsumerPostpaid_GuidedJourney();
+	public String TransferOfService() {
+		return KC.TransferOfService();
 	}
 	
 	// ------------------Keyword CRM -------------------//
+	
+	// ------------------Keyword Guided -------------------//
+
+	public String SIMSwap_Guided_Journey() {
+		return KG.SIMSwap_Guided_Journey();
+	}
+	
+	public String ConsumerPostpaid_GuidedJourney() {
+		return KG.ConsumerPostpaid_GuidedJourney();
+	}
+	
+	public String SIMSwap_Global_Search() {
+		return KG.SIMSwap_Global_Search();
+	}
+	// ------------------Keyword Guided -------------------//
 
 	// ---------------------Keyword API------------------------//
 
