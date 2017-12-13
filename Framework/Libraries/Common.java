@@ -1583,6 +1583,36 @@ public class Common extends Driver {
 		}
 
 	}
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: FL_AddonSelection
+	 * Use 					: Customizing the specific Plan for FL
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 13-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public void FL_AddonSelection(String Product) {
+		try {
+			int Length;
+			String Product_Tabs[] = Product.split("<>");
+			for (int i = 0; i < Product_Tabs.length; i++) {
+				String Prod_array[] = Product_Tabs[i].split(",");
+				Length = Prod_array.length;
+				System.out.println(Length);
+				
+					Thread.sleep(3);
+						for (int j = 0; j < Prod_array.length; j++)
+						{
+							Radio_Select(Prod_array[j]);
+							Thread.sleep(3000);
+							
+						}
+							
+					
+				
+			}
+		} catch (Exception e) {
+
+		}
+	}
 
 	// Plan_selection using existing plane name
 
@@ -1610,5 +1640,35 @@ public class Common extends Driver {
 	 * 
 	 * }
 	 */
+	/*---------------------------------------------------------------------------------------------------------
+	 * Method Name			: Actual_OSM_tabval
+	 * Use 					: To Select particular value in Query Search Screen in OSM
+	 * Designed By			: SravaniReedy
+	 * Last Modified Date 	: 13-Dec-2017
+	--------------------------------------------------------------------------------------------------------*/
+	public int Actual_OSM_tabval(String objname, String objTyp) {
+		int Col = 1, f = 0;
+		String Expected = objTyp;
+		String[] obj = objTyp.split("_");
+		if (obj.length > 1)
+			Expected = objTyp.replace('_', ' ');
+		int Col_Count = Browser.WebTable.getColCount(objname);
+		String[] objprop = Utlities.FindObject(objname, "WebTable");
+	
+		waitforload();
+		for (int i = 1; i < Col_Count; i++) {
+			Col = i;
+			String cellXpath = objprop[0]+"//table//td[" + i + "]";
+			/*WebElement scr1 = cDriver.get().findElement(By.xpath(cellXpath));
+			((RemoteWebDriver) cDriver.get()).executeScript("arguments[0].scrollIntoView(true)", scr1);*/
+			String celldata = cDriver.get().findElement(By.xpath(cellXpath)).getText();
+			if (celldata.equalsIgnoreCase(Expected))
+				f = f + 1;
+			if (f == 1)
+				break;
+
+		}
+		return Col;
+	}
 
 }

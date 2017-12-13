@@ -68,6 +68,8 @@ public class Driver {
 	public static ThreadLocal<Session> nsession  = new ThreadLocal<Session>();
 	public static ThreadLocal<FileOutputStream> tergetFile  = new ThreadLocal<FileOutputStream>();
 	public static ThreadLocal<String> TCscreenfile = new ThreadLocal<String>();
+	public static ThreadLocal<String> SalesOrder_No = new ThreadLocal<String>();
+	public static ThreadLocal<String> contact = new ThreadLocal<String>();
 	// public static ThreadLocal<String> Billprofile_No = new ThreadLocal<String>();
 
 	public static ThreadLocal<Dictionary> TestData = new ThreadLocal<Dictionary>();

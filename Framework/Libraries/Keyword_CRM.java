@@ -152,10 +152,11 @@ public class Keyword_CRM extends Driver {
 				} else if (!(pulldata("LastName").equals(""))) {
 					Last_Name = pulldata("LastName") + R.nextInt(1000);
 				}
+				contact.set(Last_Name);
 				CO.scroll("LastName", "WebEdit");
 				Browser.WebEdit.Set("LastName", Last_Name);
 				Result.fUpdateLog("LastName : " + Last_Name);
-
+				contact.set(Last_Name);
 				if (!(getdata("FirstName").equals(""))) {
 					Browser.WebEdit.Set("FirstName", getdata("FirstName"));
 				} else if (!(pulldata("FirstName").equals(""))) {
@@ -673,6 +674,7 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			Col_new = CO.Actual_Cell("Order_Table", "Status");
 			boolean flag = true;
+
 			do {
 				String orderstatus = Browser.WebTable.getCellData_title("Order_Table", 2, Col_new);
 				if (orderstatus.equalsIgnoreCase("Pending")) {
@@ -693,11 +695,16 @@ public class Keyword_CRM extends Driver {
 			OrderDate.set((Date[1] + "-" + Date[0] + "-" + Date[2]));
 
 			Browser.WebTable.click("Order_Table", Row, (Col - 1));
+			SalesOrder_No.set(Order_No);
 			do {
 				CO.waitforload();
 			} while (!Browser.WebLink.waitTillEnabled("Line_Items"));
 			Browser.WebLink.waittillvisible("Line_Items");
 			Browser.WebLink.click("Line_Items");
+			if (Browser.WebLink.exist("SalesOd_Expand")) {
+				Browser.WebLink.click("SalesOd_Expand");
+				CO.waitforload();
+			}
 			CO.waitforload();
 			Result.fUpdateLog(Billprofile_No);
 			if (Billprofile_No != null) {
@@ -709,7 +716,7 @@ public class Keyword_CRM extends Driver {
 			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
-				Utlities.StoreValue("Sales_OrderNO", Order_No);
+				Utlities.StoreValue("Sales_OrderNO", SalesOrder_No.get());
 				Test_OutPut += "Order_No : " + Order_No + ",";
 				Utlities.StoreValue("Order_Creation_Date", OrderDate.get());
 				Result.takescreenshot("Sales Order Created Order_No : " + Order_No);
@@ -1000,6 +1007,10 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", SIM);
 			Result.takescreenshot("Plan Selection is Successful : " + PlanName);
+			if (Browser.WebLink.exist("SalesOd_Expand")) {
+				Browser.WebLink.click("SalesOd_Expand");
+				CO.waitforload();
+			}
 
 			Test_OutPut += OrderSubmission().split("@@")[1];
 			CO.Action_Update("Add", MSISDN);
@@ -1044,7 +1055,10 @@ public class Keyword_CRM extends Driver {
 		try {
 			int Complete_Status = 0, Wait = 0, Row = 2, Col, Bill_Col, Row_Count;
 			String EStatus = "Complete", FStatus = "Failed", Bill_Cycle;
-
+			if (Browser.WebLink.exist("SalesOd_Expand")) {
+				Browser.WebLink.click("SalesOd_Expand");
+				CO.waitforload();
+			}
 			if (Browser.WebTable.exist("Line_Items"))
 				Result.fUpdateLog("Proceeding Order Submission");
 			CO.waitforload();
@@ -1384,6 +1398,7 @@ public class Keyword_CRM extends Driver {
 
 					CO.waitforload();
 					CO.scroll("Add_OK", "WebButton");
+					CO.waitmoreforload();
 					Browser.WebButton.click("Add_OK");
 					/*
 					 * do { Result.fUpdateLog("Page Loading....."); } while
@@ -2726,6 +2741,7 @@ public class Keyword_CRM extends Driver {
 				Col = CO.Select_Cell("Bill_Prof", "Status");
 				Browser.WebTable.SetData("Bill_Prof", Row, Col_P, "Name", BillingProfile);
 				CO.waitforload();
+				CO.waitforload();
 				if (Browser.WebTable.getRowCount("Bill_Prof") >= 2) {
 					Browser.WebTable.click("Bill_Prof", Row, Col);
 					Browser.WebTable.clickL("Bill_Prof", Row, Col_P);
@@ -2858,6 +2874,8 @@ public class Keyword_CRM extends Driver {
 			Browser.WebTable.SetData("Payments", 2, Col, "Payment_Number", Payment_Reference);
 			CO.waitforload();
 			Result.takescreenshot("Payment Verification Bill level");
+			CO.waitforload();
+			CO.waitforload();
 			Row_Count = Browser.WebTable.getRowCount("Payments");
 
 			CO.ToWait();
@@ -3314,8 +3332,8 @@ public class Keyword_CRM extends Driver {
 			} else {
 				GetData = pulldata("GetData");
 			}
-			//Continue.set(true);
-			//Bil_Profile ="1-4FX8U44";
+			// Continue.set(true);
+			// Bil_Profile ="1-4FX8U44";
 			CO.Assert_Search(MSISDN, "Active");
 			CO.waitforload();
 			CO.Text_Select("a", GetData);
@@ -3324,10 +3342,9 @@ public class Keyword_CRM extends Driver {
 			Bil_Profile = Browser.WebTable.getCellData("Acc_Installed_Assert", Row, Col_Nam);
 
 			CO.TabNavigator("Profiles");
-			
+
 			CO.waitforload();
 
-			
 			Col_Nam = CO.Select_Cell("Bill_Prof", "Name");
 			Col_Type = CO.Select_Cell("Bill_Prof", "Payment Type");
 			Col_Type1 = CO.Select_Cell("Bill_Prof", "Payment Method");
@@ -3364,7 +3381,7 @@ public class Keyword_CRM extends Driver {
 				TOS_BillingProfileCreation(Account_No, Pymt_Type, Payment_Method);
 			}
 			Test_OutPut += "Account_No : " + Account_No + ",";
-			
+
 			CO.Assert_Search(MSISDN, "Active");
 			CO.waitforload();
 			CO.Text_Select("a", GetData);
@@ -3410,12 +3427,12 @@ public class Keyword_CRM extends Driver {
 			CO.waitforload();
 			if (CO.isAlertExist())
 				Continue.set(false);
-			
+
 			int Col_SA = CO.Actual_Cell("Line_Items", "Service Account");
 			int Col_BA = CO.Actual_Cell("Line_Items", "Billing Account");
 			int Col_BP = CO.Actual_Cell("Line_Items", "Billing Profile");
 			int Col_OA = CO.Actual_Cell("Line_Items", "Owner Account");
-			
+
 			CO.waitforload();
 			Browser.WebButton.click("Order_Account");
 			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
@@ -3423,30 +3440,29 @@ public class Keyword_CRM extends Driver {
 
 			Browser.WebButton.click("Billing_Profile");
 			CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
-			//CO.Webtable_Value("Billing Profile", Billprofile_No);
+			// CO.Webtable_Value("Billing Profile", Billprofile_No);
 			CO.waitforload();
-			
-			
+
 			CO.Popup_Click1("Line_Items", Row, Col_SA);
 			CO.waitforload();
 			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
-			
+
 			CO.waitforload();
 			CO.Popup_Click1("Line_Items", Row, Col_BA);
 			CO.waitforload();
 			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
-			
+
 			CO.waitforload();
 			CO.Popup_Click1("Line_Items", Row, Col_OA);
 			CO.waitforload();
 			CO.Popup_Selection("Account_PickTable", "Account_Number", Account_No);
-			
+
 			CO.waitforload();
 			CO.Popup_Click("Line_Items", Row, Col_BP);
 			CO.waitforload();
 			CO.Popup_Selection("Bill_Selection", "Name", Billprofile_No);
 			Test_OutPut += "Billprofile_No : " + Billprofile_No + ",";
-			
+
 			Browser.WebButton.waittillvisible("Validate");
 			Test_OutPut += OrderSubmission().split("@@")[1];
 			Order_no = CO.Order_ID();
@@ -3457,8 +3473,8 @@ public class Keyword_CRM extends Driver {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
-			CO.Action_Update("Update",MSISDN);
-			
+			CO.Action_Update("Update", MSISDN);
+
 			// Transfer of Service Validation
 
 			CO.Assert_Search(MSISDN, "Active");

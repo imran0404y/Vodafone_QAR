@@ -2,13 +2,14 @@ package Libraries;
 
 public class Keyword_FixedLine extends Driver {
 	Common CO = new Common();
+	Keyword_CRM KC= new Keyword_CRM();
 
 	/*---------------------------------------------------------------------------------------------------------
-	 * Method Name			: PlanSelection_FL(Under Construction)
+	 * Method Name			: PlanSelection_FL
 	 * Arguments			: None
 	 * Use 					: Specified Plan is selected for the Order in Vanilla Journey
-	 * Designed By			: Imran Baig
-	 * Last Modified Date 	: 23-Aug-2017
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 13-Dec-2017
 	--------------------------------------------------------------------------------------------------------*/
 	@SuppressWarnings("unused")
 	public String PlanSelection_FL() {
@@ -17,15 +18,10 @@ public class Keyword_FixedLine extends Driver {
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
 
-			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S, Col_b, Col_Vo;
-			String SData = "SIM Card", GetData, Field, Add_Addon, Remove_Addon, MSISDN, ReservationToken;
-
-			if (Browser.WebButton.exist("LI_New"))
-				System.out.println("Proceeding Plan Selection");
-			else {
-				Continue.set(true);
-				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
-			}
+			int Row_Val = 3, Col_V, COl_STyp, Col_Res, Col_S, Col_pri, Col_cat,Col_b, Col_Vo;
+			String Reserve, Category, GetData, Add_Addon, Remove_Addon, ReservationToken, StarNumber = null, SIM,
+					MSISDN = null, SData = "SIM Card";
+					
 			CO.waitforload();
 
 			if (!(getdata("PlanName").equals(""))) {
@@ -33,35 +29,19 @@ public class Keyword_FixedLine extends Driver {
 			} else {
 				PlanName = pulldata("PlanName");
 			}
+			Planname.set(PlanName);
+			Test_OutPut += "PlanName : " + PlanName + ",";
 
 			if (!(getdata("GetData").equals(""))) {
 				GetData = getdata("GetData");
 			} else {
 				GetData = pulldata("GetData");
 			}
-
-			// To use Catalog view uncomment the below lines
-			// Browser.WebLink.click("VQ_Catalog");
-			// CO.Category_Select(pulldata("PlanName"),pulldata("PlanName"),PlanName);
-			// Browser.WebButton.click("LI_New");
-			// CO.waitforload();
-
-			// To use the catalog view comment the below line till '----'
-			CO.scroll("LI_New", "WebButton");
-			// Browser.WebButton.click("LI_New");
-			int Row = 2, Col;
-			Col = CO.Select_Cell("Line_Items", "Product");
-			// Testing
-
-			// -----------------------
-
-			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
-
-			Col_S = CO.Select_Cell("Line_Items", "Service Id");
-			Field = CO.Col_Data(Col_S);
-			// To select the Mobile Bundle
-			Col_V = Col + 2;
-
+			if (!(getdata("SData").equals(""))) {
+				SData = getdata("Sdata");
+			} else {
+				SData = pulldata("Sdata");
+			}
 			if (!(getdata("Add_Addon").equals(""))) {
 				Add_Addon = getdata("Add_Addon");
 			} else {
@@ -73,11 +53,40 @@ public class Keyword_FixedLine extends Driver {
 			} else {
 				Remove_Addon = pulldata("Remove_Addon");
 			}
+			
+			
+			CO.scroll("LI_New", "WebButton");
+			Browser.WebButton.click("LI_New");
+			int Row = 2, Col;
+			Col = CO.Select_Cell("Line_Items", "Product");
+			Col_S = CO.Actual_Cell("Line_Items", "Service Id");
+			Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
+			Browser.WebTable.click("Line_Items", Row, Col_S);
+			CO.waitforload();
+			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			Col_S = CO.Select_Cell("Line_Items", "Service Id");
+			Col_V = Col + 2;
+			for (int i = 2; i <= Row_Count; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				if (GetData.equals(LData)) {
+					Row_Val = i;
+					break;
+				}
+			}
+			Browser.WebTable.click("Line_Items", Row_Val, Col_V);
 
 			if (!(getdata("MSISDN").equals(""))) {
 				MSISDN = getdata("MSISDN");
 			} else {
 				MSISDN = pulldata("MSISDN");
+			}
+			Result.fUpdateLog("MSISDN : " + MSISDN);
+			Test_OutPut += "MSISDN : " + MSISDN + ",";
+
+			if (!(getdata("StarNumber").equals(""))) {
+				StarNumber = getdata("StarNumber");
+			} else if (!(pulldata("StarNumber").equals(""))) {
+				StarNumber = pulldata("StarNumber");
 			}
 
 			if (!(getdata("ReservationToken").equals(""))) {
@@ -86,33 +95,167 @@ public class Keyword_FixedLine extends Driver {
 				ReservationToken = pulldata("ReservationToken");
 			}
 
-			Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			if (Row_Count <= 3) {
-				Browser.WebButton.waittillvisible("Expand");
-				Browser.WebButton.click("Expand");
+			if (Add_Addon != "" || Remove_Addon != "" || ReservationToken != "") {
+				Browser.WebButton.click("Customize");
+				if (ReservationToken != "") {
+					Browser.WebEdit.waittillvisible("NumberReservationToken");
+					Browser.WebEdit.Set("NumberReservationToken", ReservationToken);
+					Result.takescreenshot("Providing Number Reservation Token");
+				}
+				CO.AddOnSelection(Add_Addon, "Add");
+				CO.AddOnSelection(Remove_Addon, "Delete");
+				CO.waitforload();
+				CO.Text_Select("button", "Verify");
+				CO.isAlertExist();
+				CO.waitforload();
+				CO.Text_Select("button", "Done");
+				CO.waitforload();
+				if (CO.isAlertExist())
+					Continue.set(false);
 			}
-			GetData = "Broadband Internet Service";
 
-			for (int i = 2; i <= Row_Count; i++) {
-				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-				if (GetData.equals(LData))
-					Row_Val = i;
+			if (ReservationToken.equals("")) {
+				CO.scroll("Numbers", "WebLink");
+				Browser.WebLink.click("Numbers");
+				CO.waitforload();
+				Row_Count = Browser.WebTable.getRowCount("Numbers");
+				if (Row_Count == 1)
+					Browser.WebButton.click("Number_Query");
+				Browser.WebLink.click("Num_Manage");
+				CO.waitforload();
+				Browser.WebButton.waitTillEnabled("Reserve");
+				Browser.WebButton.waittillvisible("Reserve");
+				COl_STyp = CO.Select_Cell("Numbers", "Service Type");
+				Col_Res = CO.Select_Cell("Numbers", "(Start) Number");
+				Col_cat = CO.Select_Cell("Numbers", "Category");
+				Col_pri = CO.Select_Cell("Numbers", "Price From");
+				Browser.WebTable.SetData("Numbers", Row, COl_STyp, "Service_Type", "FixedLine");
+
+				if (!MSISDN.equals("")) {
+
+					Reserve = MSISDN.substring(3, MSISDN.length());
+					Browser.WebTable.SetData("Numbers", Row, Col_Res, "Service_Id", Reserve);
+					// Browser.WebButton.click("Number_Go");
+					CO.waitmoreforload();
+				} else {
+					Browser.WebButton.click("Number_Go");
+					CO.waitmoreforload();
+					CO.waitforload();
+					Browser.WebTable.click("Numbers", (Row + 1), Col);
+					MSISDN = Browser.WebTable.getCellData("Numbers", (Row + 1), Col_Res);
+
+				}
+
+				Category = Browser.WebTable.getCellData("Numbers", Row, Col_cat);
+				if (StarNumber == null) {
+					StarNumber = Browser.WebTable.getCellData("Numbers", Row, Col_pri);
+					StarNumber = StarNumber.substring(2, StarNumber.length());
+				}
+
+				Result.fUpdateLog("Category " + Category);
+				Browser.WebButton.click("Reserve");
+				CO.waitmoreforload();
+				if (CO.isAlertExist()) {
+					Result.takescreenshot("Number Reseved");
+					Result.fUpdateLog("Alert Handled");
+				}
+
+				Browser.WebLink.waittillvisible("Line_Items");
+				Browser.WebLink.click("Line_Items");
+				CO.waitforload();
+				// Browser.WebLink.click("LI_Totals");
+				CO.waitforload();
+				Col = CO.Actual_Cell("Line_Items", "Product");
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+
+				if (Category.contains("STAR")) {
+
+					for (int i = 2; i <= Row_Count; i++) {
+						String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+						if (GetData.equalsIgnoreCase(LData)) {
+							Row_Val = i;
+							break;
+						}
+					}
+					Browser.WebTable.click("Line_Items", Row_Val, Col_V);
+					CO.Text_Select("span", "Customize");
+					CO.Link_Select("Others");
+					CO.scroll("Star_Number_purch", "WebEdit");
+					CO.waitforload();
+					CO.Text_Select("option", "Default");
+					CO.Text_Select("option", "For Testing Only");
+					CO.waitforload();
+					CO.scroll("Star_Number_purch", "WebEdit");
+					Browser.WebEdit.Set("Star_Number_purch", StarNumber);
+
+					CO.waitforload();
+					CO.Text_Select("button", "Verify");
+					CO.isAlertExist();
+					CO.waitforload();
+					CO.Text_Select("button", "Done");
+					if (CO.isAlertExist()) {
+						Continue.set(false);
+						System.exit(0);
+					}
+
+				}
+				CO.waitforload();
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				if (Row_Count <= 3) {
+					Browser.WebButton.waittillvisible("Expand");
+					Browser.WebButton.click("Expand");
+				}
+				Col = CO.Actual_Cell("Line_Items", "Product");
+				Col_S = CO.Actual_Cell("Line_Items", "Service Id");
+				for (int i = 2; i <= Row_Count; i++) {
+					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+					if (GetData.equalsIgnoreCase(LData)) {
+						Row_Val = i;
+					}
+				}
+				CO.waitforload();
+				CO.waitforload();
+				CO.Popup_Click("Line_Items", Row_Val, Col_S);
+				CO.waitforload();
+				Reserve = MSISDN.substring(3, MSISDN.length());
+				Result.takescreenshot("MSISDN Selected");
+				CO.Popup_Selection("Number_Selection", "Number", Reserve);
+				
+				 
+				 
+			} else if (!ReservationToken.equals("")) {
+				Row_Count = Browser.WebTable.getRowCount("Line_Items");
+				if (Row_Count <= 3) {
+					Browser.WebButton.waittillvisible("Expand");
+					Browser.WebButton.click("Expand");
+				}
+				Col_S = CO.Actual_Cell("Line_Items", "Service Id");
+				for (int i = 2; i <= Row_Count; i++) {
+					String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+					if (GetData.equalsIgnoreCase(LData))
+						Row_Val = i;
+				}
+				Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+				Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", MSISDN);
+
 			}
-			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
-			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", MSISDN);
-
-			// To Provide SIM No
+		
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			 Col = CO.Select_Cell("Line_Items", "Product");
+			Col_S = CO.Actual_Cell("Line_Items", "Service Id");
 			if (Row_Count <= 3) {
 				Browser.WebButton.waittillvisible("Expand");
 				Browser.WebButton.click("Expand");
 			}
 			CO.waitforload();
-			SData = "VoIP Service";
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
 			for (int i = 2; i <= Row_Count; i++) {
 				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
-				if (SData.equals(LData))
+				if (SData.equals(LData.trim()))
+				{
 					Row_Val = i;
+					break;
+				}
 			}
 			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
 			Browser.WebTable.SetData("Line_Items", Row_Val, Col_S, "Service_Id", MSISDN);
@@ -125,19 +268,14 @@ public class Keyword_FixedLine extends Driver {
 				}
 			}
 			CO.waitforload();
-
-			Browser.WebTable.Popup("Line_Items", Row_Val, Col_SP);
-			CO.Title_Select("button", "Pick Service Point:Query");
+			Result.takescreenshot("MSISDN Selected");
 			int Col1;
-			Col1 = CO.Actual_Cell("LI_ServPoint_head", "Service Point");
-			Browser.WebTable.SetDataE("LI_ServPoint", Row, Col1, "Service_Point_Id", MSISDN);
-			Col = CO.Actual_Cell("LI_ServPoint_head", "Location");
-			Browser.WebTable.SetDataE("LI_ServPoint", Row, Col, "Location", MSISDN);
-			Browser.WebButton.click("Li_ServPoint_go");
-
-			CO.Title_Select("button", "Pick Service Point:OK");
-
-			GetData = "Broadband Internet Service";
+			CO.waitforload();
+			CO.waitforload();
+			CO.Popup_Click("Line_Items", Row_Val, Col_SP);
+			CO.waitforload();
+			Reserve = MSISDN.substring(3, MSISDN.length());
+			CO.Popup_Selection("LI_ServPoint", "Location", "Not*");
 			Col = CO.Select_Cell("Line_Items", "Product");
 
 			Row_Count = Browser.WebTable.getRowCount("Line_Items");
@@ -150,27 +288,61 @@ public class Keyword_FixedLine extends Driver {
 				}
 			}
 			CO.waitforload();
+			CO.waitforload();
 			CO.Popup_Click("Line_Items", Row_Val, Con_No);
 			CO.waitforload();
-			CO.Popup_Selection("Number_Selection", "Number", MSISDN);
+		
 			
 			CO.Title_Select("button", "Pick Contact:OK");
-
+			CO.Tag_Select("a", "Appointments");
+			
+			CO.Text_Select("a", "Appointments");
+			CO.waitforload();
+			Row_Count = Browser.WebTable.getRowCount("Line_Items");
+			Col = CO.Actual_Cell("Line_Items", "Product");
+			for (int i = 2; i <= Row_Count; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				if (GetData.equalsIgnoreCase(LData)) {
+					Row_Val = i;
+					break;
+				}
+			}
+			Browser.WebTable.click("Line_Items", Row_Val, Col);
+			CO.waitforload();
 			Browser.WebButton.click("Activ_New");
-
 			CO.Text_Select("span", "Book Appointment");
+			CO.waitforload();
 			CO.Text_Select("span", "Confirm");
-
+			Result.takescreenshot("Appointment added Successfully");
 			CO.Action_Update("Add", "MSISDN");
 
+			CO.scroll("Service", "WebButton");
+
+			Browser.WebButton.waittillvisible("Validate");
+			Browser.WebButton.click("Validate");
+			if (CO.isAlertExist()) {
+				Continue.set(false);
+			}
+			CO.waitmoreforload();
+			CO.waitforload();
 			if (Continue.get()) {
+				Browser.WebButton.waittillvisible("Submit");
+				CO.scroll("Submit", "WebButton");
+				Browser.WebButton.click("Submit");
+				CO.waitmoreforload();
+				if (CO.isAlertExist()) {
+					Continue.set(false);
+				}
+			}
+
+			CO.waitforload();
+			Result.takescreenshot("FL Consumer Order Submited");
+
+			if (Continue.get() & (Row_Count >= 3)) {
 				Status = "PASS";
 				Utlities.StoreValue("PlanName", PlanName);
-				Test_OutPut += "PlanName : " + PlanName + ",";
 				Utlities.StoreValue("MSISDN", MSISDN);
-				Test_OutPut += "MSISDN : " + MSISDN + ",";
-
-				Result.takescreenshot("Plan Selection is Successful : " + PlanName);
+			
 				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
 			} else {
 				Status = "FAIL";
@@ -189,63 +361,67 @@ public class Keyword_FixedLine extends Driver {
 		Result.fUpdateLog("------Plan Selection Event Details - Completed------");
 		return Status + "@@" + Test_OutPut + "<br/>";
 	}
-
 	/*--------------------------------------------------------------------------------------------------------
-	 * Method Name			: PlanSelection_FL_ENT(Under Construction)
+	 * Method Name			: PlanSelection_FL_ENT
 	 * Arguments			: None
 	 * Use 					: Specified Plan is selected for the Order in Vanilla Journey
-	 * Designed By			: Imran Baig
-	 * Last Modified Date 	: 23-Aug-2017
+	 * Designed By			: SravaniReddy
+	 * Last Modified Date 	: 13-Dec-2017
 	--------------------------------------------------------------------------------------------------------*/
-	@SuppressWarnings("unused")
 	public String PlanSelection_FL_ENT() {
 		String Test_OutPut = "", Status = "";
 		String PlanName = null;
+		String Charges, IP_Type, Res_CPE, Corp_SLA, Discount, Pf_Report;
 		Result.fUpdateLog("------Plan Selection Event Details------");
 		try {
-			String Charge, IP_Type, Res_CPE, Corp_SLA, Discount, Pf_Report;
-			String Add_Addon, GetData, MSISDN = null, SData = "SIM Card", Order_no;
 
-			if (Browser.WebButton.exist("LI_New"))
-				System.out.println("Proceeding Plan Selection");
-			else {
-				Continue.set(true);
-				// CO.OrderSearch(Utlities.FetchStoredValue("SalesOrder"));
-			}
+			int Row_Val = 3,  Col_S; 
+			String GetData;
 			CO.waitforload();
-
+		
 			if (!(getdata("PlanName").equals(""))) {
 				PlanName = getdata("PlanName");
 			} else {
 				PlanName = pulldata("PlanName");
 			}
-
+			Planname.set(PlanName);
+			Test_OutPut += "PlanName : " + PlanName + ",";
 			if (!(getdata("GetData").equals(""))) {
 				GetData = getdata("GetData");
 			} else {
 				GetData = pulldata("GetData");
 			}
-			if (!(getdata("Add_Addon").equals(""))) {
-				Add_Addon = getdata("Add_Addon");
-			} else {
-				Add_Addon = pulldata("Add_Addon");
-			}
+		
 			CO.scroll("LI_New", "WebButton");
 			Browser.WebButton.click("LI_New");
 			int Row = 2, Col;
-			Col = CO.Select_Cell("Line_Items", "Product");
+			Col = CO.Actual_Cell("Line_Items", "Product");
+			Col_S = CO.Actual_Cell("Line_Items", "Service Id");
 			Browser.WebTable.SetDataE("Line_Items", Row, Col, "Product", PlanName);
-			Browser.WebTable.click("Line_Items", Row, Col + 1);
+			Result.takescreenshot("Plan Selected");
+			Browser.WebTable.click("Line_Items", Row, Col_S);
 			CO.waitforload();
 			// -----------------------
 
 			int Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			if (!(getdata("Connection_Charge").equals(""))) {
-				Charge = getdata("Charges");
-			} else {
-				Charge = pulldata("Charges");
-			}
 
+
+			for (int i = 2; i <= Row_Count; i++) {
+				String LData = Browser.WebTable.getCellData("Line_Items", i, Col);
+				if (GetData.equals(LData)) {
+					Row_Val = i;
+					break;
+				}
+			}
+			Browser.WebTable.click("Line_Items", Row_Val, Col_S);
+			CO.Text_Select("span", "Customize");
+			
+			if (!(getdata("Charges").equals(""))) {
+				Charges = getdata("Charges");
+			} else {
+				Charges = pulldata("Charges");
+			}
+			
 			if (!(getdata("Static_&_Dynamic_IP_Address").equals(""))) {
 				IP_Type = getdata("Static_&_Dynamic_IP_Address");
 			} else {
@@ -272,12 +448,45 @@ public class Keyword_FixedLine extends Driver {
 				Pf_Report = pulldata("Performance_Reporting");
 			}
 
-			if (!(Charge == "")) {
-				CO.AddOnSelection(Add_Addon, "Add");
+			if (!(Charges == "")) {
+				CO.Text_Select("a", "Charges");
+				CO.waitforload();
+				CO.FL_AddonSelection(Charges);
+				Result.takescreenshot("Charges Added Scussfully");
 			}
-
-			Result.takescreenshot("");
-			CO.waitforload();
+			
+			if (!(IP_Type == "")) {
+				CO.Text_Select("a", "Static & Dynamic IP Address");
+				CO.waitforload();
+				CO.FL_AddonSelection(IP_Type);
+				Result.takescreenshot("Static & Dynamic IP Address Addon Added Scussfully");
+			}
+			Result.takescreenshot("Charges Added Scussfully");
+			if (!(Res_CPE == "")) {
+				CO.Text_Select("a", "Resilience & CPE");
+				CO.waitforload();
+				CO.FL_AddonSelection(Res_CPE);
+				Result.takescreenshot("Resilience & CPE Addon Added Scussfully");
+			}
+			
+			if (!(Corp_SLA == "")) {
+				CO.Text_Select("a", "Corporate SLA");
+				CO.waitforload();
+				CO.FL_AddonSelection(Corp_SLA);
+				Result.takescreenshot("Corp_SLA Addon Added Scussfully");
+			}
+			if (!(Discount == "")) {
+				CO.Text_Select("a", "Discount");
+				CO.waitforload();
+				CO.FL_AddonSelection(Discount);
+				Result.takescreenshot("Discount Addon Added Scussfully");
+			}
+			if (!(Pf_Report == "")) {
+				CO.Text_Select("a", "Performance Reporting");
+				CO.waitforload();
+				CO.FL_AddonSelection(Pf_Report);
+				Result.takescreenshot("Pf_Report Addon Added Scussfully");
+			}
 			CO.Text_Select("button", "Verify");
 			CO.isAlertExist();
 			CO.waitforload();
@@ -287,31 +496,26 @@ public class Keyword_FixedLine extends Driver {
 				System.out.println("Error On Clicking Done Button");
 				System.exit(0);
 			}
-			CO.waitforload();
-			Row_Count = Browser.WebTable.getRowCount("Line_Items");
-			if (Row_Count <= 3) {
-				Browser.WebButton.waittillvisible("Expand");
-				Browser.WebButton.click("Expand");
-			}
-			CO.Status(Add_Addon);
+	
+	
 			CO.waitforload();
 
-			// fetching Order_no
-			Order_no = CO.Order_ID();
-			Utlities.StoreValue("Order_no", Order_no);
-			Test_OutPut += "Order_no : " + Order_no + ",";
-			Result.takescreenshot("");
+			Test_OutPut += KC.OrderSubmission().split("@@")[1];
+			CO.Action_Update("Add", "MSISDN");
 
-			CO.ToWait();
 			if (Continue.get()) {
 				Status = "PASS";
-				Result.takescreenshot("Modification is Successful");
-			} else
+				Utlities.StoreValue("PlanName", PlanName);
+				Result.fUpdateLog("Plan Selection for " + PlanName + "is done Successfully");
+			} else {
 				Status = "FAIL";
+				Test_OutPut += "Plan Selection Failed" + ",";
+				Result.takescreenshot("Plan Selection Failed");
+				Result.fUpdateLog("Plan Selection Failed");
+			}
 
 		} catch (Exception e) {
-			Status = "FAIL";
-			Test_OutPut += "Exception occurred" + ",";
+			
 			Result.takescreenshot("Exception occurred");
 			Result.fUpdateLog("Exception occurred *** " + e.getMessage());
 			e.printStackTrace();
